@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-07.3">
+<meta name="app-version" content="2026-10-07.4">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -273,6 +273,15 @@
   @media (max-width: 600px) { .sg { grid-template-columns: auto 1fr; } .sg .sv { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; text-align: left; } .sg .sv button { margin-top: 0; } }
   .sg-banner { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 1px solid #f0d29a; background: #fff7e6; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; cursor: pointer; }
   .sg-banner > i { font-size: 24px; color: #c27c00; flex: none; } .sg-banner b { display: block; font-size: 15px; } .sg-banner span { display: block; font-size: 13px; color: var(--muted); } .sg-banner .car { margin-left: auto; color: var(--muted); font-size: 18px; }
+  .ai { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .ai h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; } .ai h3 i { color: #7a44b8; font-size: 19px; }
+  .ai-tag { font-size: 11px; font-weight: 600; color: #7a44b8; background: #f1e9fb; border-radius: 999px; padding: 2px 8px; }
+  .ai-ex { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .ai textarea { width: 100%; font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); resize: vertical; }
+  .ai [data-ai-ask] { margin-top: 8px; }
+  .ai-ans { margin-top: 12px; background: #f7f2fd; border: 1px solid #e3d5f5; border-radius: 12px; padding: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
+  .ai-ch { margin-top: 10px; }
+  .ai.off textarea, .ai.off [data-ai-ask], .ai.off .ai-ex { opacity: .5; pointer-events: none; }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
   .wx-strip { margin-bottom: 14px; }
@@ -699,6 +708,14 @@
         <div class="sg-head"><h2><i class="ph-fill ph-magic-wand" aria-hidden="true"></i>Sugerencias para ahorrar</h2><button type="button" class="mini primary" data-sg-all hidden><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar las que no pierden calidad</button></div>
         <p class="small muted" style="margin-top:4px">La app prueba otros hoteles, vuelos, días y planes a partir de lo que ya elegiste y recalcula el total exacto de cada cambio.</p>
         <div data-sugg></div>
+        <div class="ai" data-ai>
+          <h3><i class="ph-fill ph-sparkle" aria-hidden="true"></i>Preguntarle a la IA <span class="ai-tag">DeepSeek</span></h3>
+          <p class="small muted" data-ai-status>Revisando la conexión...</p>
+          <div class="ai-ex" data-ai-ex></div>
+          <label class="field"><span class="sr">Pregunta</span><textarea data-ai-q rows="2" maxlength="600" placeholder="Ej.: ¿Cómo bajo 500.000 sin dejar Rincón del Mar?"></textarea></label>
+          <button type="button" class="mini primary" data-ai-ask><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>Preguntar</button>
+          <div data-ai-out></div>
+        </div>
       </div>
       <div class="card" style="margin-top:12px">
         <h2><i class="ph ph-money" aria-hidden="true"></i>Efectivo a llevar por destino</h2>
@@ -1200,7 +1217,7 @@
     const fs = captureFocus();
     fixHotels();
     const C = costs(); LAST = C;
-    renderTop(C); renderWxStrip(); renderArmar(C); renderSugg(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
+    renderTop(C); renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
     refreshSheets();
     restoreFocus(fs);
     if (save) persist();
@@ -1660,6 +1677,10 @@
     const ds = t.dataset;
     if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
     if (ds.sg != null) { applySugg(+ds.sg); return; }
+    if (t.hasAttribute("data-ai-ask")) { aiAsk(); return; }
+    if (ds.aiExq) { $("[data-ai-q]").value = ds.aiExq; aiAsk(ds.aiExq); return; }
+    if (ds.aiApply != null) { const m = AI_LAST && AI_LAST.items && AI_LAST.items[+ds.aiApply]; if (m) aiApply(m.st); return; }
+    if (t.hasAttribute("data-ai-all")) { const its = AI_LAST && AI_LAST.items || []; const r = evalState(st => its.forEach(m => m.f(st))); if (r) aiApply(r.st); return; }
     if (t.hasAttribute("data-sg-all")) { applyAllFree(); return; }
     if (t.hasAttribute("data-sg-open")) { showView("costos"); setTimeout(() => { const el = document.getElementById("sugerencias"); if (el) el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); }, 50); return; }
     if (ds.gtab) { GTAB = ds.gtab; store.set("caribe-gtab", GTAB); renderGuide(); return; }
@@ -1845,6 +1866,71 @@
     for (let k = 0; k < 8; k++) { const free = suggestions().filter(x => x.q === 0); if (!free.length) break; S = norm(free[0].st); render(false); n++; }
     render(); toast(`${n} ${n === 1 ? "cambio aplicado" : "cambios aplicados"}: ahorras ${fmt(t0 - LAST.total)}.`, () => { S = norm(prev); render(); });
   }
+  /* ---------- IA (DeepSeek vía Worker de Cloudflare) ---------- */
+  const AI_URL = "https://vacas-ia.label-printer.workers.dev";
+  let AI_READY = null, AI_BUSY = false, AI_LAST = null;
+  const AI_EX = ["¿Cómo bajo 500.000 sin dejar Rincón?", "¿Qué hotel cambio para ahorrar sin perder calidad?", "Quiero gastar máximo 4 millones, ¿qué ajusto?", "¿Vale la pena regresar un día antes?"];
+  async function aiCheck() {
+    try { const r = await fetch(AI_URL + "/", { cache: "no-store" }); const j = await r.json(); AI_READY = !!j.ready; } catch (e) { AI_READY = false; }
+    renderAI();
+  }
+  function aiContext() {
+    const C = LAST, it = C.it, p = P();
+    const fl = side => Object.fromEntries(Object.entries(p[side]).map(([k, v]) => [k, { fecha: v.date, aerolinea: v.air, hora: v.time, precio_pp: fPrice(side, k), aviso: v.warn || "" }]));
+    return {
+      viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
+        planes_activos: Object.keys(it.placed), pasadia_fecha: it.placed.pasadia ? it.placed.pasadia.iso : null, total_pareja: Math.round(C.total), meta: S.goal,
+        desglose: C.rows.map(r => [r.t, Math.round(r.v)]) },
+      opciones: {
+        puentes: Object.fromEntries(Object.entries(PUENTES).map(([k, v]) => [k, v.label + " " + v.sub])),
+        vuelos_puente_actual: { salida: fl("out"), regreso: fl("back") },
+        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), info: h.info }))])),
+        planes: allActs().map(a => ({ id: a.id, nombre: a.t, destino: a.dest, nivel: a.lvl, costo_pareja: a.cost })),
+        comida: FOOD.map(f => ({ nivel: f.id, nombre: f.name, por_persona_dia: f.v })),
+        fechas_posibles_pasadia: it.placed.pasadia || actById("pasadia") ? allowedDays(actById("pasadia"), it.days, it.N).map(d => ({ fecha: d.iso, lugar: d.loc, fin_de_semana_o_festivo: d.wkend || d.fest })) : []
+      }
+    };
+  }
+  function aiMut(c) {
+    const ok = v => v != null;
+    switch (c.op) {
+      case "hotel": { const d = DESTS.find(x => x.id === c.dest); if (!d || !d.hotels.some(h => h.id === c.hotel)) return null; return { t: `Hotel en ${DNAME_SHORT[c.dest]}: ${d.hotels.find(h => h.id === c.hotel).name}`, f: st => { st.h[c.dest] = c.hotel; } }; }
+      case "noches": { const n = { golfo: +c.golfo || 0, rincon: +c.rincon || 0, ctg: +c.ctg || 0 }; if (n.ctg < 1) return null; return { t: `Noches: Tolú ${n.golfo}, Rincón ${n.rincon}, Cartagena ${n.ctg}`, f: st => { st.n = n; } }; }
+      case "salida": if (!P().out[c.dia]) return null; return { t: `Salir el ${dlabel(P().out[c.dia].date)}`, f: st => { st.out = c.dia; } };
+      case "regreso": if (!P().back[c.dia]) return null; return { t: `Regresar el ${dlabel(P().back[c.dia].date)}`, f: st => { st.back = c.dia; } };
+      case "puente": if (!PUENTES[c.id]) return null; return { t: `Cambiar al ${PUENTES[c.id].label}`, f: st => { st.pu = c.id; } };
+      case "comida": { const f = FOOD.find(x => x.id === c.nivel); if (!f) return null; return { t: `Comida ${f.name.toLowerCase()}`, f: st => { st.food = c.nivel; } }; }
+      case "plan": { const a = actById(c.id); if (!a || !ok(c.activo)) return null; return { t: `${c.activo ? "Agregar" : "Quitar"}: ${a.t}`, f: st => { st.acts[c.id] = !!c.activo; } }; }
+      case "maleta": if (!ok(c.activo)) return null; return { t: c.activo ? "Llevar maleta de mano" : "Viajar sin maleta de mano", f: st => { st.bag = !!c.activo; } };
+      case "pasadia_dia": if (!/^\d{4}-\d{2}-\d{2}$/.test(c.fecha || "")) return null; return { t: `Pasadía el ${dlabel(c.fecha)}`, f: st => { st.pin.pasadia = c.fecha; } };
+    }
+    return null;
+  }
+  function renderAI() {
+    const box = $("[data-ai]"); if (!box) return;
+    const st = $("[data-ai-status]");
+    box.classList.toggle("off", AI_READY !== true);
+    st.textContent = AI_READY === null ? "Revisando la conexión..." : AI_READY ? "Escribe tu pregunta. La IA ve tu plan y todas las opciones con precios, y propone cambios que puedes aplicar." : "Falta conectar la clave de DeepSeek en Cloudflare. Cuando esté, esto se activa solo.";
+    $("[data-ai-ex]").innerHTML = AI_EX.map(q => `<button type="button" class="chip-btn" data-ai-exq="${esc(q)}">${esc(q)}</button>`).join("");
+    const out = $("[data-ai-out]");
+    if (AI_BUSY) { out.innerHTML = `<p class="ai-ans"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...</p>`; return; }
+    if (!AI_LAST) { out.innerHTML = ""; return; }
+    if (AI_LAST.error) { out.innerHTML = `<p class="ai-ans" style="background:var(--warn-soft);border-color:#f3c8b0">${esc(AI_LAST.error)}</p>`; return; }
+    const B = LAST, items = (AI_LAST.cambios || []).map(c => aiMut(c)).filter(Boolean).map(m => { const r = evalState(m.f); return r ? Object.assign(m, { save: Math.round(B.total - r.total), st: r.st }) : null; }).filter(Boolean);
+    AI_LAST.items = items;
+    const all = items.length > 1 ? evalState(st => items.forEach(m => m.f(st))) : null;
+    out.innerHTML = `<div class="ai-ans">${esc(AI_LAST.respuesta || "")}</div>${items.length ? `<div class="ai-ch">${items.map((m, i) => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b><small>${m.save >= 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.</small></div><div class="sv"><b class="num" style="color:${m.save >= 0 ? "#1f8a4c" : "var(--warn)"}">${m.save >= 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b><button type="button" class="mini" data-ai-apply="${i}">Aplicar</button></div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:10px" data-ai-all><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B.total - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B.total - all.total))})</button>` : ""}</div>` : ""}`;
+  }
+  async function aiAsk(q) {
+    q = (q || $("[data-ai-q]").value || "").trim(); if (!q || AI_BUSY || !AI_READY) return;
+    AI_BUSY = true; AI_LAST = null; renderAI();
+    try {
+      const r = await fetch(AI_URL + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, context: aiContext() }) });
+      AI_LAST = await r.json(); if (!r.ok && !AI_LAST.error) AI_LAST.error = "No se pudo consultar la IA.";
+    } catch (e) { AI_LAST = { error: "Sin conexión con la IA. Revisa tu internet." }; }
+    AI_BUSY = false; renderAI();
+  }
+  function aiApply(sts) { const prev = structuredClone(S), t0 = LAST.total; S = norm(sts); render(); toast(`Aplicado: ${t0 - LAST.total >= 0 ? "ahorras" : "cuesta"} ${fmt(Math.abs(t0 - LAST.total))}.`, () => { S = norm(prev); render(); }); }
   /* ---------- Guía ---------- */
   const GUIDE = [
     { id: "general", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
@@ -1921,6 +2007,7 @@
   showView(store.get("caribe-view", "armar"));
   loadWeather(false);
   renderGuide();
+  aiCheck();
   /* ---------- Actualizar: deslizar y aviso de versión nueva ---------- */
   const APP_VER = (document.querySelector('meta[name="app-version"]') || {}).content || "";
   function hardReload() { const u = location.pathname + "?v=" + Date.now() + location.hash; location.replace(u); }
