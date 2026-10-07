@@ -7,6 +7,12 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Viaje al Caribe</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Caribe">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -200,6 +206,28 @@
   .hol-list h4 { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 6px; } .hol-list h4 i { color: #c0392b; font-size: 18px; }
   .hol-row { display: flex; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; } .hol-row b { min-width: 86px; color: #c0392b; } .hol-row span { color: var(--muted); } .hol-row.in span { color: var(--text); font-weight: 500; }
   @media (max-width: 600px) { .hol-t { display: none; } .hol-i { display: block; } }
+  .a2hs { position: fixed; z-index: 40; left: 50%; bottom: calc(var(--bottom) + 18px + var(--sab)); transform: translateX(-50%); width: min(92vw, 380px); background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 40px -12px rgba(13, 60, 54, .45); padding: 16px 16px 12px; }
+  .a2hs.ipad { bottom: auto; top: calc(var(--top) + 14px); left: auto; right: 16px; transform: none; }
+  .a2hs-x { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: transparent; font-size: 20px; color: var(--muted); cursor: pointer; }
+  .a2hs-head { display: flex; gap: 12px; align-items: center; padding-right: 30px; }
+  .a2hs-head img { border-radius: 10px; flex: none; }
+  .a2hs-head b { display: block; font-size: 16px; }
+  .a2hs-head span { display: block; font-size: 13px; color: var(--muted); line-height: 1.3; }
+  .a2hs-steps { list-style: none; margin: 14px 0 6px; padding: 0; display: grid; gap: 10px; font-size: 14px; }
+  .a2hs-steps li { position: relative; padding-left: 32px; line-height: 1.75; }
+  .a2hs-steps .n { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 700; display: grid; place-items: center; position: absolute; left: 0; top: 2px; }
+  .a2hs-steps .key { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 8px; background: var(--surface-2); font-weight: 600; }
+  .a2hs-steps .key i { font-size: 17px; color: #0a84ff; }
+  .a2hs-steps .alt { display: block; color: var(--muted); font-size: 13px; line-height: 1.4; }
+  .a2hs-note { font-size: 13px; color: var(--warn); margin: 6px 0; }
+  .a2hs-later { display: block; margin: 4px auto 0; border: 0; background: none; color: var(--muted); font-weight: 600; padding: 10px; min-height: 40px; cursor: pointer; }
+  .a2hs-arrow { position: absolute; left: 50%; bottom: -11px; width: 20px; height: 20px; background: var(--surface); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: translateX(-50%) rotate(45deg); }
+  .a2hs.ipad .a2hs-arrow { bottom: auto; top: -11px; left: auto; right: 24px; transform: rotate(-135deg); }
+  @media (prefers-reduced-motion: no-preference) { .a2hs:not([hidden]) { animation: a2hs-in .45s cubic-bezier(.16,1,.3,1) both, a2hs-bob 2.4s ease-in-out .6s 3; } .a2hs.ipad:not([hidden]) { animation: a2hs-in2 .45s cubic-bezier(.16,1,.3,1) both; } }
+  @keyframes a2hs-in { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
+  @keyframes a2hs-in2 { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+  @keyframes a2hs-bob { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 6px); } }
+  @media (min-width: 861px) { .a2hs:not(.ipad) { bottom: 24px; } }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
   .wx-strip { margin-bottom: 14px; }
@@ -701,6 +729,17 @@
   <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
   <button data-view-btn="mas"><i class="ph ph-dots-three-outline" aria-hidden="true"></i>Más</button>
 </nav>
+<div class="a2hs" data-a2hs hidden role="dialog" aria-labelledby="a2hs-t">
+  <button type="button" class="a2hs-x" data-a2hs-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button>
+  <div class="a2hs-head"><img src="apple-touch-icon.png" alt="" width="44" height="44"><div><b id="a2hs-t">Instala Caribe en tu iPhone</b><span>Se abre como app, a pantalla completa y sin la barra de Safari.</span></div></div>
+  <ol class="a2hs-steps">
+    <li><span class="n">1</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span> abajo en Safari. <span class="alt">Si no lo ves, toca primero <i class="ph ph-dots-three" aria-hidden="true"></i></span></li>
+    <li><span class="n">2</span>Elige <span class="key"><i class="ph ph-plus-square" aria-hidden="true"></i>Agregar a inicio</span> y toca <b>Agregar</b></li>
+  </ol>
+  <p class="a2hs-note" data-a2hs-note hidden>Estás en un navegador dentro de otra app. Ábrela primero en Safari para poder instalarla.</p>
+  <button type="button" class="a2hs-later" data-a2hs-close>Ahora no</button>
+  <span class="a2hs-arrow" aria-hidden="true"></span>
+</div>
 <div class="toast" data-toast role="status" aria-live="polite"><span data-toast-msg></span><button type="button" data-toast-undo hidden>Deshacer</button></div>
 <dialog class="sheet" data-sheet aria-label="Detalle"><div class="sheet-in"><div class="grab" aria-hidden="true"></div><div data-sheet-body></div></div></dialog>
 <dialog class="sheet" data-sheet2 aria-label="Editar"><div class="sheet-in"><div class="grab" aria-hidden="true"></div><div data-sheet-body></div></div></dialog>
@@ -1685,6 +1724,20 @@
   });
   showView(store.get("caribe-view", "armar"));
   loadWeather(false);
+  (function a2hs() {
+    const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
+    if (!ios || standalone) return;
+    const seen = store.get("caribe-a2hs", 0);
+    if (seen && Date.now() - seen < 7 * 864e5) return;
+    const el = $("[data-a2hs]"), ipad = /iPad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const inApp = /FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\//.test(ua) || (/CriOS|FxiOS|EdgiOS/.test(ua) ? false : !/Safari\//.test(ua));
+    if (ipad) el.classList.add("ipad");
+    if (inApp) { $("[data-a2hs-note]").hidden = false; el.querySelector(".a2hs-steps").hidden = true; }
+    if (/CriOS|FxiOS|EdgiOS/.test(ua)) { el.querySelector(".a2hs-steps li").innerHTML = `<span class="n">1</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span> arriba a la derecha.`; el.querySelector(".a2hs-arrow").hidden = true; }
+    setTimeout(() => { el.hidden = false; }, 2500);
+    el.addEventListener("click", e => { if (e.target.closest("[data-a2hs-close]")) { el.hidden = true; store.set("caribe-a2hs", Date.now()); } });
+  })();
 </script>
 </body>
 </html>
