@@ -7,6 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
+<meta name="app-version" content="2026-10-07.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -236,6 +237,28 @@
   @media (min-width: 861px) { .a2hs:not(.ipad) { bottom: 24px; } }
   .logo-img { border-radius: 8px; flex: none; }
   .a2hs-head img { box-shadow: 0 4px 10px -4px rgba(0,0,0,.35); }
+  .g-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px 14px; padding: 0 16px 2px; }
+  .g-tabs::-webkit-scrollbar { display: none; }
+  .g-tab { flex: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; min-height: 40px; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text); }
+  .g-tab i { font-size: 17px; color: var(--dc, var(--accent)); }
+  .g-tab[aria-selected="true"] { background: var(--dc, var(--accent)); border-color: var(--dc, var(--accent)); color: #fff; }
+  .g-tab[aria-selected="true"] i { color: #fff; }
+  .g-intro { display: flex; gap: 12px; align-items: flex-start; background: var(--dcs, var(--accent-soft)); border: 1px solid color-mix(in srgb, var(--dc, var(--accent)) 30%, transparent); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+  .g-intro > i { font-size: 26px; color: var(--dc, var(--accent)); flex: none; }
+  .g-intro b { display: block; font-size: 17px; } .g-intro p { color: var(--text); font-size: 14px; margin-top: 2px; }
+  .g-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 860px) { .g-grid { grid-template-columns: 1fr; } }
+  .g-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .g-card h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 6px; } .g-card h3 i { font-size: 19px; color: var(--dc, var(--accent)); }
+  .g-card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .g-card li { position: relative; padding-left: 16px; font-size: 14px; line-height: 1.45; color: var(--text); }
+  .g-card li::before { content: ""; position: absolute; left: 2px; top: .6em; width: 6px; height: 6px; border-radius: 50%; background: var(--dc, var(--accent)); }
+  .g-card li a { font-weight: 600; }
+  .g-card.warn h3 i { color: var(--warn); } .g-card.warn li::before { background: var(--warn); }
+  .ptr { position: fixed; z-index: 35; left: 50%; top: calc(var(--top) + var(--sat) + 8px); transform: translate(-50%, -80px); display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--accent); box-shadow: 0 8px 20px -10px rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .15s; }
+  .ptr i { font-size: 16px; transition: transform .2s; } .ptr.ready i { transform: rotate(180deg); }
+  .upd { position: fixed; z-index: 36; left: 50%; transform: translateX(-50%); top: calc(var(--top) + var(--sat) + 10px); display: flex; align-items: center; gap: 10px; background: var(--text); color: #fff; border-radius: 999px; padding: 6px 6px 6px 14px; font-size: 14px; box-shadow: 0 10px 24px -10px rgba(0,0,0,.5); white-space: nowrap; }
+  .upd i { color: #ffd27a; } .upd button { border: 0; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
   .wx-strip { margin-bottom: 14px; }
@@ -556,6 +579,7 @@
     <button class="nav-btn" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
     <button class="nav-btn" data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
+    <button class="nav-btn" data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
     <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
@@ -719,9 +743,16 @@
       <p class="credits">Basado en 27 videos de viajeros en YouTube. Hoteles y vuelos verificados el 5 de octubre de 2026; lo marcado como estimado es aproximado.</p>
     </section>
 
+    <section class="view" data-view="guia" hidden>
+      <div class="view-head"><h1>Guía</h1><p>Lo que cuentan 40 videos de viajeros (varios de 2025 y 2026), por destino.</p></div>
+      <div class="g-tabs" role="tablist" data-gtabs></div>
+      <div data-guide></div>
+    </section>
+
     <section class="view" data-view="mas" hidden>
       <div class="view-head"><div><h1>Más</h1></div></div>
       <div class="more-list">
+        <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
         <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
         <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
@@ -734,7 +765,7 @@
   <button data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
   <button data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
   <button data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Días</button>
-  <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
+  <button data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
   <button data-view-btn="mas"><i class="ph ph-dots-three-outline" aria-hidden="true"></i>Más</button>
 </nav>
 <div class="a2hs-backdrop" data-a2hs-bg hidden></div>
@@ -748,6 +779,8 @@
   <button type="button" class="a2hs-later" data-a2hs-copy hidden><i class="ph ph-link" aria-hidden="true"></i> Copiar enlace para abrir en Safari</button>
   <span class="a2hs-arrow" aria-hidden="true"></span>
 </div>
+<div class="ptr" data-ptr aria-hidden="true"><i class="ph ph-arrow-down" data-ptr-ic></i><span data-ptr-t>Desliza para actualizar</span></div>
+<div class="upd" data-upd hidden role="status"><i class="ph-fill ph-sparkle" aria-hidden="true"></i><span>Hay una versión nueva de Vacas</span><button type="button" data-upd-go>Actualizar</button></div>
 <div class="toast" data-toast role="status" aria-live="polite"><span data-toast-msg></span><button type="button" data-toast-undo hidden>Deshacer</button></div>
 <dialog class="sheet" data-sheet aria-label="Detalle"><div class="sheet-in"><div class="grab" aria-hidden="true"></div><div data-sheet-body></div></div></dialog>
 <dialog class="sheet" data-sheet2 aria-label="Editar"><div class="sheet-in"><div class="grab" aria-hidden="true"></div><div data-sheet-body></div></div></dialog>
@@ -1606,6 +1639,7 @@
     const t = e.target.closest("button"); if (!t) return;
     const ds = t.dataset;
     if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
+    if (ds.gtab) { GTAB = ds.gtab; store.set("caribe-gtab", GTAB); renderGuide(); return; }
     if (ds.wxref) { WXREF = ds.wxref; store.set("caribe-wxref", WXREF); render(false); return; }
     if (t.hasAttribute("data-toast-undo")) { const f = undoFn; undoFn = null; $("[data-toast]").classList.remove("show"); if (f) f(); return; }
     if (ds.viewBtn) { showView(ds.viewBtn); return; }
@@ -1705,6 +1739,54 @@
     else if (store.get("caribe-acc", "") === dt.dataset.acc) store.set("caribe-acc", "");
   }));
 
+  /* ---------- Guía ---------- */
+  const GUIDE = [
+    { id: "general", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
+      { i: "ph-cloud-sun", t: "Cuándo ir", li: ["Agosto a noviembre es temporada de lluvias: aguaceros sobre todo en la tarde. Las mañanas sirven para las lanchas.", "Los puentes festivos llenan todo y suben lanchas y pasadías.", "La pasadía conviene entre semana."] },
+      { i: "ph-bus", t: "Cómo moverse", li: ["Vuelo a Montería: el aeropuerto barato más cercano. A Tolú y Corozal solo vuela Satena, y es caro.", "Colectivo en la entrada 5 del aeropuerto, puerta a puerta (30.000 a 40.000 p/p, 1 h 40).", "Más barato: bus en la Troncal a 1 km del aeropuerto (25.000 a 28.000, el último hacia las 6 pm).", "Ojo: el taxi cobra 160.000 a 195.000 y en el aeropuerto suben el precio al llegar."] },
+      { i: "ph-money", t: "Plata", li: ["Llevar efectivo: varios hospedajes no reciben tarjeta y en Rincón y las islas casi no hay datáfono ni cajero.", "Negociar los tours: cobran según la cara de turista.", "Reservar con tarjeta de crédito y pedir por escrito las condiciones de cancelación."] },
+      { i: "ph-backpack", t: "Qué llevar", li: ["Repelente: los zancudos pican al atardecer.", "Bolsa seca y funda para el celular: a la lancha se sube desde la playa con el agua a la rodilla.", "Careta propia: sale mejor que la alquilada.", "Calzado para arena."] },
+      { i: "ph-lifebuoy", t: "En el mar", li: ["Pedir capitán certificado por la Capitanía y chalecos.", "Regresar de las islas antes de las 15:30: en la tarde el mar se pica.", "Si te mareas, siéntate atrás o en el medio de la lancha.", "Con mar picado la Capitanía cancela: dejar un día de respaldo."] }
+    ] },
+    { id: "golfo", name: "Tolú y Coveñas", icon: "ph-umbrella-simple", cls: "c-golfo", intro: "Base de playa del Golfo de Morrosquillo. Coveñas tiene mejor playa; Tolú, el malecón y el muelle.", sec: [
+      { i: "ph-compass", t: "Qué hacer", li: ["<b>Imperdible:</b> canoa por la Ciénaga La Caimanera, 2 horas entre manglares sin motor y con ostras al final (20.000 a 40.000 p/p).", "Malecón renovado de Tolú al atardecer (bicitaxi 5.000).", "Playa El Francés para caretear, a 20 minutos en mototaxi.", "Museo de Infantería de Marina, gratis y con guía.", "Boca de la Ciénaga: playa tranquila con kayak y snorkel."] },
+      { i: "ph-fork-knife", t: "Comer", li: ["El Parito Feliz (Coveñas): arroz de mariscos con vista al atardecer.", "Plato típico (pescado frito, arroz con coco, patacón): 20.000 a 30.000.", "Arepa de huevo en el malecón: 3.000 a 5.000, con suero costeño."] },
+      { i: "ph-warning", t: "Ojo", warn: true, li: ["Revisar que el hospedaje no quede pegado a una discoteca o picó.", "Tolú casi no tiene playa propia.", "Si duermen en Rincón, la pasadía sale más barata desde allá."] },
+      { i: "ph-phone", t: "Contactos", li: ["Viajando con Trixie: <a href=\"https://wa.me/573014087371\" target=\"_blank\" rel=\"noopener\">301 408 7371</a>. Pasadía con recogida en el hotel.", "Club Náutico Tolumaria: <a href=\"https://wa.me/573023665427\" target=\"_blank\" rel=\"noopener\">302 366 5427</a>.", "Navegar Club Tolú: <a href=\"https://www.instagram.com/navegarclubtolu\" target=\"_blank\" rel=\"noopener\">@navegarclubtolu</a>."] }
+    ] },
+    { id: "anteros", name: "San Antero", icon: "ph-mountains", cls: "c-golfo", intro: "A unos 30 minutos de Coveñas. Con medio día alcanza.", sec: [
+      { i: "ph-compass", t: "Qué hacer", li: ["Tour de 2 horas por la bahía de Cispatá: caimanes y tortugas albinas en Asocaimán, túnel de manglar y cultivo de ostras (30.000 a 40.000 p/p).", "Playa Blanca: 3 km de playa, carpas a 30.000 negociables.", "El volcán de lodo El Tesoro colapsó; solo queda una poza.", "Punta Bolívar: tranquila, pero con algas."] },
+      { i: "ph-bus", t: "Cómo llegar", li: ["Van desde la vía a Lorica, frente al módulo de Brasilia en Coveñas (4.000 p/p), y moto hasta la playa (10.000)."] },
+      { i: "ph-fork-knife", t: "Comer", li: ["Casa flotante de Cispatá: almuerzo desde 25.000.", "Bucaneros en Playa Blanca: desde 30.000."] }
+    ] },
+    { id: "islas", name: "Islas", icon: "ph-island", cls: "c-islas", intro: "Tintipán, Múcura y Santa Cruz del Islote, en el Parque Nacional Corales del Rosario y San Bernardo. Se visitan en pasadía.", sec: [
+      { i: "ph-compass", t: "Cuál escoger", li: ["Tintipán: tranquilidad. Es la isla más grande, con manglares.", "Múcura: más ambiente; su playa pública se llena de pasadías hasta las 3 pm.", "Santa Cruz del Islote: la isla más densamente poblada del mundo. Recorrido y acuario por 10.000."] },
+      { i: "ph-boat", t: "Pasadía", li: ["Desde Tolú o Coveñas: 100.000 p/p en temporada baja y 140.000 en alta, con almuerzo.", "Desde Rincón del Mar: 70.000 p/p solo la lancha (8:30 a 15:30). Almuerzo aparte; se puede llevar comida.", "Más el parque nacional, unos 11.000 p/p."] },
+      { i: "ph-fork-knife", t: "Comer", li: ["Mojarra en Tintipán: unos 35.000.", "Pescado en Puerto Caracol, el caserío de Múcura: 40.000.", "Langosta: 70.000 a 120.000.", "Llevar agua desde tierra: en la isla es mucho más cara."] },
+      { i: "ph-warning", t: "Ojo", warn: true, li: ["Dormir en las islas cuesta 160.000 o más la noche.", "Isla Palma no vale para este plan: 330.000 a 370.000 p/p por unas 5 horas, sin poder llevar comida.", "Un viajero denunció un cobro del 100% sin aviso en el Hotel Isla Múcura.", "Después de oleaje fuerte pueden aparecer fragatas portuguesas."] }
+    ] },
+    { id: "rincon", name: "Rincón del Mar", icon: "ph-sun", cls: "c-rincon", intro: "Pueblo pesquero tranquilo, de agua clara y lo más cerca de las islas. Recomiendan 2 noches.", sec: [
+      { i: "ph-bus", t: "Cómo llegar", li: ["Desde Tolú o Coveñas: bus a San Onofre y moto o tuk-tuk a Rincón (15.000 a 17.500 p/p, 20 min). Cerca de 1 h 30 en total.", "Hacia Cartagena: moto a San Onofre (15.000) y bus Brasilia (35.000 p/p, 2 horas)."] },
+      { i: "ph-compass", t: "Qué hacer", li: ["Bioluminiscencia con Isla de los Pájaros al atardecer; se ve mejor en noches sin luna.", "Manglar con guías locales de Mundo Verde; el 10% va a la comunidad.", "Playa Tranquila de día.", "Pasadía a las islas saliendo de la playa del hotel."] },
+      { i: "ph-fork-knife", t: "Comer", li: ["Corrientazo en el pueblo: 15.000 a 16.000.", "Mar Blanco: pescado con sopa 25.000, ceviche 35.000, camarones 40.000.", "El Tropical: desde 10.000."] },
+      { i: "ph-warning", t: "Ojo", warn: true, li: ["Calles de arena y tubos sueltos: buen calzado.", "No ir de noche a Playa Tranquila: la marea sube.", "En la mañana hay basura que trae el mar.", "Casi no hay cajeros: llevar efectivo y comprar lo que falte en San Onofre."] },
+      { i: "ph-phone", t: "Contactos", li: ["JJ Tour del Mar (Jader Jiménez): <a href=\"https://wa.me/573115971494\" target=\"_blank\" rel=\"noopener\">311 597 1494</a>. Islas y bioluminiscencia."] }
+    ] },
+    { id: "ctg", name: "Cartagena", icon: "ph-castle-turret", cls: "c-ctg", intro: "Plan de caminar y comer bien, sin lanchas. Aún faltan 17 videos de Cartagena por revisar.", sec: [
+      { i: "ph-compass", t: "Qué hacer", li: ["Getsemaní: murales del Callejón Angosto y la Plaza de la Trinidad de noche.", "Ciudad Amurallada y San Diego a pie, Las Bóvedas y el Museo del Oro (gratis).", "Atardecer sobre la muralla."] },
+      { i: "ph-fork-knife", t: "Comer", li: ["Corrientazo: 15.000 a 17.000 por fuera de la zona turística.", "En el Centro un plato ronda 35.000.", "Revisar si la propina viene incluida en la cuenta."] },
+      { i: "ph-bus", t: "Cómo moverse", li: ["Taxi del aeropuerto al Centro: 21.400 (tarifa oficial)."] }
+    ] }
+  ];
+  let GTAB = store.get("caribe-gtab", "general");
+  function renderGuide() {
+    const tabs = $("[data-gtabs]"), box = $("[data-guide]"); if (!tabs || !box) return;
+    if (!GUIDE.some(g => g.id === GTAB)) GTAB = "general";
+    tabs.innerHTML = GUIDE.map(g => `<button type="button" role="tab" class="g-tab ${g.cls}" aria-selected="${g.id === GTAB}" data-gtab="${g.id}"><i class="ph ${g.icon}" aria-hidden="true"></i>${g.name}</button>`).join("");
+    const sel = tabs.querySelector('[aria-selected="true"]'); if (sel) tabs.scrollLeft = Math.max(0, sel.offsetLeft - (tabs.clientWidth - sel.offsetWidth) / 2);
+    const g = GUIDE.find(x => x.id === GTAB);
+    box.innerHTML = `<div class="${g.cls}"><div class="g-intro"><i class="ph-fill ${g.icon}" aria-hidden="true"></i><div><b>${g.name}</b><p>${g.intro}</p></div></div><div class="g-grid">${g.sec.map(sc => `<div class="g-card ${sc.warn ? "warn" : ""}"><h3><i class="ph ${sc.i}" aria-hidden="true"></i>${sc.t}</h3><ul>${sc.li.map(x => `<li>${x}</li>`).join("")}</ul></div>`).join("")}</div></div>`;
+  }
   /* ---------- Navegación ---------- */
   let curView = null; const scrollMem = {};
   const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1715,7 +1797,7 @@
     if (curView) scrollMem[curView] = window.scrollY;
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = (v === "comparar" || v === "pendientes" || v === "info") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
+      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
@@ -1732,6 +1814,36 @@
   });
   showView(store.get("caribe-view", "armar"));
   loadWeather(false);
+  renderGuide();
+  /* ---------- Actualizar: deslizar y aviso de versión nueva ---------- */
+  const APP_VER = (document.querySelector('meta[name="app-version"]') || {}).content || "";
+  function hardReload() { const u = location.pathname + "?v=" + Date.now() + location.hash; location.replace(u); }
+  (function ptr() {
+    const el = $("[data-ptr]"), txt = $("[data-ptr-t]"); let y0 = null, dy = 0;
+    const blocked = () => document.querySelector("dialog[open]") || !$("[data-a2hs]").hidden;
+    window.addEventListener("touchstart", e => { y0 = window.scrollY <= 0 && !blocked() ? e.touches[0].clientY : null; dy = 0; }, { passive: true });
+    window.addEventListener("touchmove", e => {
+      if (y0 == null) return; dy = e.touches[0].clientY - y0; if (dy <= 0) { el.style.opacity = 0; return; }
+      const pull = Math.min(dy * .5, 90); el.style.opacity = Math.min(1, pull / 40); el.style.transform = `translate(-50%, ${pull - 60}px)`;
+      const ready = pull >= 70; el.classList.toggle("ready", ready); txt.textContent = ready ? "Suelta para actualizar" : "Desliza para actualizar";
+    }, { passive: true });
+    window.addEventListener("touchend", () => {
+      if (y0 == null) return; const ready = Math.min(dy * .5, 90) >= 70; y0 = null;
+      if (ready) { txt.textContent = "Actualizando..."; $("[data-ptr-ic]").className = "ph ph-arrows-clockwise spin"; setTimeout(hardReload, 150); }
+      else { el.style.opacity = 0; el.style.transform = "translate(-50%, -80px)"; }
+    });
+  })();
+  async function checkVersion() {
+    if (!APP_VER || location.protocol === "data:" || location.protocol === "file:") return;
+    try {
+      const r = await fetch(location.pathname + "?check=" + Date.now(), { cache: "no-store" }); const t = await r.text();
+      const m = t.match(/name="app-version" content="([^"]+)"/);
+      if (m && m[1] !== APP_VER) $("[data-upd]").hidden = false;
+    } catch (e) {}
+  }
+  $("[data-upd-go]").addEventListener("click", hardReload);
+  checkVersion();
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") checkVersion(); });
   (function a2hs() {
     const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     const standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
