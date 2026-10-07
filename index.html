@@ -1,0 +1,1690 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f6f5">
+<meta name="color-scheme" content="light only">
+<meta name="format-detection" content="telephone=no">
+<title>Viaje al Caribe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f4f6f5; --surface: #ffffff; --surface-2: #eef2f1; --text: #13201d; --muted: #55645f; --line: #dfe6e4;
+    --accent: #0d7468; --accent-ink: #f3fbf9; --accent-soft: #d9efeb; --warn: #b4561f; --warn-soft: #fbeee6; --ok: #1f8a4c;
+    --golfo: #2366a8; --golfo-soft: #e4eef8; --rincon: #a86a00; --rincon-soft: #fcf0d9; --ctg: #b0306a; --ctg-soft: #f8e5ee;
+    --radius: 14px; --pill: 999px; --side: 232px; --top: 60px; --bottom: 64px;
+    --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
+  }
+  .c-golfo, .c-islas { --dc: var(--golfo); --dcs: var(--golfo-soft); }
+  .c-rincon { --dc: var(--rincon); --dcs: var(--rincon-soft); }
+  .c-ctg { --dc: var(--ctg); --dcs: var(--ctg-soft); }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: var(--bg); color: var(--text); font-family: "Outfit", system-ui, sans-serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+  a { color: var(--accent); }
+  .num { font-variant-numeric: tabular-nums; }
+  h1, h2, h3, h4 { margin: 0; letter-spacing: -0.01em; line-height: 1.2; font-weight: 600; }
+  p { margin: 0; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { touch-action: manipulation; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+
+  /* Shell */
+  .app { display: grid; grid-template-columns: var(--side) 1fr; min-height: 100dvh; }
+  .side { position: sticky; top: 0; height: 100dvh; background: var(--surface); border-right: 1px solid var(--line); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; padding: 6px 10px 18px; }
+  .logo i { font-size: 24px; color: var(--accent); }
+  .nav-btn { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; border: 0; background: transparent; padding: 10px 12px; border-radius: 10px; cursor: pointer; color: var(--muted); font-weight: 500; text-align: left; }
+  .nav-btn i { font-size: 20px; }
+  .nav-btn[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+  .nav-btn:active { background: var(--surface-2); }
+  .side .foot { margin-top: auto; font-size: 12px; color: var(--muted); padding: 10px; }
+  main { min-width: 0; }
+  .topbar { position: sticky; top: 0; z-index: 10; height: calc(var(--top) + var(--sat)); padding: var(--sat) 24px 0; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+  .topbar .trip { min-width: 0; flex: 1; }
+  .topbar .trip b { display: block; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .trip b.bad { color: var(--warn); }
+  .topbar .trip span { display: block; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .trip .t-short { display: none; } .topbar .trip .t-long, .topbar .trip .t-short { white-space: nowrap; }
+  .icon-btn { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border: 0; border-radius: 12px; background: transparent; cursor: pointer; color: var(--text); font-size: 22px; }
+  .icon-btn:active { background: var(--surface-2); }
+  .topbar .tot { position: relative; text-align: right; cursor: pointer; border: 0; background: transparent; padding: 4px 0; min-height: 44px; flex: none; }
+  .topbar .tot b { display: block; font-size: 19px; font-weight: 700; color: var(--accent); line-height: 1.2; }
+  .topbar .tot span.g { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .topbar .tot span.g.over { color: var(--warn); font-weight: 600; }
+  .diff { position: absolute; right: calc(100% + 8px); top: 50%; transform: translateY(-50%) scale(.9); opacity: 0; pointer-events: none; font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: var(--pill); white-space: nowrap; transition: opacity .2s ease, transform .2s ease; }
+  .diff.up { background: var(--warn-soft); color: var(--warn); }
+  .diff.down { background: var(--accent-soft); color: var(--accent); }
+  .diff.show { opacity: 1; transform: translateY(-50%) scale(1); }
+  .meter { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: transparent; }
+  .meter i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .3s ease, background-color .2s; }
+  .meter i.over { background: var(--warn); }
+  .view { padding: 24px; max-width: 1080px; }
+  .view-head { margin-bottom: 16px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 14px; }
+  .view-head > div { flex: 1 1 260px; min-width: 0; }
+  .view-head h1 { font-size: 27px; font-weight: 700; letter-spacing: -0.02em; }
+  .view-head p { color: var(--muted); margin-top: 4px; }
+
+  /* Bottom nav (mobile) */
+  .bottom { display: none; }
+  @media (max-width: 860px) {
+    .app { grid-template-columns: 1fr; }
+    .side { display: none; }
+    .topbar { padding: var(--sat) 8px 0 16px; gap: 4px; }
+    .topbar .trip .t-long { display: none; } .topbar .trip .t-short { display: inline; }
+    .topbar .trip b { font-size: 15px; }
+    .topbar .tot b { font-size: 17px; }
+    .view { padding: 16px 16px calc(var(--bottom) + 24px + var(--sab)); }
+    .bottom { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; z-index: 20; left: 0; right: 0; bottom: 0; height: calc(var(--bottom) + var(--sab)); padding-bottom: var(--sab); background: var(--surface); border-top: 1px solid var(--line); }
+    .bottom button { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 12px; color: var(--muted); cursor: pointer; min-height: 44px; -webkit-user-select: none; user-select: none; }
+    .bottom button i { font-size: 23px; }
+    .bottom button[aria-current="page"] { color: var(--accent); font-weight: 600; }
+    .bottom button:active { background: var(--surface-2); }
+  }
+
+  /* Cards & controls */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .card + .card { margin-top: 12px; }
+  .card h2 { font-size: 16px; display: flex; align-items: center; gap: 8px; }
+  .card h2 i { color: var(--accent); font-size: 19px; }
+  .label { font-size: 13px; color: var(--muted); margin: 16px 0 8px; font-weight: 500; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pick { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 10px 12px; min-height: 44px; cursor: pointer; min-width: 140px; transition: border-color .15s, background-color .15s, transform .1s; }
+  .pick:active { transform: scale(.98); }
+  .pick[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+  .pick[disabled] { opacity: .45; cursor: not-allowed; }
+  .pick b { display: block; font-weight: 600; font-size: 14px; }
+  .pick span { display: block; font-size: 12px; color: var(--muted); }
+  .pick .warn-t { color: var(--warn); font-weight: 500; }
+  .tripinfo { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 10px; border-radius: var(--pill); background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+  .chip.warn { background: var(--surface-2); color: var(--muted); }
+  .chip.bad { background: var(--warn-soft); color: var(--warn); }
+  .chip.move { background: var(--surface-2); color: var(--text); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+  .grid2 > .card + .card { margin-top: 0; }
+  @media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } .pick { min-width: 0; flex: 1 1 130px; } }
+  .tag { display: inline-flex; align-items: center; font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: var(--pill); white-space: nowrap; vertical-align: 1px; }
+  .tag.ok { background: var(--surface-2); color: var(--muted); }
+  .tag.est { background: #fff4d6; color: #7a5300; }
+  .tag.ed { background: #e7e3fb; color: #4b3aa8; }
+  .tag.bad { background: var(--warn-soft); color: var(--warn); }
+  .tag.cash { background: #e3f3e8; color: #22663b; }
+  .price-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .price-line b { color: var(--text); }
+  .link-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; padding: 0 6px; border: 0; background: transparent; color: var(--accent); font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; border-radius: 8px; }
+  .link-btn:active { background: var(--accent-soft); }
+  .mini { font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px 14px; border-radius: var(--pill); border: 1px solid var(--line); background: var(--surface-2); cursor: pointer; text-decoration: none; color: var(--text); }
+  .mini.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .mini.wa { background: #1f8f4e; color: #fff; border-color: #1f8f4e; }
+  .mini:active { transform: scale(.97); filter: brightness(.95); }
+  .mini i { font-size: 17px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+  /* Accordion */
+  .acc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .acc + .acc { margin-top: 10px; }
+  .acc > summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-height: 64px; cursor: pointer; border-radius: var(--radius); -webkit-user-select: none; user-select: none; }
+  .acc > summary::-webkit-details-marker { display: none; }
+  .acc > summary:active { background: var(--surface-2); }
+  .acc-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 20px; flex: none; }
+  .acc-t { min-width: 0; flex: 1; }
+  .acc-t b { display: block; font-size: 16px; font-weight: 600; }
+  .acc-t > span { display: block; font-size: 13px; color: var(--muted); }
+  .acc-t .cnt { font-weight: 600; color: var(--accent); }
+  .acc-t .cnt.bad { color: var(--warn); }
+  .chev { font-size: 18px; color: var(--muted); transition: transform .2s ease; flex: none; }
+  .acc[open] .chev { transform: rotate(180deg); }
+  .acc[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .acc-body { padding: 4px 14px 16px; border-top: 1px solid var(--line); }
+
+  /* Destinos */
+  .dest { border: 1px solid var(--line); border-left: 4px solid var(--dc); border-radius: 12px; padding: 12px; background: var(--surface); margin-top: 12px; }
+  .dest-head { display: flex; align-items: center; gap: 12px; }
+  .dest-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--dcs); color: var(--dc); display: grid; place-items: center; font-size: 21px; flex: none; }
+  .dest-name { min-width: 0; flex: 1; }
+  .dest-name b { display: block; font-size: 15px; font-weight: 600; color: var(--dc); }
+  .dest-name small { display: block; color: var(--muted); font-size: 12px; }
+  .stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: var(--pill); overflow: hidden; flex: none; background: var(--surface); }
+  .stepper button { width: 44px; height: 44px; border: 0; background: var(--surface-2); font-size: 20px; cursor: pointer; }
+  .stepper button:active { background: var(--line); }
+  .stepper button:disabled { opacity: .35; cursor: not-allowed; }
+  .stepper output { min-width: 84px; text-align: center; font-weight: 600; font-size: 14px; }
+  .hotel-sel { margin-top: 12px; display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 12px; border-radius: 10px; background: var(--dcs); }
+  .hs-txt b { display: block; font-size: 14px; font-weight: 600; }
+  .hs-txt > span { display: block; font-size: 13px; color: var(--muted); }
+  .hs-txt .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .hs-price { text-align: right; }
+  .hs-price b { display: block; font-size: 16px; }
+  .hs-price span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .hs-act { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; }
+  .hs-act .mini { background: var(--surface); }
+  .dest.off { background: transparent; border-left-color: var(--line); }
+  .dest.off .dest-name b { color: var(--muted); }
+  @media (max-width: 600px) {
+    .dest-head { flex-wrap: wrap; }
+    .dest-head .stepper { margin-left: 52px; }
+  }
+  .alert { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert > i { color: var(--accent); font-size: 18px; margin-top: 1px; flex: none; }
+  .alert > div { flex: 1; min-width: 0; }
+  .alert .mini { margin-top: 8px; min-height: 40px; }
+  .alert.bad { background: var(--warn-soft); }
+  .alert.bad > i { color: var(--warn); }
+  .warns { margin-bottom: 12px; }
+  .it.flight > i, .kv.flight > i { color: var(--accent) !important; }
+  .cell.blank { background: transparent !important; border-color: transparent !important; }
+  .wx-ref { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0 6px; font-size: 13px; color: var(--muted); }
+  .chip-btn { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 12px; min-height: 36px; font-size: 13px; cursor: pointer; }
+  .chip-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .cell.out { opacity: 1; } .cell.out .num { color: var(--muted); } .cell.out .wx { opacity: .85; }
+  .cell.out.hol { opacity: 1; background: #fdecec; border: 1px solid #f3c2c2; }
+  .cell.out.hol .num { color: #c0392b; }
+  .hol-t { font-size: 12px; font-weight: 600; color: #c0392b; margin-top: auto; }
+  .hol-i { display: none; color: #c0392b; font-size: 15px; margin-top: auto; }
+  .cell .fe { color: #c0392b; font-weight: 600; }
+  .hol-list { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .hol-list h4 { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 6px; } .hol-list h4 i { color: #c0392b; font-size: 18px; }
+  .hol-row { display: flex; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; } .hol-row b { min-width: 86px; color: #c0392b; } .hol-row span { color: var(--muted); } .hol-row.in span { color: var(--text); font-weight: 500; }
+  @media (max-width: 600px) { .hol-t { display: none; } .hol-i { display: block; } }
+  .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
+  .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
+  .wx-strip { margin-bottom: 14px; }
+  .wx-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+  @media (max-width: 600px) { .wx-now { padding: 8px 6px 8px 8px; } .wn-main i { font-size: 20px; } .wn-main b { font-size: 19px; } .wn-place { font-size: 12px; } .wn-t { font-size: 12px; } }
+  .wx-row::-webkit-scrollbar { display: none; }
+  .c-islas { --dc: #0b8a8a; --dcs: #def3f2; }
+  .wx-now { text-align: left; border: 1px solid var(--line); border-left: 4px solid var(--dc); background: var(--surface); border-radius: 12px; padding: 10px 10px 9px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-height: 84px; }
+  .wx-now:active { background: var(--surface-2); }
+  .wn-place { font-size: 13px; font-weight: 600; color: var(--dc); }
+  .wn-main { display: flex; align-items: center; gap: 6px; }
+  .wn-main i { font-size: 26px; } .wn-main b { font-size: 22px; font-weight: 700; }
+  .wn-t { font-size: 12px; color: var(--muted); line-height: 1.2; }
+  .wx-now-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .fc-now { display: flex; align-items: center; gap: 14px; padding: 6px 0 14px; border-bottom: 1px solid var(--line); }
+  .fc-now > i { font-size: 46px; }
+  .fc-now b { font-size: 34px; font-weight: 700; display: block; line-height: 1; }
+  .fc-now span { display: block; font-weight: 500; margin-top: 4px; }
+  .fc-now small { color: var(--muted); font-size: 13px; }
+  .fc-list { display: grid; }
+  .fc-row { display: grid; grid-template-columns: 66px 28px 1fr auto 70px; align-items: center; gap: 8px; padding: 9px 4px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .fc-row.here { background: var(--dcs); border-radius: 8px; }
+  .fc-row > i { font-size: 24px; }
+  .fc-d b { display: block; font-size: 14px; } .fc-d small { color: var(--muted); font-size: 12px; }
+  .fc-t { color: var(--muted); font-size: 13px; line-height: 1.2; } .fc-t em { display: block; font-style: normal; font-weight: 600; color: var(--dc); font-size: 12px; }
+  .fc-p { font-size: 13px; color: #2563b0; white-space: nowrap; } .fc-p i { font-size: 12px; margin-right: 2px; } .fc-p.hi { font-weight: 700; }
+  .fc-x { text-align: right; color: var(--muted); white-space: nowrap; } .fc-x b { color: var(--text); }
+  .fc-note { font-size: 13px; color: var(--muted); margin: 12px 0; }
+  @media (max-width: 380px) { .fc-row { grid-template-columns: 58px 26px 1fr auto 62px; gap: 6px; } .fc-t { font-size: 12px; } }
+  .warnbox { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 12px; }
+  .warnbox.bad { border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); }
+  .warnbox summary { list-style: none; display: flex; align-items: center; gap: 10px; min-height: 48px; cursor: pointer; }
+  .warnbox summary::-webkit-details-marker { display: none; }
+  .warnbox summary i { font-size: 18px; color: var(--accent); }
+  .warnbox.bad summary i { color: var(--warn); }
+  .warnbox summary .car { margin-left: auto; color: var(--muted); transition: transform .2s; }
+  .warnbox[open] summary .car { transform: rotate(180deg); }
+  .warnbox .alert { margin: 0 0 10px; }
+  .warns .alert:first-child { margin-top: 0; }
+  .countdown { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: var(--pill); background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  .intro { display: flex; gap: 12px; align-items: flex-start; background: var(--accent-soft); border: 1px solid #b9ddd6; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+  .intro > i { font-size: 24px; color: var(--accent); flex: none; }
+  .intro p { font-size: 14px; }
+  .intro .icon-btn { margin: -8px -8px 0 auto; font-size: 18px; }
+
+  /* Switch */
+  .switch-row { display: flex; gap: 12px; align-items: center; padding: 10px 12px; margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; min-height: 56px; }
+  .switch-row:active { background: var(--surface-2); }
+  .switch-row input { position: absolute; opacity: 0; pointer-events: none; }
+  .switch-row .sw { width: 44px; height: 26px; border-radius: 13px; background: #c7d1ce; position: relative; flex: none; transition: background-color .2s; }
+  .switch-row .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+  .switch-row input:checked + .sw { background: var(--accent); }
+  .switch-row input:checked + .sw::after { transform: translateX(18px); }
+  .switch-row input:focus-visible + .sw { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .switch-row .txt b { display: block; font-size: 14px; font-weight: 600; }
+  .switch-row .txt span { display: block; font-size: 13px; color: var(--muted); }
+
+  /* Planes */
+  .stage-opts { margin-top: 16px; }
+  .stage-opts h3 { font-size: 13px; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--dc); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .stage-opts h3 i { font-size: 15px; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--dcs); }
+  .acts { display: grid; gap: 6px; }
+  .act { display: flex; gap: 8px 12px; align-items: flex-start; padding: 6px 12px 6px 6px; border: 1px solid var(--line); border-left: 3px solid var(--dc); border-radius: 10px; background: var(--surface); }
+  .act-main { display: flex; gap: 10px; align-items: flex-start; flex: 1; min-width: 0; padding: 6px; border-radius: 8px; cursor: pointer; min-height: 44px; }
+  .act-main:active { background: var(--surface-2); }
+  .act input, .check input { position: absolute; opacity: 0; pointer-events: none; }
+  .box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--muted); display: grid; place-items: center; margin-top: 1px; flex: none; background: var(--surface); }
+  .box i { font-size: 14px; color: var(--accent-ink); opacity: 0; }
+  input:checked ~ .box { background: var(--accent); border-color: var(--accent); }
+  input:checked ~ .box i { opacity: 1; }
+  input:focus-visible ~ .box { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .act .txt { min-width: 0; }
+  .act .txt b { font-weight: 500; font-size: 14px; }
+  .act .txt .desc { display: block; color: var(--muted); font-size: 13px; margin-top: 1px; }
+  .act:has(input:not(:checked)) .txt b, .act:has(input:not(:checked)) .cost { color: var(--muted); }
+  .act.dis { background: var(--bg); }
+  .act.dis .act-main { cursor: not-allowed; }
+  .act.dis .box { opacity: .4; }
+  .why, .nofit, .when { display: flex !important; align-items: center; gap: 5px; font-size: 13px; margin-top: 4px; font-weight: 500; }
+  .why { color: var(--muted); }
+  .nofit { color: var(--warn); }
+  .when { color: var(--accent); }
+  .act.nofit-row { border-color: #efc9b2; background: #fffaf6; }
+  .act-side { text-align: right; flex: none; padding-top: 6px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .act-side .cost { font-weight: 600; white-space: nowrap; font-size: 14px; }
+  .act-side .cost.strike { text-decoration: line-through; color: var(--muted); }
+  .act-side small { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .act-side .tools { display: flex; gap: 0; margin-right: -6px; }
+  .act-side .icon-btn { font-size: 18px; color: var(--muted); width: 40px; height: 40px; }
+  .lvl { display: inline-block; font-size: 12px; font-weight: 600; padding: 0 8px; border-radius: var(--pill); margin-left: 6px; vertical-align: 1px; }
+  .lvl.must { background: var(--accent); color: var(--accent-ink); }
+  .lvl.good { background: var(--accent-soft); color: var(--accent); }
+  .lvl.opt, .lvl.own { background: var(--surface-2); color: var(--muted); }
+  @media (max-width: 600px) {
+    .act { flex-wrap: wrap; }
+    .act-side { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 4px 8px; width: 100%; padding: 0 0 4px 38px; text-align: left; }
+    .act-side .tools { margin-left: auto; }
+  }
+
+  /* Costs */
+  .bigtot { font-size: 36px; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; line-height: 1.1; }
+  .sub { color: var(--muted); margin-top: 4px; }
+  .lines { display: grid; grid-template-columns: 1fr auto; column-gap: 16px; font-size: 14px; }
+  .lines > div { padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .lines > div:nth-child(odd) { color: var(--muted); }
+  .lines > div:nth-child(even) { text-align: right; font-weight: 500; white-space: nowrap; }
+  .lines > div.neg { color: var(--accent); }
+  .lines > div.totl { font-weight: 700; color: var(--text); border-bottom: 0; }
+  .field { display: grid; gap: 6px; margin-top: 14px; border: 0; padding: 0; min-width: 0; }
+  .field > span, .field legend { font-size: 13px; color: var(--muted); font-weight: 500; padding: 0; }
+  .field input[type=text], .field select, .field textarea, .goal-in { font-size: 16px; padding: 10px 12px; min-height: 46px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); width: 100%; }
+  .field textarea { resize: vertical; min-height: 80px; }
+  input[type=range] { width: 100%; accent-color: var(--accent); min-height: 44px; }
+  .goal-state { font-weight: 600; }
+  .goal-state.ok { color: var(--accent); }
+  .goal-state.over { color: var(--warn); }
+  .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seg label { position: relative; }
+  .seg input { position: absolute; opacity: 0; }
+  .seg span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: var(--pill); border: 1px solid var(--line); cursor: pointer; font-size: 14px; }
+  .seg input:checked + span { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .cash-grid { display: grid; gap: 10px; margin-top: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .cash-d { border-radius: 12px; padding: 12px; background: var(--dcs); }
+  .cash-d h3 { font-size: 14px; color: var(--dc); display: flex; align-items: center; gap: 6px; }
+  .cash-d .lines { font-size: 13px; }
+  .cash-d .lines > div { padding: 5px 0; border-color: color-mix(in srgb, var(--dc) 18%, transparent); }
+  .cash-d .tt { font-size: 20px; font-weight: 700; margin-top: 6px; }
+
+  .toast { position: fixed; left: 50%; transform: translate(-50%, 8px); bottom: calc(var(--bottom) + 16px + var(--sab)); max-width: calc(100% - 32px); display: flex; align-items: center; gap: 12px; background: var(--text); color: #fff; padding: 8px 8px 8px 16px; min-height: 48px; border-radius: 14px; font-size: 14px; z-index: 30; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; box-shadow: 0 6px 24px rgba(0,0,0,.2); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .toast span { padding: 6px 0; }
+  .toast button { border: 0; background: rgba(255,255,255,.14); color: #9ff0e2; font-weight: 700; min-height: 40px; padding: 0 14px; border-radius: 10px; cursor: pointer; white-space: nowrap; }
+  @media (min-width: 861px) { .toast { bottom: 24px; } }
+
+  /* Calendar */
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
+  .cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .cal-legend i.sw { width: 14px; height: 14px; border-radius: 4px; display: inline-block; background: var(--dcs); border: 1.5px solid var(--dc); }
+  .cal-legend i.sw.fly { background: transparent; border: 2px solid var(--text); }
+  .cal-legend .dot { position: static; }
+  .cal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; max-width: 760px; }
+  .cal h3 { font-size: 15px; margin-bottom: 10px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .cal-grid .wd { font-size: 12px; color: var(--muted); text-align: center; padding-bottom: 2px; text-transform: uppercase; }
+  .cell { position: relative; min-width: 0; overflow: hidden; min-height: 84px; border-radius: 10px; padding: 6px; background: var(--bg); border: 1px solid transparent; display: flex; flex-direction: column; align-items: stretch; gap: 3px; font-size: 12px; line-height: 1.25; text-align: left; }
+  button.cell { cursor: pointer; background: var(--dcs); border-color: color-mix(in srgb, var(--dc) 35%, transparent); transition: transform .1s; }
+  button.cell:active { transform: scale(.96); }
+  .cell.out { opacity: .45; }
+  .cell .dn { display: flex; align-items: center; gap: 3px; font-weight: 700; font-size: 14px; }
+  .cell .dn .mo { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+  .cell .dn .moon { font-size: 13px; color: var(--dc); }
+  .cell .ci { font-size: 18px; color: var(--dc); }
+  .cell .lb { font-weight: 500; color: var(--text); }
+  .cell .wx { display: flex; align-items: center; gap: 3px; margin-top: auto; font-size: 12px; color: var(--muted); }
+  .cell .wx i { font-size: 17px; }
+  .wx-legend { margin-top: -6px; } .wx-legend i { font-size: 18px; }
+  .wxc-sol { color: #e8a200 !important; } .wxc-par { color: #d98e04 !important; } .wxc-nub { color: #7d8c88 !important; }
+  .wxc-llo { color: #4b9bd1 !important; } .wxc-llu { color: #2563b0 !important; } .wxc-tor { color: #7a44b8 !important; }
+  .kv.wxk > i { font-size: 22px; }
+  .cell .wx .pr.hi { color: var(--warn); font-weight: 600; }
+  .cell .wx.typ { font-style: italic; }
+  .wx-status { display: block; font-size: 13px; color: var(--muted); margin: -4px 0 12px; }
+  .wx-status i { font-size: 16px; color: var(--accent); vertical-align: -3px; margin-right: 4px; }
+  .linkbtn { border: 0; background: none; color: var(--accent); font-weight: 600; padding: 4px; min-height: 0; cursor: pointer; text-decoration: underline; }
+  .kv.wxk.bad i { color: var(--warn); }
+  .kv.wxk.typ small { font-style: italic; }
+  .spin { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+  .cell .fe { font-size: 12px; font-weight: 600; color: var(--warn); }
+  .cell .nt { position: absolute; right: 5px; top: 6px; font-size: 13px; color: var(--muted); }
+  .cell.fly { box-shadow: inset 0 0 0 2px var(--text); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dc); display: inline-block; }
+  @media (max-width: 600px) {
+    .cal { padding: 10px; } .cal-grid { gap: 3px; }
+    .cell { min-height: 58px; padding: 5px 4px; align-items: center; text-align: center; }
+    .cell .dn { justify-content: center; font-size: 13px; }
+    .cell .dn .mo { display: none; }
+    .cell .lb, .cell .fe { display: none; }
+    .cell .wx { justify-content: center; flex-wrap: wrap; font-size: 12px; gap: 0 2px; } .cell .wx i { font-size: 16px; } .cell .wx .num:first-of-type:not(:only-of-type) { display: none; }
+    .cell .ci { font-size: 20px; }
+    .cell .nt { right: 2px; top: 2px; font-size: 12px; }
+  }
+
+  /* Itinerary list */
+  .stage { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .stage + .stage { margin-top: 14px; }
+  .stage-head { position: sticky; top: calc(var(--top) + var(--sat)); z-index: 5; display: flex; gap: 12px; align-items: center; padding: 10px 12px; background: var(--dcs); border-bottom: 2px solid var(--dc); border-radius: var(--radius) var(--radius) 0 0; }
+  .stage-head .dest-ic { background: var(--surface); }
+  .stage-head > div { min-width: 0; }
+  .stage-head h3 { font-size: 16px; color: var(--dc); font-weight: 700; }
+  .stage-head p { color: var(--muted); font-size: 13px; }
+  .day { display: grid; grid-template-columns: 52px 1fr; gap: 12px; padding: 14px 12px; scroll-margin-top: calc(var(--top) + var(--sat) + 70px); }
+  .day + .day { border-top: 1px solid var(--line); }
+  .date b { display: block; font-size: 24px; font-weight: 700; line-height: 1; }
+  .date span { display: block; color: var(--muted); font-size: 12px; }
+  .date .fe { color: var(--warn); font-weight: 600; }
+  .day-body { min-width: 0; display: grid; gap: 8px; }
+  .it { display: flex; gap: 10px; align-items: flex-start; }
+  .it > i { font-size: 19px; color: var(--dc); margin-top: 1px; flex: none; }
+  .it h4 { font-size: 14px; margin-bottom: 2px; }
+  .it p { color: var(--muted); font-size: 13px; }
+  .slot { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 6px; }
+  .mover { display: flex; align-items: center; gap: 6px; margin-left: 29px; font-size: 13px; color: var(--muted); }
+  .mover select { font-size: 14px; min-height: 40px; padding: 4px 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); max-width: 100%; }
+  .note { width: 100%; font-size: 16px; min-height: 44px; padding: 10px 12px; border-radius: 10px; border: 1px dashed var(--line); background: var(--bg); resize: vertical; field-sizing: content; }
+  .note:focus { border-style: solid; background: var(--surface); }
+  .empty { color: var(--muted); padding: 28px; border: 1px dashed var(--line); border-radius: var(--radius); text-align: center; background: var(--surface); }
+  .empty .mini { margin-top: 12px; }
+
+  /* Compare */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  table.cmp { border-collapse: collapse; width: 100%; min-width: 480px; font-size: 14px; }
+  .cmp th, .cmp td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: right; vertical-align: top; }
+  .cmp th[scope=row] { text-align: left; color: var(--muted); font-weight: 500; position: sticky; left: 0; background: var(--surface); }
+  .cmp thead th { text-align: left; vertical-align: bottom; min-width: 170px; }
+  .cmp thead th:first-child { min-width: 110px; }
+  .cmp .scen-name { width: 100%; font-weight: 700; font-size: 16px; border: 1px solid transparent; border-radius: 8px; padding: 6px 8px; margin-left: -8px; background: transparent; min-height: 44px; }
+  .cmp .scen-name:focus { border-color: var(--line); background: var(--bg); }
+  .cmp thead small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .cmp .dchips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .dchip { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: var(--pill); background: var(--dcs); color: var(--dc); }
+  .cmp td.dif { background: #fbfaf3; }
+  .cmp td.min { color: var(--accent); font-weight: 700; background: var(--accent-soft); }
+  .cmp tr.tot th, .cmp tr.tot td { font-weight: 700; font-size: 16px; border-bottom: 0; }
+  .cmp td small { display: block; font-size: 12px; font-weight: 500; color: var(--warn); }
+  .cmp td small.best { color: var(--accent); }
+  .cmp td.acts-c { text-align: left; }
+  .cmp td.acts-c .mini { min-height: 40px; padding: 6px 12px; margin: 2px 4px 2px 0; }
+
+  /* Checks, info */
+  .checks { display: grid; gap: 8px; }
+  .check { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; min-height: 56px; }
+  .check:active { background: var(--surface-2); }
+  .check input:checked ~ .txt b { text-decoration: line-through; color: var(--muted); }
+  .check .txt b { font-weight: 500; display: block; }
+  .check .txt span { color: var(--muted); font-size: 13px; }
+  .check .txt a { display: inline-block; padding: 4px 0; }
+  .progress { color: var(--muted); margin-bottom: 10px; }
+  .agency { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; }
+  .agency small { color: var(--muted); display: block; font-size: 12px; }
+  .agency p { color: var(--muted); font-size: 13px; grid-column: 1 / -1; }
+  .agency .wa { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600; font-size: 14px; min-height: 44px; padding: 0 14px; border-radius: var(--pill); background: var(--accent); color: var(--accent-ink); white-space: nowrap; }
+  .agency .wa:active { filter: brightness(.92); }
+  .tip { display: flex; gap: 10px; padding: 10px 0; }
+  .tip + .tip { border-top: 1px solid var(--line); }
+  .tip i { font-size: 20px; color: var(--accent); flex: none; }
+  .tip b { display: block; font-size: 14px; }
+  .tip span { color: var(--muted); font-size: 13px; }
+  .places a { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 0; text-decoration: none; color: var(--text); border-top: 1px solid var(--line); }
+  .places a:first-of-type { border-top: 0; }
+  .places a i { font-size: 20px; color: var(--accent); }
+  .places a span small { display: block; color: var(--muted); font-size: 12px; }
+  .more-list .nav-btn { background: var(--surface); border: 1px solid var(--line); margin-bottom: 8px; color: var(--text); padding: 14px; min-height: 56px; }
+  .credits { font-size: 12px; color: var(--muted); margin-top: 16px; }
+
+  /* Bottom sheet */
+  dialog.sheet { border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 600px; max-height: 90dvh; border-radius: 20px 20px 0 0; background: var(--surface); color: var(--text); box-shadow: 0 -8px 40px rgba(0,0,0,.18); overflow: hidden; }
+  dialog.sheet[open] { animation: sheet-up .22s ease-out; }
+  dialog.sheet::backdrop { background: rgba(10, 20, 18, .45); }
+  @keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .sheet-in { max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain; padding-bottom: calc(16px + var(--sab)); }
+  .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 8px auto 0; }
+  .sh-head { display: flex; align-items: center; gap: 12px; padding: 10px 8px 10px 16px; position: sticky; top: 0; background: var(--surface); z-index: 1; border-bottom: 1px solid var(--line); }
+  .sh-head > div { flex: 1; min-width: 0; }
+  .sh-head h2 { font-size: 18px; font-weight: 700; }
+  .sh-head p { font-size: 13px; color: var(--muted); }
+  .sh-pad { padding: 4px 16px 8px; }
+  .sh-list { display: grid; gap: 8px; padding: 12px 16px 4px; }
+  .hopt { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .hopt.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .hopt-pick { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left; border: 0; background: var(--surface); padding: 12px; cursor: pointer; min-height: 56px; }
+  .hopt.on .hopt-pick { background: var(--accent-soft); }
+  .hopt-pick:active { background: var(--surface-2); }
+  .radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--muted); flex: none; margin-top: 1px; display: grid; place-items: center; }
+  .hopt.on .radio { border-color: var(--accent); }
+  .hopt.on .radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .hopt-txt { flex: 1; min-width: 0; }
+  .hopt-txt b { display: block; font-size: 15px; font-weight: 600; }
+  .hopt-txt span { display: block; font-size: 13px; color: var(--muted); }
+  .hopt-price { text-align: right; flex: none; }
+  .hopt-price b { display: block; font-size: 15px; }
+  .hopt-price span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .hopt-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 0 4px; padding: 0 8px 4px 44px; }
+  .nocupo { margin: 10px 16px 0; font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: flex-start; }
+  .kv { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .kv > i { font-size: 19px; color: var(--dc, var(--accent)); flex: none; margin-top: 1px; }
+  .kv small { display: block; color: var(--muted); font-size: 13px; }
+  .choice { display: grid; gap: 10px; margin-top: 14px; }
+  .choice .mini { width: 100%; min-height: 50px; font-size: 15px; }
+
+  @media (hover: hover) {
+    .nav-btn:hover { background: var(--surface-2); color: var(--text); }
+    .pick:hover { border-color: var(--accent); }
+    .act-main:hover .box { border-color: var(--accent); }
+    .mini:hover { filter: brightness(.97); }
+    .link-btn:hover { background: var(--accent-soft); }
+    .icon-btn:hover { background: var(--surface-2); }
+    button.cell:hover { border-color: var(--dc); }
+    .acc > summary:hover { background: var(--bg); }
+    .hopt-pick:hover { background: var(--bg); }
+    .check:hover, .switch-row:hover { border-color: var(--accent); }
+  }
+  @media (min-width: 861px) {
+    dialog.sheet { margin: auto; border-radius: 20px; }
+    .grab { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    .diff, .diff.show { transform: translateY(-50%); }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="Menú">
+    <div class="logo"><i class="ph-fill ph-sun-horizon" aria-hidden="true"></i>Viaje al Caribe</div>
+    <button class="nav-btn" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
+    <button class="nav-btn" data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
+    <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
+    <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
+    <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
+    <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
+    <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
+    <p class="foot">Precios del 5 de octubre de 2026. Confirmar antes de reservar.</p>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div class="trip"><b data-trip-title>Viaje</b><span data-eyebrow></span></div>
+      <button type="button" class="icon-btn" data-share-native aria-label="Compartir el plan"><i class="ph ph-share-network" aria-hidden="true"></i></button>
+      <button type="button" class="tot" data-view-btn="costos" aria-label="Ver costos"><span class="diff" data-diff aria-hidden="true"></span><b class="num" data-f-total aria-live="polite">$0</b><span class="g" data-top-goal>total pareja</span></button>
+      <div class="meter" aria-hidden="true"><i data-meter></i></div>
+    </header>
+
+    <section class="view" data-view="armar">
+      <div class="view-head"><div><h1>Armar el viaje</h1><p>Todo se guarda solo. Toca una sección para abrirla.</p></div><span class="countdown" data-countdown hidden></span></div>
+      <div class="intro" data-intro hidden>
+        <i class="ph-fill ph-hand-waving" aria-hidden="true"></i>
+        <p><b>Así funciona:</b> abre cada sección, ajusta noches, hoteles y planes, y el total de arriba se recalcula solo. Todo queda guardado en este celular y con el botón de compartir le mandas el plan a tu pareja.</p>
+        <button type="button" class="icon-btn" data-intro-off aria-label="Cerrar la explicación"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="wx-strip" data-wx-strip></div>
+      <div class="warns" data-warn-armar></div>
+
+      <details class="acc" name="armar" data-acc="fechas">
+        <summary><span class="acc-ic"><i class="ph ph-airplane-tilt" aria-hidden="true"></i></span><span class="acc-t"><b>Fechas y vuelos</b><span data-sum="fechas"></span></span><i class="ph ph-caret-down chev" aria-hidden="true"></i></summary>
+        <div class="acc-body">
+          <p class="label" id="lb-pu">Puente festivo</p>
+          <div class="chips" role="radiogroup" aria-labelledby="lb-pu" data-puente></div>
+          <p class="label lb-ic" id="lb-out"><i class="ph-fill ph-airplane-takeoff" aria-hidden="true"></i>Salida de Bogotá a Montería (precio por persona)</p>
+          <div class="chips" role="radiogroup" aria-labelledby="lb-out" data-out></div>
+          <div class="price-line" data-price-out></div>
+          <p class="label lb-ic" id="lb-back"><i class="ph-fill ph-airplane-landing" aria-hidden="true"></i>Regreso de Cartagena a Bogotá (precio por persona)</p>
+          <div class="chips" role="radiogroup" aria-labelledby="lb-back" data-back></div>
+          <div class="price-line" data-price-back></div>
+          <div data-bag></div>
+          <div class="tripinfo" data-tripinfo></div>
+        </div>
+      </details>
+
+      <details class="acc" name="armar" data-acc="noches">
+        <summary><span class="acc-ic"><i class="ph ph-bed" aria-hidden="true"></i></span><span class="acc-t"><b>Noches y hoteles</b><span data-sum="noches"></span></span><i class="ph ph-caret-down chev" aria-hidden="true"></i></summary>
+        <div class="acc-body">
+          <div data-nights-alert></div>
+          <div data-dests></div>
+          <p class="small muted" style="margin-top:10px">Tope de $150.000 la noche y promedio de $120.000, siempre con baño privado.</p>
+        </div>
+      </details>
+
+      <details class="acc" name="armar" data-acc="comida">
+        <summary><span class="acc-ic"><i class="ph ph-fork-knife" aria-hidden="true"></i></span><span class="acc-t"><b>Comida</b><span data-sum="comida"></span></span><i class="ph ph-caret-down chev" aria-hidden="true"></i></summary>
+        <div class="acc-body">
+          <p class="label" id="lb-food">Presupuesto diario por persona</p>
+          <div class="chips" role="radiogroup" aria-labelledby="lb-food" data-food></div>
+        </div>
+      </details>
+
+      <details class="acc" name="armar" data-acc="planes">
+        <summary><span class="acc-ic"><i class="ph ph-compass" aria-hidden="true"></i></span><span class="acc-t"><b>Planes</b><span data-sum="planes"></span></span><i class="ph ph-caret-down chev" aria-hidden="true"></i></summary>
+        <div class="acc-body">
+          <p class="label" style="margin-bottom:0">Lo imperdible viene marcado. Solo se cobra lo que cabe en el itinerario.</p>
+          <div data-acts></div>
+          <div class="actions"><button type="button" class="mini primary" data-cadd><i class="ph ph-plus" aria-hidden="true"></i>Agregar plan</button></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="view" data-view="calendario" hidden>
+      <div class="view-head"><div><h1>Calendario</h1><p>Toca un día para ver el detalle.</p></div></div>
+      <div data-cal></div>
+    </section>
+
+    <section class="view" data-view="dias" hidden>
+      <div class="view-head"><div><h1>Día a día</h1><p>Se arma solo. Puedes mover planes y escribir notas.</p></div></div>
+      <div data-itin></div>
+    </section>
+
+    <section class="view" data-view="costos" hidden>
+      <div class="view-head"><div><h1>Costos</h1><p>Para los dos, con imprevistos incluidos.</p></div></div>
+      <div class="warns" data-warn-costos></div>
+      <div class="grid2">
+        <div class="card">
+          <p class="bigtot num" data-total>$0</p>
+          <p class="sub">Por persona <b class="num" data-pp>$0</b> · por día <b class="num" data-pd>$0</b></p>
+          <p class="sub"><span data-f-days>9</span> días · <span data-f-work>4</span> días laborales · noche promedio <b class="num" data-f-night>$0</b></p>
+          <label class="field"><span>Meta de presupuesto para los dos</span><input class="goal-in" type="text" inputmode="decimal" autocomplete="off" data-goal aria-describedby="goal-help"></label>
+          <p class="small muted" id="goal-help" style="margin-top:4px">Escribe por ejemplo 4.500.000 o 4,5 millones.</p>
+          <p class="goal-state" data-goal-state style="margin-top:6px"></p>
+          <label class="field"><span>Imprevistos: <b data-cont-out>10%</b></span><input type="range" min="0" max="20" step="1" data-cont aria-label="Porcentaje de imprevistos"></label>
+          <div class="actions">
+            <button type="button" class="mini primary" data-share-native><i class="ph ph-share-network" aria-hidden="true"></i>Compartir</button>
+            <a class="mini wa" data-wa-share href="https://wa.me/" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>Enviar por WhatsApp</a>
+            <button type="button" class="mini" data-copy><i class="ph ph-link" aria-hidden="true"></i>Copiar enlace</button>
+            <button type="button" class="mini" data-save><i class="ph ph-floppy-disk" aria-hidden="true"></i>Guardar escenario</button>
+            <button type="button" class="mini" data-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Restablecer</button>
+          </div>
+        </div>
+        <div class="card"><h2 style="margin-bottom:6px"><i class="ph ph-receipt" aria-hidden="true"></i>Desglose</h2><div class="lines" data-lines></div></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <h2><i class="ph ph-money" aria-hidden="true"></i>Efectivo a llevar por destino</h2>
+        <p class="small muted" style="margin-top:4px">Hospedajes que solo reciben efectivo, planes, traslados y comida donde casi no hay datáfono. Redondeado hacia arriba.</p>
+        <div data-cash></div>
+      </div>
+    </section>
+
+    <section class="view" data-view="comparar" hidden>
+      <div class="view-head"><div><h1>Comparar</h1><p>Guarda hasta 3 versiones y míralas lado a lado.</p></div></div>
+      <div data-scen></div>
+    </section>
+
+    <section class="view" data-view="pendientes" hidden>
+      <div class="view-head"><div><h1>Pendientes</h1><p>Cambian si cambias hotel o fechas. Los enlaces abren Booking con las fechas.</p></div></div>
+      <p class="progress" data-progress></p>
+      <div class="checks" data-checks></div>
+    </section>
+
+    <section class="view" data-view="info" hidden>
+      <div class="view-head"><div><h1>Agencias y consejos</h1><p>Contactos que dejaron los viajeros en sus videos de YouTube.</p></div></div>
+      <div class="grid2">
+        <div>
+          <div class="card agency"><div><b>Viajando con Trixie</b><small>Coveñas y Tolú · Experimento Nómada, 2025</small></div><a class="wa num" data-wa-agency="573014087371" href="https://wa.me/573014087371" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>301 408 7371</a><p>La más recomendada. Recoge en el hotel a las 7:20, almuerzo isleño, regreso 16:30. $100.000 p/p en temporada baja, $140.000 en alta. El botón abre WhatsApp con el mensaje listo.</p></div>
+          <div class="card agency"><div><b>Club Náutico Tolumaria</b><small>Muelle de Tolú · Franklin Alfor, 2024</small></div><a class="wa num" data-wa-agency="573023665427" href="https://wa.me/573023665427" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>302 366 5427</a><p>Pasadía con lancha, seguro y almuerzo. $75.000 en 2024.</p></div>
+          <div class="card agency"><div><b>Navegar Club Tolú</b><small>Tolú · Helder José Orozco, 2026</small></div><a class="wa" href="https://www.instagram.com/navegarclubtolu" target="_blank" rel="noopener"><i class="ph ph-instagram-logo" aria-hidden="true"></i>Instagram</a><p>Tour a Tintipán y Múcura en 2026 por cerca de $100.000.</p></div>
+          <div class="card agency"><div><b>JJ Tour del Mar</b><small>Rincón del Mar · La Mochila Vacía, 2025</small></div><a class="wa num" data-wa-agency="573115971494" href="https://wa.me/573115971494" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>311 597 1494</a><p>Jader Jiménez. Pasadía a las islas desde Rincón (70.000 p/p solo lancha, 8:30 a 15:30) y bioluminiscencia.</p></div>
+          <div class="card agency"><div><b>Mundo Verde</b><small>Rincón del Mar · Sombrero Viajero e Isa por ahí</small></div><p>Asociación local de guías para el manglar de día o de noche (a veces se ven perezosos). Se contrata en el pueblo; el 10% va a la comunidad.</p></div>
+          <div class="card agency"><div><b>Asocaimán y tour de Cispatá</b><small>San Antero · La Mochila Vacía, 2023</small></div><p>Caimanes y tortugas albinas, túnel de manglar y cultivo de ostras. Se contrata en la playa: $30.000 a $40.000 p/p.</p></div>
+          <div class="card"><p class="sub" style="margin:0">Isla Palma no vale para este plan: 330.000 a 370.000 p/p por unas 5 horas, sin poder llevar comida. Más antiguos: Happy Trip +57 319 312 8491 (2022) · Tolú Mar, Rogelio, +57 315 320 9564 (2019). Taxi Montería de José Salas +57 304 597 9974, solo emergencia: el taxi privado cobra $190.000 o más.</p></div>
+          <div class="card places">
+            <h2 style="margin-bottom:6px"><i class="ph ph-map-trifold" aria-hidden="true"></i>Lugares clave</h2>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Aeropuerto%20Los%20Garzones%2C%20Monter%C3%ADa%2C%20C%C3%B3rdoba" target="_blank" rel="noopener"><i class="ph ph-airplane-landing" aria-hidden="true"></i><span>Aeropuerto Los Garzones<small>Montería. Llegada y colectivos a Tolú</small></span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Muelle%20tur%C3%ADstico%2C%20Santiago%20de%20Tol%C3%BA%2C%20Sucre" target="_blank" rel="noopener"><i class="ph ph-anchor" aria-hidden="true"></i><span>Muelle turístico de Tolú<small>Salida de las lanchas a las islas</small></span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Ci%C3%A9naga%20La%20Caimanera%2C%20Cove%C3%B1as%2C%20Sucre" target="_blank" rel="noopener"><i class="ph ph-boat" aria-hidden="true"></i><span>Ciénaga La Caimanera<small>Recorrido en canoa por el manglar</small></span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Rinc%C3%B3n%20del%20Mar%2C%20San%20Onofre%2C%20Sucre" target="_blank" rel="noopener"><i class="ph ph-sun" aria-hidden="true"></i><span>Rincón del Mar<small>San Onofre, Sucre</small></span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Terminal%20de%20Transportes%20de%20Cartagena" target="_blank" rel="noopener"><i class="ph ph-bus" aria-hidden="true"></i><span>Terminal de Transportes de Cartagena<small>Llegada de los buses desde Tolú</small></span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Aeropuerto%20Internacional%20Rafael%20N%C3%BA%C3%B1ez%2C%20Cartagena" target="_blank" rel="noopener"><i class="ph ph-airplane-takeoff" aria-hidden="true"></i><span>Aeropuerto Rafael Núñez<small>Cartagena. Vuelo de regreso</small></span></a>
+          </div>
+        </div>
+        <div class="card">
+          <h2 style="margin-bottom:4px"><i class="ph ph-lightbulb" aria-hidden="true"></i>Consejos de los viajeros</h2>
+          <div class="tip"><i class="ph ph-anchor" aria-hidden="true"></i><div><b>Capitán certificado</b><span>Pedir licencia de Capitanía y chalecos. Después de las 16:00 el mar se pica.</span></div></div>
+          <div class="tip"><i class="ph ph-money" aria-hidden="true"></i><div><b>Llevar efectivo</b><span>Varios hospedajes no reciben tarjeta y en las islas casi no hay datáfono.</span></div></div>
+          <div class="tip"><i class="ph ph-drop" aria-hidden="true"></i><div><b>Bolsa seca</b><span>A la lancha se sube desde la playa con el agua a la rodilla.</span></div></div>
+          <div class="tip"><i class="ph ph-bug" aria-hidden="true"></i><div><b>Repelente y careta propia</b><span>Los zancudos pican al atardecer.</span></div></div>
+          <div class="tip"><i class="ph ph-hand-coins" aria-hidden="true"></i><div><b>Precio antes de subir</b><span>En el aeropuerto de Montería suben el precio al llegar. Tomar colectivo.</span></div></div>
+          <div class="tip"><i class="ph ph-island" aria-hidden="true"></i><div><b>Tintipán o Múcura</b><span>Tintipán para tranquilidad; Múcura para ambiente, se llena hasta las 3 pm.</span></div></div>
+          <div class="tip"><i class="ph ph-clock-countdown" aria-hidden="true"></i><div><b>Último bus en la Troncal</b><span>Hacia las 6 pm. Si el vuelo se retrasa, toca el colectivo de la entrada 5 del aeropuerto.</span></div></div>
+          <div class="tip"><i class="ph ph-sneaker" aria-hidden="true"></i><div><b>Rincón del Mar</b><span>Calles de arena y tubos sueltos: buen calzado. No ir de noche a Playa Tranquila, la marea sube. Comprar lo que falte en San Onofre.</span></div></div>
+          <div class="tip"><i class="ph ph-speaker-slash" aria-hidden="true"></i><div><b>Ojo con los picós</b><span>Revisar reseñas sobre ruido antes de reservar.</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:4px"><i class="ph ph-fork-knife" aria-hidden="true"></i>Dónde comer, según los viajeros</h2>
+        <div class="tip"><i class="ph ph-umbrella-simple" aria-hidden="true"></i><div><b>Tolú y Coveñas</b><span>El Parito Feliz en Coveñas: arroz de mariscos con vista al atardecer. Plato típico (pescado frito, arroz con coco, patacón) $20.000 a $30.000. Arepa de huevo en el malecón $3.000 a $5.000; pedir suero costeño.</span></div></div>
+        <div class="tip"><i class="ph ph-mountains" aria-hidden="true"></i><div><b>San Antero</b><span>Casa flotante de la bahía de Cispatá, almuerzo desde $25.000. Bucaneros en Playa Blanca, desde $30.000.</span></div></div>
+        <div class="tip"><i class="ph ph-sun" aria-hidden="true"></i><div><b>Rincón del Mar</b><span>Corrientazo en el pueblo $15.000 a $16.000. Mar Blanco: pescado con sopa $25.000, ceviche $35.000, camarones $40.000. El Tropical desde $10.000.</span></div></div>
+        <div class="tip"><i class="ph ph-island" aria-hidden="true"></i><div><b>Islas</b><span>Mojarra en Tintipán unos $35.000. En Puerto Caracol, el caserío de Múcura, pescado fresco a $40.000. Langosta $70.000 a $120.000. Llevar agua desde tierra.</span></div></div>
+        <div class="tip"><i class="ph ph-castle-turret" aria-hidden="true"></i><div><b>Cartagena</b><span>Corrientazo $15.000 a $17.000 por fuera de la zona turística. En el Centro un plato ronda $35.000. Revisar la carta y si la propina viene incluida.</span></div></div>
+      </div>
+      <p class="credits">Basado en 27 videos de viajeros en YouTube. Hoteles y vuelos verificados el 5 de octubre de 2026; lo marcado como estimado es aproximado.</p>
+    </section>
+
+    <section class="view" data-view="mas" hidden>
+      <div class="view-head"><div><h1>Más</h1></div></div>
+      <div class="more-list">
+        <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
+        <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
+        <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<nav class="bottom" aria-label="Navegación">
+  <button data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
+  <button data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
+  <button data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Días</button>
+  <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
+  <button data-view-btn="mas"><i class="ph ph-dots-three-outline" aria-hidden="true"></i>Más</button>
+</nav>
+<div class="toast" data-toast role="status" aria-live="polite"><span data-toast-msg></span><button type="button" data-toast-undo hidden>Deshacer</button></div>
+<dialog class="sheet" data-sheet aria-label="Detalle"><div class="sheet-in"><div class="grab" aria-hidden="true"></div><div data-sheet-body></div></div></dialog>
+<dialog class="sheet" data-sheet2 aria-label="Editar"><div class="sheet-in"><div class="grab" aria-hidden="true"></div><div data-sheet-body></div></div></dialog>
+
+<script>
+  /* ---------- Datos ---------- */
+  const PUENTES = {
+    p2: { label: "Puente del 2", sub: "31 oct al 8 nov", festivo: "2026-11-02",
+      weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
+      out: { vie: { date: "2026-10-30", air: "JetSMART", time: "10:40 → 12:10", price: 301570 },
+             sab: { date: "2026-10-31", air: "JetSMART", time: "11:25 → 12:55", price: 244330, note: "Sin equipaje de mano grande" } },
+      back: { vie: { date: "2026-11-06", air: "LATAM", time: "11:35 → 13:10", price: 185350 },
+              sab: { date: "2026-11-07", air: "JetSMART", time: "11:04 → 12:40", price: 253540 },
+              dom: { date: "2026-11-08", air: "LATAM", time: "6:15 → 7:50", price: 211530, warn: "Madrugada" },
+              lun: { date: "2026-11-09", air: "JetSMART", time: "8:29", price: 301610 } } },
+    p16: { label: "Puente del 16", sub: "14 al 22 nov", festivo: "2026-11-16",
+      weather: "Segunda mitad de noviembre: ya se acerca la época seca.",
+      out: { vie: { date: "2026-11-13", air: "Avianca", time: "20:15 → 21:35", price: 389030, warn: "Llega de noche, sin colectivos" },
+             sab: { date: "2026-11-14", air: "LATAM", time: "14:25 → 15:50", price: 290260 } },
+      back: { vie: { date: "2026-11-20", air: "LATAM", time: "13:35", price: 185350 },
+              sab: { date: "2026-11-21", air: "JetSMART", time: "11:04 → 12:40", price: 172970 },
+              dom: { date: "2026-11-22", air: "LATAM", time: "12:30 → 14:05", price: 232830 },
+              lun: { date: "2026-11-23", air: "Wingo", time: "3:01 → 4:30", price: 274600, warn: "Madrugada" } } }
+  };
+  const DAYNAME = { vie: "Viernes", sab: "Sábado", dom: "Domingo", lun: "Lunes" };
+  const DESTS = [
+    { id: "golfo", name: "Tolú o Coveñas", icon: "ph-umbrella-simple", min: 0,
+      blurb: "Playa, Ciénaga La Caimanera y malecón. Base para la pasadía a las islas.",
+      hotels: [
+        { id: "floral", name: "Hospedaje El Floral", where: "Tolú, a 200 m de la playa", score: "9,1", rate: { p2: 93220, p16: 95964 }, info: "Aire y cocina. Tarifa sin reembolso.", url: "https://www.booking.com/hotel/co/hospedaje-el-floral-santiago-de-tolu.es.html" },
+        { id: "monaco", name: "Habitaciones Mónaco", where: "Coveñas, primera ensenada", score: "sin nota", rate: { p2: 100000, p16: 100000 }, info: "Aire y baño privado. Precio de 2024 visto en un video; confirmar en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Habitaciones+M%C3%B3naco+Cove%C3%B1as" },
+        { id: "saray", name: "Hospedaje Saray Sofía", where: "Coveñas, 1,3 km de la playa", score: "9,8", rate: { p2: 83300, p16: 83300 }, info: "Aire, cuarto pequeño. Cancelación gratis.", url: "https://www.booking.com/hotel/co/saray-del-mar.es.html" },
+        { id: "oasis", name: "Oasis de Tolú", where: "Tolú, 800 m de la playa", score: "8,4", rate: { p2: 83300, p16: 83300 }, info: "Aire. Solo efectivo o transferencia.", url: "https://www.booking.com/hotel/co/oasis-de-tolu.es.html" },
+        { id: "casita", name: "La Casita Rooms", where: "Coveñas, 550 m de la playa", score: "8,7", rate: { p2: null, p16: 130000 }, info: "Aire. Solo efectivo.", url: "https://www.booking.com/hotel/co/la-casita-rooms.es.html" }
+      ] },
+    { id: "rincon", name: "Rincón del Mar", icon: "ph-sun", min: 0,
+      blurb: "Pueblo pesquero con agua clara, a 30 minutos en lancha de Tintipán. Bioluminiscencia de noche.",
+      hotels: [
+        { id: "cangrejo", name: "Cabaña El Cangrejo Azul", where: "Rincón del Mar, frente al mar", score: "8,8", rate: { p2: 101750, p16: 101750 }, info: "Aire, balcón. Cancelación gratis.", url: "https://www.booking.com/hotel/co/cabana-el-cangrejo-azul-blue-crab-house.es.html" },
+        { id: "nugeku", name: "Hostel Nugeku", where: "Rincón del Mar", score: "9,0", rate: { p2: 131580, p16: null }, info: "Doble con baño privado, sin aire indicado. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostel-nugeku.es.html" }
+      ] },
+    { id: "ctg", name: "Cartagena", icon: "ph-castle-turret", min: 1,
+      blurb: "Caminar Getsemaní y la Ciudad Amurallada y comer bien. Sin lanchas.",
+      hotels: [
+        { id: "sanfelipe", name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,3", rate: { p2: 99960, p16: 99960 }, info: "Solo adultos, aire. Cancelación gratis.", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html" },
+        { id: "altisimo", name: "Hostal El Altísimo", where: "Getsemaní", score: "8,4", rate: { p2: 144000, p16: 144000 }, info: "Cuarto privado con baño y aire. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostal-el-altisimo.es.html" },
+        { id: "dakema", name: "Posada Dakema", where: "Canapote, lejos del centro", score: "8,5", rate: { p2: 80000, p16: 72000 }, info: "Aire, balcón. Hay que moverse en taxi.", url: "https://www.booking.com/hotel/co/posada-dakema-cartagena.es.html" }
+      ] }
+  ];
+  const MOVES = {
+    "air-golfo": ["Colectivo desde la entrada 5 del aeropuerto de Montería, puerta a puerta hasta el hotel (30.000 a 40.000 p/p, 1 h 30 a 1 h 40). Más barato: caminar 1 km hasta la Troncal y tomar Sotracor, Torcoroma o Tucurá (25.000 a 28.000 p/p, el último pasa hacia las 6 pm)", 70000],
+    "air-rincon": ["Colectivo del aeropuerto a Tolú o Coveñas, bus a San Onofre y moto o tuk-tuk a Rincón (15.000 a 17.500 p/p), unas 3 horas", 130000],
+    "air-ctg": ["Colectivo y bus de Montería a Cartagena, unas 5 horas", 150000],
+    "golfo-rincon": ["Bus de Tolú o Coveñas a San Onofre (precio por confirmar) y moto o tuk-tuk a Rincón (15.000 a 17.500 p/p, 20 min), cerca de 1 hora y media", 60000],
+    "golfo-ctg": ["Bus a Cartagena, unas 3 horas, y taxi al hotel", 139000],
+    "rincon-ctg": ["Moto a San Onofre (15.000 p/p), bus Brasilia a Cartagena (35.000 p/p, 2 horas) y taxi del terminal al hotel", 115000]
+  };
+  const MOVE_T = { "air-golfo": "1 h 40", "air-rincon": "3 h", "air-ctg": "5 h", "golfo-rincon": "1 h 30", "golfo-ctg": "3 h", "rincon-ctg": "2 h 30" };
+  const MOVE_MODE = { "air-golfo": "Colectivo", "air-rincon": "Colectivo, bus y mototaxi", "air-ctg": "Colectivo y bus", "golfo-rincon": "Bus y mototaxi", "golfo-ctg": "Bus", "rincon-ctg": "Mototaxi y bus" };
+  const FOOD = [
+    { id: "aj", name: "Ajustado", sub: "$60.000 p/p al día", v: 60000 },
+    { id: "no", name: "Normal", sub: "$80.000 p/p al día", v: 80000 },
+    { id: "ge", name: "Generoso", sub: "$110.000 p/p al día", v: 110000 }
+  ];
+  const ACTS = [
+    { id: "cienaga", dest: "golfo", t: "Canoa por la Ciénaga La Caimanera", d: "2 horas entre manglares, sin motor, con ostras al final. Mejor temprano.", lvl: "must", cost: 60000 },
+    { id: "pasadia", dest: "islas", t: "Pasadía a Tintipán o Múcura", d: "Parada en Santa Cruz del Islote y día de playa. Desde Tolú o Coveñas incluye almuerzo isleño. Desde Rincón es más cerca y cuesta 70.000 p/p solo la lancha (8:30 a 15:30): el almuerzo va aparte (mojarra unos 35.000) y se puede llevar comida.", lvl: "must", cost: 242000 },
+    { id: "biolum", dest: "rincon", t: "Bioluminiscencia en Rincón del Mar", d: "Con Isla de los Pájaros al atardecer. Se ve mejor sin luna: del 3 al 6 de noviembre las primeras horas de la noche están oscuras. En lancha grande y en buen estado. Precio por confirmar con JJ Tour del Mar.", lvl: "must", cost: 90000, night: true },
+    { id: "manglar", dest: "rincon", t: "Manglar con Mundo Verde", d: "Recorrido con guías locales; a veces se ven perezosos.", lvl: "opt", cost: 50000 },
+    { id: "tolu", dest: "golfo", t: "Malecón de Tolú en bicitaxi", d: "Atardecer y comida callejera. Plan suave.", lvl: "good", cost: 30000, light: true },
+    { id: "centro", dest: "ctg", t: "Ciudad Amurallada a pie", d: "Centro y San Diego temprano, Las Bóvedas y Museo del Oro (gratis). Atardecer en la muralla.", lvl: "must", cost: 0 },
+    { id: "careteo", dest: "islas", t: "Careteo en Múcura", d: "30 minutos con chaleco y guía, durante la pasadía.", lvl: "opt", cost: 70000, addon: "pasadia" },
+    { id: "anteros", dest: "golfo", t: "Bahía de Cispatá y Playa Blanca de San Antero", d: "Van desde la vía a Lorica (4.000 p/p) y moto a la playa (10.000). Tour de 2 horas por la bahía con caimanes, túnel de manglar y ostras (30.000 a 40.000 p/p). Medio día. El volcán de lodo ya colapsó.", lvl: "opt", cost: 100000 },
+    { id: "arrecife", dest: "golfo", t: "Lancha a los arrecifes de Coveñas", d: "20 a 30 minutos de snorkel; el mar suele estar brusco.", lvl: "opt", cost: 100000 },
+    { id: "frances", dest: "golfo", t: "Playa El Francés y snorkel", d: "A 20 minutos de Tolú en mototaxi, cerca de La Alegría y Guacamayas. Agua clara para caretear: llevar careta propia.", lvl: "opt", cost: 40000 },
+    { id: "museo", dest: "golfo", t: "Museo de Infantería de Marina", d: "En Coveñas, gratis y con guía. Buen plan si llueve.", lvl: "opt", cost: 0, light: true },
+    { id: "boca", dest: "golfo", t: "Boca de la Ciénaga", d: "Playa tranquila donde la ciénaga sale al mar, con kayak y snorkel.", lvl: "opt", cost: 20000, light: true },
+    { id: "islafuerte", dest: "golfo", t: "Pasadía a Isla Fuerte", d: "Día completo saliendo por Lorica, unos 60.000 p/p la lancha más el transporte. Isla menos concurrida, alternativa a San Bernardo.", lvl: "opt", cost: 180000 },
+    { id: "tranquila", dest: "rincon", t: "Playa Tranquila de día", d: "Playa solitaria caminando desde el pueblo. Volver antes del atardecer: la marea sube.", lvl: "good", cost: 0, light: true },
+    { id: "getsemani", dest: "ctg", t: "Getsemaní de noche", d: "Murales del Callejón Angosto y ambiente de la Plaza de la Trinidad. Gratis.", lvl: "good", cost: 0, night: true },
+    { id: "muralla", dest: "ctg", t: "Atardecer en la muralla", d: "Caminar la muralla de Santo Domingo a San Diego al caer el sol. Gratis.", lvl: "good", cost: 0, light: true },
+    { id: "walking", dest: "ctg", t: "Free walking tour por el Centro", d: "Unas 2 horas con guía local; se paga propina (unos 20.000 p/p).", lvl: "opt", cost: 40000 },
+    { id: "inquisicion", dest: "ctg", t: "Palacio de la Inquisición", d: "En la Plaza de Bolívar, al lado del Museo del Oro.", lvl: "opt", cost: 44000 }
+  ];
+  const LVL = { must: "Imperdible", good: "Vale la pena", opt: "Opcional", own: "Propio" };
+  const ACT_ICON = { frances: "ph-person-simple-swim", museo: "ph-anchor-simple", boca: "ph-sun-horizon", islafuerte: "ph-island", tranquila: "ph-sun", getsemani: "ph-paint-brush", muralla: "ph-sun-horizon", walking: "ph-users", cienaga: "ph-boat", pasadia: "ph-island", biolum: "ph-sparkle", manglar: "ph-tree", tolu: "ph-bicycle", centro: "ph-person-simple-walk", careteo: "ph-goggles", anteros: "ph-mountains", arrecife: "ph-fish", inquisicion: "ph-bank" };
+  const ACT_PAY = { inquisicion: "tarjeta", museo: "tarjeta", getsemani: "tarjeta", muralla: "tarjeta" };
+  const SHORT = { frances: "El Francés", museo: "Museo", boca: "Boca", islafuerte: "Isla Fuerte", tranquila: "Playa Tranquila", getsemani: "Getsemaní", muralla: "Muralla", walking: "Walking tour", cienaga: "Ciénaga", tolu: "Malecón", anteros: "San Antero", arrecife: "Arrecifes", pasadia: "Pasadía", manglar: "Manglar", centro: "Ciudad Amurallada", inquisicion: "Inquisición", biolum: "Bioluminiscencia", careteo: "Careteo" };
+  const DNAME_SHORT = { golfo: "Tolú", rincon: "Rincón", ctg: "Cartagena", islas: "Islas" };
+  const PAS = { hi: 140000, lo: 100000, rincon: 70000, park: 11000, islote: 10000 };
+  const BAG = 90000, LOWCOST = ["JetSMART", "Wingo"], LUNCH = 0.35, CAP = 150000, AVG = 120000;
+  const CASH_FOOD = { golfo: 0.5, rincon: 1, ctg: 0 };
+
+  /* ---------- Estado ---------- */
+  const KEY = "caribe-v5";
+  const DEFAULT = { pu: "p2", out: "sab", back: "dom", n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "floral", rincon: "cangrejo", ctg: "sanfelipe" }, food: "no",
+    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: {}, over: {}, custom: [] };
+  const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+                  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+  const enc = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const dec = s => JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/")))));
+  const undash = s => String(s == null ? "" : s).replace(/[\u2013\u2014]/g, "-");
+  const isObj = o => o && typeof o === "object" && !Array.isArray(o);
+  function norm(o) {
+    const s = structuredClone(DEFAULT); if (!isObj(o)) return s;
+    if (PUENTES[o.pu]) s.pu = o.pu;
+    const p = PUENTES[s.pu];
+    s.out = p.out[o.out] ? o.out : (p.out[DEFAULT.out] ? DEFAULT.out : Object.keys(p.out)[0]);
+    s.back = p.back[o.back] ? o.back : (p.back[DEFAULT.back] ? DEFAULT.back : Object.keys(p.back)[0]);
+    DESTS.forEach(d => {
+      const v = isObj(o.n) ? Number(o.n[d.id]) : NaN; if (Number.isFinite(v) && v >= d.min && v <= 20) s.n[d.id] = Math.round(v);
+      if (isObj(o.h) && d.hotels.some(h => h.id === o.h[d.id])) s.h[d.id] = o.h[d.id];
+    });
+    if (FOOD.some(f => f.id === o.food)) s.food = o.food;
+    if (isObj(o.acts)) for (const k in o.acts) s.acts[k] = !!o.acts[k];
+    const g = Number(o.goal); if (Number.isFinite(g) && g >= 500000 && g <= 50000000) s.goal = Math.round(g);
+    s.bag = !!o.bag;
+    if (typeof o.cont === "number" && Number.isFinite(o.cont)) s.cont = Math.min(20, Math.max(0, Math.round(o.cont)));
+    if (isObj(o.notes)) for (const k in o.notes) if (/^\d{4}-\d{2}-\d{2}$/.test(k) && typeof o.notes[k] === "string" && o.notes[k].trim()) s.notes[k] = undash(o.notes[k]).slice(0, 1000);
+    if (isObj(o.pin)) for (const k in o.pin) if (/^\d{4}-\d{2}-\d{2}$/.test(o.pin[k])) s.pin[k] = o.pin[k];
+    if (isObj(o.over)) for (const k in o.over) { const v = Number(o.over[k]); if (Number.isFinite(v) && v >= 0 && v < 1e8 && /^(h|f|a|pas|bag)\b/.test(k)) s.over[k] = Math.round(v); }
+    if (Array.isArray(o.custom)) s.custom = o.custom.filter(c => isObj(c) && c.id && c.t).slice(0, 30).map(c => ({
+      id: String(c.id).replace(/[^\w-]/g, "").slice(0, 20) || "c" + Math.random().toString(36).slice(2, 8), t: undash(c.t).slice(0, 80),
+      dest: DESTS.some(d => d.id === c.dest) ? c.dest : "golfo", cost: Math.max(0, Math.round(Number(c.cost) || 0)),
+      pay: c.pay === "tarjeta" ? "tarjeta" : "efectivo", kind: ["dia", "tarde", "noche"].includes(c.kind) ? c.kind : "dia" }));
+    return s;
+  }
+  function hashState() { const m = location.hash.match(/p=([\w-]+)/); if (!m) return null; try { return dec(m[1]); } catch (e) { return null; } }
+  let saved = store.get(KEY, null); if (!saved) saved = store.get("caribe-v4", null);
+  const HS = hashState();
+  const firstTime = !saved && !HS;
+  let S, pendingShared = null;
+  if (HS && saved && enc(norm(HS)) !== enc(norm(saved))) { S = norm(saved); pendingShared = norm(HS); }
+  else S = norm(HS || saved);
+
+  /* ---------- Utilidades ---------- */
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const fmt = n => "$" + Math.round(n).toLocaleString("es-CO");
+  const fmtV = n => (Math.round(n) < 0 ? "−" : "") + fmt(Math.abs(n));
+  const fmtSigned = n => (n > 0 ? "+" : "−") + fmt(Math.abs(n));
+  const short = n => "$" + (n / 1e6).toLocaleString("es-CO", { maximumFractionDigits: 1 }) + " M";
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const D = s => new Date(s + "T12:00:00");
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const addDays = (d, k) => { const x = new Date(d); x.setDate(x.getDate() + k); return x; };
+  const WD = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const WDS = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  const MO = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  const MN = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const dlabel = d => { d = typeof d === "string" ? D(d) : d; return `${WDS[d.getDay()]} ${d.getDate()} ${MO[d.getMonth()]}`; };
+  const dlong = d => { d = typeof d === "string" ? D(d) : d; return `${WD[d.getDay()]} ${d.getDate()} de ${MN[d.getMonth()]}`; };
+  const noches = n => `${n} ${n === 1 ? "noche" : "noches"}`;
+  const destName = id => id === "islas" ? "Islas de San Bernardo" : DESTS.find(d => d.id === id).name;
+  const P = () => PUENTES[S.pu];
+  const totalNights = () => Math.round((D(P().back[S.back].date) - D(P().out[S.out].date)) / 864e5);
+  const sumNights = () => DESTS.reduce((s, d) => s + S.n[d.id], 0);
+  const hotelOf = d => d.hotels.find(h => h.id === S.h[d.id]);
+  const ov = (k, def) => Object.prototype.hasOwnProperty.call(S.over, k) ? S.over[k] : def;
+  const rateOf = h => h && h.rate[S.pu] ? ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]) : null;
+  const fPrice = (side, k) => ov(`f.${S.pu}.${side}.${k}`, P()[side][k].price);
+  const hm = t => { const m = String(t).trim().match(/^(\d{1,2}):(\d{2})/); return m ? (+m[1]) * 60 + (+m[2]) : null; };
+  const hmStr = min => { min = ((min % 1440) + 1440) % 1440; return `${Math.floor(min / 60)}:${String(min % 60).padStart(2, "0")}`; };
+  const alHora = min => (Math.floor((((min % 1440) + 1440) % 1440) / 60) === 1 ? "a la " : "a las ") + hmStr(min);
+  const depOf = f => hm(f.time.split("→")[0]);
+  const arrOf = f => { const p = f.time.split("→"); return p[1] ? hm(p[1]) : null; };
+  const lateArrival = f => { const a = arrOf(f); return a !== null && a >= 18 * 60; };
+  const earlyBack = f => depOf(f) < 9 * 60;
+  const mapsURL = (h, d) => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${h.name}, ${d.id === "golfo" ? h.where.split(",")[0] + ", Sucre" : d.id === "rincon" ? "Rincón del Mar, San Onofre, Sucre" : "Cartagena, Bolívar"}, Colombia`);
+  function parseMoney(str) {
+    const s = String(str).toLowerCase().replace(/\s+/g, "");
+    if (!s) return null;
+    const m = s.match(/^\$?(\d+(?:[.,]\d+)?)(m|mill|millon|millón|millones|mm)$/);
+    if (m) return Math.round(parseFloat(m[1].replace(",", ".")) * 1e6);
+    const digits = s.replace(/\D/g, "");
+    return digits ? +digits : null;
+  }
+  function fixHotels() {
+    DESTS.forEach(d => { const h = hotelOf(d); if (!h || !h.rate[S.pu]) { const ok = d.hotels.find(x => x.rate[S.pu]); if (ok) S.h[d.id] = ok.id; } });
+  }
+  function balance() {
+    let diff = totalNights() - sumNights(), guard = 50;
+    const order = ["ctg", "golfo", "rincon"];
+    const most = cond => DESTS.filter(cond).sort((a, b) => S.n[b.id] - S.n[a.id] || order.indexOf(a.id) - order.indexOf(b.id))[0];
+    while (diff > 0 && guard--) { const d = most(() => true); S.n[d.id]++; diff--; }
+    while (diff < 0 && guard--) { const d = most(x => S.n[x.id] > x.min); if (!d) break; S.n[d.id]--; diff++; }
+  }
+  function workdays() {
+    const a = D(P().out[S.out].date), b = D(P().back[S.back].date); let n = 0;
+    for (let d = new Date(a); d <= b; d = addDays(d, 1)) { const w = d.getDay(); if (w > 0 && w < 6 && iso(d) !== P().festivo) n++; }
+    return n;
+  }
+  function priceMeta(key) {
+    const [k, a, b, c] = key.split(".");
+    if (k === "h") { for (const d of DESTS) { const h = d.hotels.find(x => x.id === b); if (h) return { label: `${h.name}, la noche (${PUENTES[a].label})`, def: h.rate[a] || 0, est: false }; } }
+    if (k === "f") { const v = PUENTES[a][b][c]; return { label: `Vuelo ${b === "out" ? "de ida" : "de regreso"}: ${v.air} ${DAYNAME[c].toLowerCase()} ${dlabel(v.date).split(" ").slice(1).join(" ")}, por persona`, def: v.price, est: false }; }
+    if (k === "a") { const x = ACTS.find(y => y.id === a); return { label: `${x.t}, para la pareja`, def: x.cost, est: false }; }
+    if (k === "pas") return { label: `Pasadía en temporada ${a === "hi" ? "alta (puente o fin de semana)" : "baja (entre semana)"}, por persona, sin parque ni Islote`, def: PAS[a], est: true };
+    if (k === "bag") return { label: "Maleta de mano, por trayecto y por persona", def: BAG, est: true };
+    return { label: key, def: 0, est: true };
+  }
+  const isEdited = key => Object.prototype.hasOwnProperty.call(S.over, key);
+  const tag = key => isEdited(key) ? `<span class="tag ed">editado</span>` : priceMeta(key).est ? `<span class="tag est">estimado</span>` : `<span class="tag ok">verificado 5 oct</span>`;
+
+  /* ---------- Planes ---------- */
+  function allActs() {
+    return ACTS.map(a => Object.assign({}, a, { pay: ACT_PAY[a.id] || "efectivo", icon: ACT_ICON[a.id] || "ph-star" }))
+      .concat(S.custom.map(c => ({ id: c.id, dest: c.dest, t: c.t, d: c.kind === "noche" ? "Plan propio de noche, no ocupa el día." : c.kind === "tarde" ? "Plan propio de medio día." : "Plan propio de día completo.",
+        lvl: "own", cost: c.cost, pay: c.pay, night: c.kind === "noche", light: c.kind === "tarde", custom: true, icon: "ph-star" })));
+  }
+  const actById = id => allActs().find(a => a.id === id);
+  function feasible(a) {
+    if (!a) return { ok: false, why: "" };
+    if (a.addon) { const b = actById(a.addon); return feasible(b).ok && S.acts[a.addon] ? { ok: true } : { ok: false, why: "Requiere la pasadía" }; }
+    if (a.id === "pasadia") {
+      const g = S.n.golfo, r = S.n.rincon;
+      if (g + r < 2) return { ok: false, why: "Necesitas al menos 2 noches entre Tolú y Rincón" };
+      if (g < 2 && r < 2) return { ok: false, why: "Necesitas 2 noches seguidas en Tolú o en Rincón: con 1 y 1 todos los días son de traslado" };
+      return { ok: true };
+    }
+    if (!S.n[a.dest]) return { ok: false, why: `Agrega al menos 1 noche en ${destName(a.dest)}` };
+    return { ok: true };
+  }
+  function actCost(a, it) {
+    if (a.id === "pasadia") { if (pasRincon(it)) return (ov("pas.rincon", PAS.rincon) + PAS.park + PAS.islote) * 2; const hi = pasHigh(it); return (ov(hi ? "pas.hi" : "pas.lo", hi ? PAS.hi : PAS.lo) + PAS.park + PAS.islote) * 2; }
+    if (a.custom) return a.cost;
+    return ov("a." + a.id, a.cost);
+  }
+  function pasRincon(it) { const pl = it && it.placed.pasadia; if (!pl) return false; const d = it.days.find(x => x.iso === pl.iso); return !!(d && d.loc === "rincon"); }
+  function pasHigh(it) { const pl = it && it.placed.pasadia; if (!pl) return false; const d = it.days.find(x => x.iso === pl.iso); return !!(d && (d.wkend || d.fest)); }
+
+  /* ---------- Itinerario ---------- */
+  function buildRoute() { const seq = []; DESTS.forEach(d => { for (let i = 0; i < S.n[d.id]; i++) seq.push(d.id); }); return seq; }
+  function allowedDays(a, days, N) {
+    if (!a || a.addon) return [];
+    if (a.id === "pasadia") return days.filter(d => d.i > (days[0] && days[0].late ? 1 : 0) && d.i < N && (d.loc === "golfo" || d.loc === "rincon") && !d.move);
+    return days.filter(d => d.i < N && d.loc === a.dest);
+  }
+  function itinerary() {
+    const p = P(), out = p.out[S.out], back = p.back[S.back], seq = buildRoute(), N = seq.length, start = D(out.date), late = lateArrival(out);
+    const days = [];
+    for (let i = 0; i <= N; i++) {
+      const date = addDays(start, i), k = iso(date), w = date.getDay(), loc = seq[i], prev = i === 0 ? "air" : seq[i - 1];
+      days.push({ i, date, iso: k, loc, stay: loc || seq[N - 1], fest: k === p.festivo, wkend: w === 0 || w === 6, move: i < N && loc !== prev ? prev + "-" + loc : null, items: [], eve: [], tarde: false, backup: false });
+    }
+    days[0].late = late;
+    days[0].items.push({ k: "flight", icon: "ph-airplane-takeoff", t: "Vuelo a Montería", d: `${out.air}, ${out.time}. ` + (late
+      ? "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más."
+      : MOVES["air-" + days[0].loc][0] + ".") });
+    days.forEach(d => { if (d.i > 0 && d.move) d.items.push({ k: "move", icon: "ph-bus", t: "Traslado a " + destName(d.loc), d: MOVES[d.move][0] + "." }); });
+    const acts = allActs().filter(a => S.acts[a.id] && feasible(a).ok), placed = {};
+    const hasAct = d => d.items.some(x => x.k === "act");
+    const isPas = d => d.items.some(x => x.act === "pasadia");
+    const put = (a, d, slot) => { d.items.push({ k: "act", icon: a.icon, t: a.t, d: a.d, act: a.id, slot }); placed[a.id] = { iso: d.iso, slot, loc: d.loc }; if (slot === "tarde") d.tarde = true; };
+    const putNight = (a, d) => { d.eve.push({ act: a.id, t: a.t, icon: a.icon }); placed[a.id] = { iso: d.iso, slot: "noche", loc: d.loc }; };
+    const al = a => allowedDays(a, days, N);
+    // 1. Planes que el usuario movió a mano (la pasadía primero)
+    acts.filter(a => S.pin[a.id]).sort((x, y) => (y.id === "pasadia") - (x.id === "pasadia")).forEach(a => {
+      const d = al(a).find(x => x.iso === S.pin[a.id]); if (!d) return;
+      if (a.night) { putNight(a, d); return; }
+      if (a.id === "pasadia") { if (!hasAct(d)) put(a, d, "dia"); return; }
+      if (isPas(d)) return;
+      put(a, d, hasAct(d) || d.move ? "tarde" : "dia");
+    });
+    // 2. Pasadía: nunca en traslado; evita el festivo; busca día de respaldo y, si se puede, entre semana
+    const pas = acts.find(a => a.id === "pasadia");
+    if (pas && !placed.pasadia) {
+      const all = al(pas), cands = all.filter(d => !hasAct(d));
+      const score = d => (d.fest ? 100 : 0) + (d.wkend ? 40 : 0) + (all.some(x => x.i > d.i) ? 0 : 15) + d.i * 0.1;
+      cands.sort((x, y) => score(x) - score(y));
+      if (cands[0]) put(pas, cands[0], "dia");
+    }
+    // 3. Complementos de la pasadía
+    acts.filter(a => a.addon && !placed[a.id]).forEach(a => {
+      const base = placed[a.addon]; if (!base) return;
+      const d = days.find(x => x.iso === base.iso), item = d.items.find(x => x.act === a.addon);
+      item.extra = (item.extra || []).concat(a.t); placed[a.id] = { iso: d.iso, slot: "dia", loc: d.loc, addon: true };
+    });
+    // 4. El resto: un plan de día por día libre; los suaves pueden ir en la tarde; los de noche no ocupan el día
+    const rank = { must: 0, good: 1, opt: 2, own: 3 };
+    acts.filter(a => !placed[a.id] && !a.addon && a.id !== "pasadia").sort((x, y) => rank[x.lvl] - rank[y.lvl]).forEach(a => {
+      const list = al(a);
+      if (a.night) { const d = list.find(x => !x.eve.length) || list[0]; if (d) putNight(a, d); return; }
+      const free = list.filter(d => !d.move && !hasAct(d));
+      if (a.light) {
+        const tardes = list.filter(d => !isPas(d) && !d.tarde && !(d.i === 0 && late));
+        const d = tardes.find(x => x.move) || free.find(x => x.fest) || free[0] || tardes[0];
+        if (d) put(a, d, d.move || hasAct(d) ? "tarde" : "dia");
+        return;
+      }
+      const d = free.find(x => !x.fest) || free[0];
+      if (d) put(a, d, "dia");
+    });
+    // 5. Día de respaldo para la pasadía
+    let pasDay = null, backup = null;
+    if (placed.pasadia) {
+      pasDay = days.find(x => x.iso === placed.pasadia.iso);
+      backup = al(pas).find(x => x.i > pasDay.i) || null;
+      if (backup) { backup.backup = true; backup.items.push({ k: "backup", icon: "ph-arrow-clockwise", t: "Respaldo de la pasadía", d: hasAct(backup) ? "Si el mar canceló la pasadía, se hace hoy y el plan de este día se cambia por playa." : "Si el mar canceló la pasadía, se hace hoy. Si no, playa y hamaca sin afán." }); }
+    }
+    // 6. Días libres
+    days.forEach(d => { if (d.i < N && !d.items.length) d.items.push({ k: "rest", icon: "ph-coffee", t: "Día libre", d: d.loc === "ctg" ? "Getsemaní sin afán, piscina o siesta y una buena comida." : "Playa, hamaca y nada más." }); });
+    // 7. Regreso: salir al aeropuerto 1 h 30 antes del vuelo
+    const dep = depOf(back), early = dep < 9 * 60;
+    days[N].items.push({ k: "flight", icon: "ph-airplane-landing", t: "Regreso a Bogotá", d: `${back.air}, ${back.time}. ` + (early
+      ? `Es de madrugada: hay que salir al aeropuerto ${alHora(dep - 90)}${dep < 300 ? " y la noche anterior no se duerme" : ""}. A esa hora no hay buses; el taxi desde Getsemaní cuesta cerca de $21.400.`
+      : `Salir al aeropuerto ${alHora(dep - 90)}. Bus urbano hasta el aeropuerto Rafael Núñez; el taxi cuesta cerca de $21.400.`) });
+    return { days, N, placed, unplaced: acts.filter(a => !placed[a.id]), pasDay, backup };
+  }
+
+  /* ---------- Costos ---------- */
+  function costs() {
+    const p = P(), out = p.out[S.out], back = p.back[S.back], seq = buildRoute(), it = itinerary(), rows = [];
+    const fl = (fPrice("out", S.out) + fPrice("back", S.back)) * 2;
+    rows.push({ t: "Vuelos, 2 personas", v: fl, cat: "vuelos" });
+    const legs = [out, back].filter(f => LOWCOST.includes(f.air)).length, bagV = ov("bag", BAG), bag = S.bag ? legs * 2 * bagV : 0;
+    if (bag) rows.push({ t: `Maleta de mano, ${legs} ${legs === 1 ? "trayecto" : "trayectos"} por 2`, v: bag, cat: "vuelos", est: !isEdited("bag") });
+    let lodging = 0;
+    DESTS.forEach(d => { const n = S.n[d.id]; if (!n) return; const h = hotelOf(d), r = rateOf(h) || 0; lodging += r * n; rows.push({ t: `${h.name}, ${noches(n)}`, v: r * n, cat: "hospedaje" }); });
+    let mv = 0, prev = "air"; seq.forEach(l => { if (l !== prev) { mv += MOVES[prev + "-" + l][1]; prev = l; } });
+    rows.push({ t: "Traslados en colectivo y bus", v: mv, cat: "traslados", est: true });
+    const local = (S.n.golfo + S.n.rincon > 0 ? 40000 : 0) + (S.n.ctg > 0 ? 60000 : 0);
+    rows.push({ t: "Transporte local (bicitaxi, mototaxi, bus urbano)", v: local, cat: "otros", est: true });
+    const days = totalNights() + 1, f = FOOD.find(x => x.id === S.food).v, lunch = Math.round(f * LUNCH);
+    rows.push({ t: `Comida, ${days} días`, v: f * 2 * days, cat: "comida" });
+    if (it.placed.pasadia && !pasRincon(it)) rows.push({ t: "Almuerzo incluido en la pasadía", v: -lunch * 2, cat: "comida" });
+    const ids = Object.keys(it.placed), list = allActs();
+    const plansV = ids.reduce((s, id) => { const a = list.find(x => x.id === id); return s + (a ? actCost(a, it) : 0); }, 0);
+    rows.push({ t: `Planes en el itinerario (${ids.length})`, v: plansV, cat: "planes" });
+    const sub = rows.reduce((s, r) => s + r.v, 0), cont = Math.round(sub * S.cont / 100);
+    rows.push({ t: `Imprevistos, ${S.cont}%`, v: cont, cat: "otros" });
+    const cats = { vuelos: 0, hospedaje: 0, traslados: 0, comida: 0, planes: 0, otros: 0 };
+    rows.forEach(r => cats[r.cat] += r.v);
+    return { rows, total: sub + cont, lodging, days, it, flights: fl + bag, plansN: ids.length, plansV, cats, bagLegs: legs, bagV, lunch, local };
+  }
+  function warnings(C) {
+    const W = [], p = P(), out = p.out[S.out], back = p.back[S.back], TN = totalNights(), SN = sumNights(), diff = TN - SN;
+    if (diff) W.push({ bad: true, icon: "ph-bed", txt: diff > 0 ? `Falta repartir ${noches(diff)}: van ${SN} de ${TN}.` : `Sobran ${noches(-diff)}: van ${SN} de ${TN}.`, btn: `<button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button>` });
+    DESTS.forEach(d => { if (!S.n[d.id]) return; const h = hotelOf(d), r = rateOf(h); if (r > CAP) W.push({ bad: true, icon: "ph-warning", txt: `${h.name} cuesta ${fmt(r)} la noche: pasa el tope de ${fmt(CAP)}.` }); });
+    const avg = C.lodging / Math.max(1, SN); if (avg > AVG) W.push({ bad: true, icon: "ph-warning", txt: `La noche promedio es ${fmt(avg)}: pasa el promedio de ${fmt(AVG)}.` });
+    if (lateArrival(out)) W.push({ bad: true, icon: "ph-moon", txt: `El vuelo de ida llega a Montería a las ${hmStr(arrOf(out))} y ya no hay colectivos. Toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.` });
+    if (earlyBack(back)) {
+      const dep = depOf(back), bd = D(back.date), prevDay = WD[addDays(bd, -1).getDay()];
+      W.push(dep < 300
+        ? { bad: true, icon: "ph-alarm", txt: `El regreso sale a las ${hmStr(dep)} del ${WD[bd.getDay()]}: hay que salir al aeropuerto ${alHora(dep - 90)}, así que la noche del ${prevDay} no se duerme aunque se paga. Considera regresar el ${prevDay}.` }
+        : { bad: false, icon: "ph-alarm", txt: `El regreso sale a las ${hmStr(dep)}: hay que salir al aeropuerto ${alHora(dep - 90)}.` });
+    }
+    if (C.it.unplaced.length) W.push({ bad: true, icon: "ph-calendar-x", txt: `No caben en el itinerario y no se cobran: ${C.it.unplaced.map(a => SHORT[a.id] || a.t).join(", ")}. Agrega una noche o desmarca otro plan.` });
+    const pas = actById("pasadia");
+    if (S.acts.pasadia && !feasible(pas).ok) W.push({ bad: false, icon: "ph-island", txt: `La pasadía está marcada pero no se puede: ${feasible(pas).why.charAt(0).toLowerCase() + feasible(pas).why.slice(1)}.` });
+    if (C.it.pasDay) {
+      const d = C.it.pasDay;
+      if (!C.it.backup) W.push({ bad: true, icon: "ph-arrow-clockwise", txt: "La pasadía no tiene día de respaldo: si el mar la cancela, no queda otro día para hacerla. Agrega una noche en Tolú o en Rincón." });
+      if (d.fest) W.push({ bad: true, icon: "ph-users-three", txt: `La pasadía cae en el festivo (${dlong(d.date)}): todo lleno y precio alto.` });
+      else if (d.wkend) W.push({ bad: false, icon: "ph-island", txt: `La pasadía cae en ${WD[d.date.getDay()]}, que es puente o fin de semana: precio alto (${fmt(ov("pas.hi", PAS.hi))} p/p). Entre semana cuesta ${fmt(ov("pas.lo", PAS.lo))} p/p.` });
+    }
+    if (!S.bag && C.bagLegs) W.push({ bad: false, icon: "ph-suitcase-rolling", txt: `${[...new Set([out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air))].join(" y ")} solo incluye un bolso pequeño. Si llevan maleta de mano, activa "Llevar maleta de mano" en Fechas y vuelos.` });
+    if (S.n.ctg && S.h.ctg === "dakema") W.push({ bad: false, icon: "ph-map-pin", txt: "Posada Dakema queda en Canapote, lejos del centro: cada día suma transporte." });
+    W.push(...wxWarnings(C));
+    const gap = S.goal - C.total; if (gap < 0) W.push({ bad: true, icon: "ph-wallet", txt: `El total se pasa de la meta por ${fmt(-gap)}.` });
+    return W;
+  }
+  function cashPlan(C) {
+    const it = C.it, f = FOOD.find(x => x.id === S.food).v, seq = buildRoute(), list = allActs();
+    return DESTS.filter(d => S.n[d.id]).map(d => {
+      const lines = [], n = S.n[d.id], h = hotelOf(d);
+      if (/solo efectivo/i.test(h.info)) lines.push([`${h.name} (solo efectivo)`, (rateOf(h) || 0) * n]);
+      const idx = seq.indexOf(d.id), mvKey = (idx === 0 ? "air" : seq[idx - 1]) + "-" + d.id;
+      if (MOVES[mvKey]) lines.push(["Traslado para llegar", MOVES[mvKey][1]]);
+      Object.entries(it.placed).forEach(([id, pl]) => { const a = list.find(x => x.id === id); if (a && pl.loc === d.id && a.pay !== "tarjeta") { const v = actCost(a, it); if (v) lines.push([SHORT[id] || a.t, v]); } });
+      if (CASH_FOOD[d.id]) lines.push([CASH_FOOD[d.id] === 1 ? "Comida, todo en efectivo" : "Comida, la mitad en efectivo", f * 2 * n * CASH_FOOD[d.id]]);
+      const loc = d.id === "ctg" ? 60000 : (d.id === "golfo" || !S.n.golfo ? 40000 : 0); if (loc) lines.push(["Transporte local", loc]);
+      const total = Math.ceil(lines.reduce((s, l) => s + l[1], 0) / 10000) * 10000;
+      return { d, lines, total };
+    });
+  }
+
+  /* ---------- Render ---------- */
+  let LAST = null, prevTotal = null;
+  function pickBtn(on, html, attrs, dis) { return `<button type="button" class="pick" role="radio" aria-checked="${on}" ${attrs} ${dis ? "disabled" : ""}>${html}</button>`; }
+  function captureFocus() {
+    const ae = document.activeElement; if (!ae || ae === document.body) return null;
+    const attrs = Array.from(ae.attributes).filter(a => a.name.startsWith("data-")); if (!attrs.length) return null;
+    const q = v => (window.CSS && CSS.escape) ? CSS.escape(v) : String(v).replace(/"/g, '\\"');
+    return { root: ae.closest("dialog"), sel: ae.tagName.toLowerCase() + attrs.map(a => `[${a.name}="${q(a.value)}"]`).join("") };
+  }
+  function restoreFocus(f) {
+    if (!f) return; const root = f.root && f.root.open ? f.root : document.querySelector("main"); if (!root) return;
+    const el = root.querySelector(f.sel); if (el && document.activeElement !== el) { try { el.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function persist() {
+    store.set(KEY, S);
+    try { history.replaceState(null, "", location.pathname + location.search + "#p=" + enc(S)); } catch (e) {}
+  }
+  function render(save = true) {
+    const fs = captureFocus();
+    fixHotels();
+    const C = costs(); LAST = C;
+    renderTop(C); renderWxStrip(); renderArmar(C); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
+    refreshSheets();
+    restoreFocus(fs);
+    if (save) persist();
+  }
+  function renderTop(C) {
+    const p = P(), TN = totalNights(), SN = sumNights(), diff = TN - SN, nd = DESTS.filter(d => S.n[d.id]);
+    $("[data-eyebrow]").textContent = `${p.label} · ${cap(dlabel(p.out[S.out].date))} a ${dlabel(p.back[S.back].date)}`;
+    const tt = $("[data-trip-title]");
+    if (diff) { tt.innerHTML = `<span class="t-long">Faltan noches: van ${SN} de ${TN}. Repártelas en Armar</span><span class="t-short">Van ${SN} de ${TN} noches</span>`; tt.className = "bad"; }
+    else { tt.innerHTML = `<span class="t-long">${noches(TN)} · ${nd.map(d => `${DNAME_SHORT[d.id]} ${S.n[d.id]}`).join(", ")}</span><span class="t-short">${noches(TN)} · ${nd.length} ${nd.length === 1 ? "destino" : "destinos"}</span>`; tt.className = ""; }
+    const t = Math.round(C.total);
+    $("[data-f-total]").textContent = fmt(t);
+    const gap = S.goal - t, tg = $("[data-top-goal]");
+    if (diff) { tg.textContent = "incompleto"; tg.className = "g over"; }
+    else { tg.textContent = gap >= 0 ? `total pareja · sobran ${short(gap)}` : `se pasa por ${short(-gap)}`; tg.className = gap >= 0 ? "g" : "g over"; }
+    const m = $("[data-meter]"); m.style.width = Math.min(100, t / S.goal * 100) + "%"; m.className = gap < 0 ? "over" : "";
+    if (prevTotal !== null && t !== prevTotal) {
+      const pill = $("[data-diff]"); pill.textContent = fmtSigned(t - prevTotal); pill.className = "diff " + (t > prevTotal ? "up" : "down");
+      void pill.offsetWidth; pill.classList.add("show"); clearTimeout(renderTop.tm); renderTop.tm = setTimeout(() => pill.classList.remove("show"), 2200);
+    }
+    prevTotal = t;
+  }
+  function warnHTML(W) { return W.map(w => `<div class="alert ${w.bad ? "bad" : ""}"><i class="ph ${w.icon}" aria-hidden="true"></i><div>${w.txt}${w.btn ? `<div>${w.btn}</div>` : ""}</div></div>`).join(""); }
+  function renderArmar(C) {
+    const p = P(), out = p.out[S.out], back = p.back[S.back], TN = totalNights(), SN = sumNights(), diff = TN - SN, W = warnings(C);
+    const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12), left = Math.round((D(out.date) - today) / 864e5), cd = $("[data-countdown]");
+    cd.hidden = left < 0; cd.innerHTML = `<i class="ph ph-hourglass-medium" aria-hidden="true"></i>` + (left > 1 ? `Faltan ${left} días` : left === 1 ? "Falta 1 día" : "Es hoy");
+    $("[data-intro]").hidden = !(firstTime && !store.get("caribe-intro-off", false));
+    const nb = W.filter(w => w.bad).length;
+    $("[data-warn-armar]").innerHTML = W.length ? `<details class="warnbox ${nb ? "bad" : ""}"><summary><i class="ph ${nb ? "ph-warning" : "ph-info"}" aria-hidden="true"></i><b>${W.length} ${W.length === 1 ? "aviso" : "avisos"}${nb ? ` · ${nb} ${nb === 1 ? "importante" : "importantes"}` : ""}</b><i class="ph ph-caret-down car" aria-hidden="true"></i></summary>${warnHTML(W)}</details>` : "";
+    // Fechas
+    $("[data-sum=fechas]").textContent = `${cap(dlabel(out.date))} a ${dlabel(back.date)} · ${fmt(C.flights)}`;
+    $("[data-puente]").innerHTML = Object.entries(PUENTES).map(([k, v]) => pickBtn(S.pu === k, `<b>${v.label}</b><span>${v.sub}</span>`, `data-set="pu" data-v="${k}"`)).join("");
+    const fl = side => Object.entries(p[side]).map(([k, v]) => { const key = `f.${S.pu}.${side}.${k}`, pr = ov(key, v.price);
+      return pickBtn(S[side] === k, `<b class="fl-h"><i class="ph-fill ${side === "out" ? "ph-airplane-takeoff" : "ph-airplane-landing"}" aria-hidden="true"></i>${DAYNAME[k]} ${+v.date.slice(8)} ${MO[+v.date.slice(5, 7) - 1]}</b><span>${v.air} ${v.time}</span><span class="num">${fmt(pr)}${isEdited(key) ? " · editado" : ""}</span>${v.warn ? `<span class="warn-t">${v.warn}</span>` : ""}${v.note ? `<span>${v.note}</span>` : ""}`, `data-set="${side}" data-v="${k}"`); }).join("");
+    $("[data-out]").innerHTML = fl("out"); $("[data-back]").innerHTML = fl("back");
+    const pl = (side, k, word) => { const key = `f.${S.pu}.${side}.${k}`; return `<span>${word}: <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>${tag(key)}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button>`; };
+    $("[data-price-out]").innerHTML = pl("out", S.out, "Ida elegida");
+    $("[data-price-back]").innerHTML = pl("back", S.back, "Regreso elegido");
+    $("[data-bag]").innerHTML = C.bagLegs ? `<label class="switch-row"><input type="checkbox" role="switch" data-bag-toggle ${S.bag ? "checked" : ""}><span class="sw" aria-hidden="true"></span><span class="txt"><b>Llevar maleta de mano</b><span>${[out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air).join(" y ")} solo incluye un bolso pequeño. ${fmt(C.bagV)} por trayecto por persona: ${fmt(C.bagLegs * 2 * C.bagV)} en total.</span></span></label><div class="price-line">${tag("bag")}<button type="button" class="link-btn" data-edit="bag"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio de la maleta</button></div>` : "";
+    $("[data-tripinfo]").innerHTML = `<span class="chip"><i class="ph ph-calendar" aria-hidden="true"></i>${TN + 1} días, ${noches(TN)}</span><span class="chip"><i class="ph ph-briefcase" aria-hidden="true"></i>${workdays()} días laborales</span><span class="chip warn"><i class="ph ph-cloud-rain" aria-hidden="true"></i>${p.weather}</span>`;
+    // Noches
+    $("[data-sum=noches]").innerHTML = `${DESTS.filter(d => S.n[d.id]).map(d => `${DNAME_SHORT[d.id]} ${S.n[d.id]}`).join(" · ")} · <span class="cnt ${diff ? "bad" : ""}">${SN} de ${noches(TN)}</span>`;
+    $("[data-nights-alert]").innerHTML = diff === 0 ? `<div class="alert"><i class="ph ph-check-circle" aria-hidden="true"></i><div>Las ${TN} noches están repartidas.</div></div>`
+      : `<div class="alert bad"><i class="ph ph-warning" aria-hidden="true"></i><div>${diff > 0 ? `Falta repartir ${noches(diff)}.` : `Sobran ${noches(-diff)}: quita en algún destino.`} Van ${SN} de ${TN}.<div><button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button></div></div></div>`;
+    $("[data-dests]").innerHTML = DESTS.map(d => {
+      const n = S.n[d.id], h = hotelOf(d), r = rateOf(h), key = `h.${S.pu}.${h.id}`;
+      return `<div class="dest c-${d.id} ${n ? "" : "off"}">
+        <div class="dest-head"><span class="dest-ic"><i class="ph ${d.icon}" aria-hidden="true"></i></span><div class="dest-name"><b>${d.name}</b><small>${d.blurb}</small></div>
+          <div class="stepper" role="group" aria-label="Noches en ${d.name}"><button type="button" data-step="${d.id}" data-d="-1" aria-label="Quitar una noche en ${d.name}" ${n <= d.min ? "disabled" : ""}>&minus;</button><output>${noches(n)}</output><button type="button" data-step="${d.id}" data-d="1" aria-label="Agregar una noche en ${d.name}">+</button></div></div>
+        ${n ? `<div class="hotel-sel"><div class="hs-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span><span class="tags">${tag(key)}${r > CAP ? `<span class="tag bad">Pasa el tope</span>` : ""}${/solo efectivo/i.test(h.info) ? `<span class="tag cash">Solo efectivo</span>` : ""}</span></div>
+          <div class="hs-price"><b class="num">${fmt(r)}</b><span>la noche</span><span class="num">${noches(n)}: ${fmt(r * n)}</span></div>
+          <div class="hs-act"><button type="button" class="mini" data-hsheet="${d.id}"><i class="ph ph-swap" aria-hidden="true"></i>Cambiar</button><a class="mini" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a></div></div>`
+        : `<p class="small muted" style="margin-top:8px">Sin noches aquí. Toca + para incluir ${d.name}.</p>`}
+      </div>`;
+    }).join("");
+    // Comida
+    const food = FOOD.find(f => f.id === S.food);
+    $("[data-sum=comida]").textContent = `${food.name} · ${fmt(food.v)} p/p/día`;
+    $("[data-food]").innerHTML = FOOD.map(f => pickBtn(S.food === f.id, `<b>${f.name}</b><span>${f.sub}</span>`, `data-set="food" data-v="${f.id}"`)).join("");
+    // Planes
+    const un = C.it.unplaced.length;
+    $("[data-sum=planes]").innerHTML = `${C.plansN} ${C.plansN === 1 ? "plan" : "planes"} · ${fmt(C.plansV)}${un ? ` · <span class="cnt bad">${un} no ${un === 1 ? "cabe" : "caben"}</span>` : ""}`;
+    const list = allActs();
+    $("[data-acts]").innerHTML = ["golfo", "islas", "rincon", "ctg"].map(g => {
+      const acts = list.filter(a => a.dest === g); if (!acts.length) return "";
+      return `<div class="stage-opts c-${g}"><h3><i class="ph ${g === "islas" ? "ph-island" : DESTS.find(d => d.id === g).icon}" aria-hidden="true"></i>${destName(g)}</h3><div class="acts">${acts.map(a => actRow(a, C)).join("")}</div></div>`;
+    }).join("");
+  }
+  function actRow(a, C) {
+    const f = feasible(a), on = !!S.acts[a.id] && f.ok, pl = C.it.placed[a.id], noFit = on && !pl, cost = actCost(a, C.it);
+    let status = "";
+    if (!f.ok) status = `<span class="why"><i class="ph ph-lock-simple" aria-hidden="true"></i>${f.why}</span>`;
+    else if (noFit) status = `<span class="nofit"><i class="ph ph-warning" aria-hidden="true"></i>${a.addon ? "No cabe: la pasadía no tiene día" : "No cabe: agrega una noche o desmarca otro plan"}</span>`;
+    else if (pl) status = `<span class="when"><i class="ph ph-calendar-check" aria-hidden="true"></i>${cap(dlabel(pl.iso))}${pl.slot === "tarde" ? " · en la tarde" : pl.slot === "noche" ? " · de noche" : ""}${S.pin[a.id] && !pl.addon ? " · movido a mano" : ""}</span>`;
+    let key = null; if (a.id === "pasadia") key = pasHigh(C.it) ? "pas.hi" : "pas.lo"; else if (!a.custom) key = "a." + a.id;
+    const extra = a.id === "pasadia" ? `<span class="desc">Desde Tolú o Coveñas: alta (puente o fin de semana) ${fmt(ov("pas.hi", PAS.hi))} p/p; baja ${fmt(ov("pas.lo", PAS.lo))} p/p, con almuerzo. Desde Rincón: ${fmt(ov("pas.rincon", PAS.rincon))} p/p solo lancha. Más parque ${fmt(PAS.park)} e Islote ${fmt(PAS.islote)} p/p. Incluye el almuerzo.</span>` : "";
+    const tools = a.custom
+      ? `<span class="tools"><button type="button" class="icon-btn" data-cedit="${a.id}" aria-label="Editar ${esc(a.t)}"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button><button type="button" class="icon-btn" data-cdel="${a.id}" aria-label="Borrar ${esc(a.t)}"><i class="ph ph-trash" aria-hidden="true"></i></button></span>`
+      : (cost || isEdited(key) ? `<span class="tools"><button type="button" class="icon-btn" data-edit="${key}" aria-label="Editar precio de ${esc(a.t)}"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button></span>` : "");
+    return `<div class="act ${f.ok ? "" : "dis"} ${noFit ? "nofit-row" : ""}">
+      <label class="act-main"><input type="checkbox" data-act="${a.id}" ${on ? "checked" : ""} ${f.ok ? "" : "disabled"}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span>
+        <span class="txt"><b>${esc(a.t)}</b><span class="lvl ${a.lvl}">${LVL[a.lvl]}</span><span class="desc">${esc(a.d)}</span>${extra}${status}</span></label>
+      <div class="act-side"><span class="cost num ${noFit ? "strike" : ""}">${cost ? fmt(cost) : "Gratis"}</span><small>${noFit ? "no se cobra" : "la pareja"} · ${a.pay === "tarjeta" ? "tarjeta" : "efectivo"}</small>${key && cost ? tag(key) : a.custom ? `<span class="tag ed">propio</span>` : ""}${tools}</div>
+    </div>`;
+  }
+  function renderCostos(C) {
+    const TN = totalNights();
+    $("[data-warn-costos]").innerHTML = warnHTML(warnings(C).filter(w => w.bad));
+    $("[data-total]").textContent = fmt(C.total);
+    $("[data-pp]").textContent = fmt(C.total / 2);
+    $("[data-pd]").textContent = fmt(C.total / C.days);
+    $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
+    const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
+    const gap = S.goal - C.total, gs = $("[data-goal-state]");
+    gs.className = "goal-state " + (gap >= 0 ? "ok" : "over"); gs.textContent = gap >= 0 ? `Sobran ${fmt(gap)}` : `Se pasa por ${fmt(-gap)}`;
+    const cr = $("[data-cont]"); if (document.activeElement !== cr) cr.value = S.cont; $("[data-cont-out]").textContent = S.cont + "%";
+    $("[data-f-days]").textContent = TN + 1;
+    $("[data-f-work]").textContent = workdays();
+    $("[data-f-night]").textContent = fmt(C.lodging / Math.max(1, sumNights()));
+    $("[data-wa-share]").href = "https://wa.me/?text=" + encodeURIComponent(shareText(C) + "\n" + shareURL());
+    const cash = cashPlan(C), tot = cash.reduce((s, c) => s + c.total, 0);
+    $("[data-cash]").innerHTML = `<div class="cash-grid">${cash.map(c => `<div class="cash-d c-${c.d.id}"><h3><i class="ph ${c.d.icon}" aria-hidden="true"></i>${c.d.name}</h3><div class="lines">${c.lines.map(l => `<div>${esc(l[0])}</div><div class="num">${fmt(l[1])}</div>`).join("")}</div><p class="tt num">${fmt(c.total)}</p></div>`).join("")}</div><p class="sub" style="margin-top:10px">En total, lleven cerca de <b class="num">${fmt(tot)}</b> en efectivo repartidos entre los dos.</p>`;
+  }
+  function moveChip(mv) { return `<span class="chip move"><i class="ph ph-bus" aria-hidden="true"></i>${MOVE_MODE[mv]} · ${MOVE_T[mv]} · ${fmt(MOVES[mv][1])} la pareja · estimado</span>`; }
+  function itemHTML(it) {
+    const slot = it.slot === "tarde" ? `<span class="slot">en la tarde</span>` : "";
+    return `<div class="it ${it.k === "flight" ? "flight" : ""}"><i class="${it.k === "flight" ? "ph-fill" : "ph"} ${it.icon || "ph-star"}" aria-hidden="true"></i><div><h4>${esc(it.t)}${slot}</h4><p>${esc(it.d)}${it.extra ? " Con " + it.extra.map(x => x.toLowerCase()).join(" y ") + "." : ""}</p></div></div>`;
+  }
+  function dayMain(d, it) {
+    if (d.i === 0) return { icon: "ph-airplane-takeoff", lb: "Vuelo de ida", fly: true };
+    if (d.i === it.N) return { icon: "ph-airplane-landing", lb: "Vuelo de regreso", fly: true };
+    const a = d.items.find(x => x.k === "act" && x.slot !== "tarde");
+    if (a) return { icon: a.icon || "ph-star", lb: SHORT[a.act] || a.t };
+    if (d.move) return { icon: "ph-bus", lb: "Traslado a " + DNAME_SHORT[d.loc] };
+    const b = d.items.find(x => x.k === "act"); if (b) return { icon: b.icon || "ph-star", lb: SHORT[b.act] || b.t };
+    if (d.backup) return { icon: "ph-arrow-clockwise", lb: "Respaldo" };
+    return { icon: "ph-coffee", lb: "Libre" };
+  }
+  const emptyItin = () => `<div class="empty"><p>Faltan o sobran noches: van ${sumNights()} de ${totalNights()}.</p><p>Repártelas en Armar o deja que la app lo haga.</p><button type="button" class="mini primary" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button></div>`;
+  /* ---------- Clima (Open-Meteo, sin clave) ---------- */
+  const WX_PTS = { golfo: [9.52, -75.58], rincon: [9.77, -75.64], islas: [9.79, -75.84], ctg: [10.42, -75.54] };
+  const WX_NAME = { golfo: "Tolú", rincon: "Rincón", islas: "Tintipán", ctg: "Cartagena" };
+  const WX_SEA = [9.75, -75.85];
+  const WX_KEY = "caribe-wx1", CLIMO_KEY = "caribe-climo1";
+  let WX = store.get(WX_KEY, null), CLIMO = store.get(CLIMO_KEY, null), WX_BUSY = false, WX_ERR = false;
+  function wmo(c) {
+    if (c == null) return { icon: "ph-cloud", t: "Sin dato", k: "nub" };
+    if (c === 0) return { icon: "ph-sun", t: "Despejado", k: "sol" };
+    if (c <= 2) return { icon: "ph-cloud-sun", t: "Parcialmente nublado", k: "par" };
+    if (c === 3) return { icon: "ph-cloud", t: "Nublado", k: "nub" };
+    if (c === 45 || c === 48) return { icon: "ph-cloud-fog", t: "Neblina", k: "nub" };
+    if (c >= 51 && c <= 57) return { icon: "ph-drop", t: "Llovizna", k: "llo" };
+    if (c >= 61 && c <= 67) return { icon: "ph-cloud-rain", t: c >= 65 ? "Lluvia fuerte" : "Lluvia", k: "llu" };
+    if (c >= 80 && c <= 82) return { icon: "ph-cloud-rain", t: c === 82 ? "Aguaceros fuertes" : "Aguaceros", k: "llu" };
+    if (c >= 95) return { icon: "ph-cloud-lightning", t: "Tormenta eléctrica", k: "tor" };
+    return { icon: "ph-cloud", t: "Nublado", k: "nub" };
+  }
+  async function fetchJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
+  async function loadWeather(force) {
+    if (WX_BUSY) return;
+    const fresh = WX && Date.now() - WX.at < (WX.loc && Object.values(WX.loc).every(l => l.current) && WX.loc.islas ? 30 * 60e3 : 0);
+    const needClimo = !CLIMO || Object.keys(WX_PTS).some(k => !CLIMO[k]);
+    if (fresh && !force && !needClimo) return;
+    WX_BUSY = true; WX_ERR = false; render(false);
+    try {
+      if (!fresh || force) {
+        const base = "https://api.open-meteo.com/v1/forecast?timezone=America%2FBogota&forecast_days=16&models=ecmwf_ifs025&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&hourly=precipitation_probability,precipitation,weather_code&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,wind_speed_10m,precipitation";
+        const ids = Object.keys(WX_PTS);
+        const res = await Promise.all(ids.map(k => fetchJSON(`${base}&latitude=${WX_PTS[k][0]}&longitude=${WX_PTS[k][1]}`)));
+        const sea = await fetchJSON(`https://marine-api.open-meteo.com/v1/marine?latitude=${WX_SEA[0]}&longitude=${WX_SEA[1]}&daily=wave_height_max&current=wave_height&timezone=America%2FBogota&forecast_days=16`).catch(() => null);
+        const loc = {}; ids.forEach((k, i) => { loc[k] = { daily: res[i].daily, hourly: res[i].hourly, current: res[i].current }; });
+        WX = { at: Date.now(), loc, sea: sea && sea.daily, seaNow: sea && sea.current };
+        store.set(WX_KEY, WX);
+      }
+      if (needClimo) {
+        const c = CLIMO || {};
+        for (const k of Object.keys(WX_PTS)) {
+          if (c[k]) continue;
+          const j = await fetchJSON(`https://archive-api.open-meteo.com/v1/archive?latitude=${WX_PTS[k][0]}&longitude=${WX_PTS[k][1]}&start_date=2016-01-01&end_date=2025-12-31&daily=precipitation_sum,temperature_2m_max&timezone=America%2FBogota`);
+          const agg = {};
+          j.daily.time.forEach((t, i) => { const md = t.slice(5); if (md < "10-25" || md > "11-30") return; const a = agg[md] || (agg[md] = { n: 0, wet: 0, mm: 0, tx: 0 }); const p = j.daily.precipitation_sum[i] || 0; a.n++; a.mm += p; a.tx += j.daily.temperature_2m_max[i] || 0; if (p >= 1) a.wet++; });
+          c[k] = Object.fromEntries(Object.entries(agg).map(([md, a]) => [md, { wet: a.wet, n: a.n, mm: +(a.mm / a.n).toFixed(1), tx: Math.round(a.tx / a.n) }]));
+        }
+        CLIMO = c; store.set(CLIMO_KEY, CLIMO);
+      }
+    } catch (e) { WX_ERR = true; }
+    WX_BUSY = false; render(false);
+  }
+  function wxDay(loc, k) {
+    const L = WX && WX.loc && WX.loc[loc]; if (!L) return null;
+    const i = L.daily.time.indexOf(k); if (i < 0) return null;
+    const dd = L.daily, slot = (h0, h1) => { let m = 0; L.hourly.time.forEach((t, j) => { if (t.slice(0, 10) === k) { const h = +t.slice(11, 13); if (h >= h0 && h < h1) m = Math.max(m, L.hourly.precipitation_probability[j] || 0); } }); return m; };
+    const si = WX.sea ? WX.sea.time.indexOf(k) : -1, wv = si >= 0 ? WX.sea.wave_height_max[si] : null;
+    return { code: dd.weather_code[i], tmax: Math.round(dd.temperature_2m_max[i]), tmin: Math.round(dd.temperature_2m_min[i]), mm: +(dd.precipitation_sum[i] || 0).toFixed(1), prob: dd.precipitation_probability_max[i], wind: Math.round(dd.wind_speed_10m_max[i]),
+      man: slot(6, 12), tar: slot(12, 18), noc: slot(18, 24), wave: wv == null ? null : wv, lead: Math.round((D(k) - D(iso(new Date()))) / 864e5) };
+  }
+  function climoState(c) {
+    const pct = Math.round(c.wet / c.n * 100);
+    if (pct >= 70 && c.mm >= 5) return { icon: "ph-cloud-rain", t: "Lluvioso", pct, k: "llu" };
+    if (pct >= 60) return { icon: "ph-drop", t: "Lluvias cortas", pct, k: "llo" };
+    if (pct >= 35) return { icon: "ph-cloud-sun", t: "Nubes y algo de lluvia", pct, k: "par" };
+    return { icon: "ph-sun", t: "Mayormente seco", pct, k: "sol" };
+  }
+  function climoDay(loc, k) { const c = CLIMO && CLIMO[loc] && CLIMO[loc][k.slice(5)]; return c || null; }
+  function wxAge() { if (!WX) return ""; const m = Math.round((Date.now() - WX.at) / 6e4); return m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.round(m / 60)} h` : `hace ${Math.round(m / 1440)} días`; }
+  function wxStart(k) { return addDays(D(k), -15); }
+  /* Luna: edad desde una luna nueva de referencia (6 ene 2000 18:14 UTC) */
+  function moonInfo(k) {
+    const t = new Date(k + "T20:00:00-05:00"), age = (((t - Date.UTC(2000, 0, 6, 18, 14)) / 864e5) % 29.530589 + 29.530589) % 29.530589;
+    const ill = Math.round((1 - Math.cos(2 * Math.PI * age / 29.530589)) / 2 * 100), rise = (6 + age * 0.8277) % 24, set = (rise + 12.4) % 24;
+    const hh = h => { const H = Math.floor(h), M = Math.round((h - H) * 60); return `${((H + 11) % 12) + 1}:${String(M).padStart(2, "0")} ${H < 12 ? "a.m." : "p.m."}`; };
+    const dark = ill < 35 || (age > 17 && (rise >= 22 || rise < 5));
+    const name = age < 1.5 || age > 28 ? "luna nueva" : age < 7.4 ? "creciente" : age < 9 ? "cuarto creciente" : age < 14 ? "creciente gibosa" : age < 16 ? "luna llena" : age < 22 ? "menguante gibosa" : age < 23.5 ? "cuarto menguante" : "menguante";
+    return { ill, name, dark, txt: `${cap(name)}, ${ill}% iluminada. Sale hacia las ${hh(rise)} y se oculta hacia las ${hh(set)}` };
+  }
+  const wxLoc = d => d.items && d.items.some(x => x.act === "pasadia") ? "islas" : d.stay;
+  let WXREF = store.get("caribe-wxref", "auto");
+  const refLoc = (d, k) => WXREF !== "auto" ? WXREF : d ? wxLoc(d) : "golfo";
+  function wxCell(d, k) {
+    const L = refLoc(d, k), key = d ? d.iso : k;
+    const w = wxDay(L, key);
+    if (w) { const m = wmo(w.code); return `<span class="wx" title="${m.t}"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><span class="num">${w.tmax}°</span><span class="num pr ${w.prob >= 70 ? "hi" : ""}">${w.prob}%</span></span>`; }
+    const c = climoDay(L, key);
+    if (!c) return "";
+    const st = climoState(c);
+    return `<span class="wx typ" title="Clima típico: ${st.t}"><i class="ph-fill ${st.icon} wxc-${st.k}" aria-hidden="true"></i><span class="num pr ${st.pct >= 70 ? "hi" : ""}">${st.pct}%</span></span>`;
+  }
+  function wxSheet(d) {
+    const wl = wxLoc(d), w = wxDay(wl, d.iso), c = climoDay(wl, d.iso), place = WX_NAME[wl];
+    let html = "";
+    if (w) {
+      const m = wmo(w.code);
+      html += `<div class="kv wxk"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><span><b>${m.t} en ${place} · ${w.tmax}° / ${w.tmin}°</b><small>${wl === "islas" ? "Día de pasadía: clima en las islas. " : ""}Lluvia ${w.prob}% (${String(w.mm).replace(".", ",")} mm). Mañana ${w.man}% · tarde ${w.tar}% · noche ${w.noc}%. Viento hasta ${w.wind} km/h.${w.lead > 5 ? " A más de 5 días la lluvia es orientativa." : ""}</small></span></div>`;
+      if (d.items.some(x => x.act === "pasadia") && w.wave != null) html += `<div class="kv wxk ${w.wave >= 1.5 ? "bad" : ""}"><i class="ph ph-waves" aria-hidden="true"></i><span><b>Olas hasta ${w.wave.toFixed(1).replace(".", ",")} m cerca de las islas</b><small>${w.wave >= 1.5 ? "Mar picado: la Capitanía puede cancelar la lancha. Tengan listo el día de respaldo." : "Mar en buen estado para la lancha."}</small></span></div>`;
+    } else if (c) {
+      const st = climoState(c);
+      html += `<div class="kv wxk typ"><i class="ph-fill ${st.icon} wxc-${st.k}" aria-hidden="true"></i><span><b>Clima típico en ${place}: ${st.t.toLowerCase()} · ${c.tx}°</b><small>En esta misma fecha llovió en ${c.wet} de los últimos ${c.n} años (${st.pct}% de probabilidad), con ${String(c.mm).replace(".", ",")} mm en promedio. Todavía no hay pronóstico: aparece desde el ${dlabel(iso(wxStart(d.iso)))}.</small></span></div>`;
+    }
+    if (d.eve.some(e => e.act === "biolum" || /bioluminiscencia/i.test(e.t))) { const mo = moonInfo(d.iso); html += `<div class="kv wxk ${mo.dark ? "" : "bad"}"><i class="ph ph-moon" aria-hidden="true"></i><span><b>Luna: ${mo.dark ? "buena noche para la bioluminiscencia" : "mucha luz para la bioluminiscencia"}</b><small>${mo.txt}</small></span></div>`; }
+    return html;
+  }
+  function wxWarnings(C) {
+    const W = [], it = C.it; if (!it || !it.days) return W;
+    const pd = it.pasDay;
+    if (pd) {
+      const w = wxDay("islas", pd.iso);
+      if (w && w.wave != null && w.wave >= 1.5) W.push({ bad: true, icon: "ph-waves", txt: `Olas de hasta ${w.wave.toFixed(1).replace(".", ",")} m el día de la pasadía (${dlong(pd.date)}): riesgo de que cancelen la lancha.` });
+      if (w && w.prob >= 80 && w.mm >= 10) {
+        const alt = it.days.find(x => x !== pd && (x.stay === "golfo" || x.stay === "rincon") && !x.move && x.i > 0 && x.i < it.N && (() => { const y = wxDay("islas", x.iso); return y && y.mm < w.mm / 2; })());
+        W.push({ bad: true, icon: "ph-cloud-rain", txt: `Pronóstico de lluvia fuerte en las islas el día de la pasadía (${w.prob}%, ${String(w.mm).replace(".", ",")} mm).${alt ? ` El ${dlong(alt.date)} se ve mejor: muévela desde Día a día.` : ""}` });
+      }
+    }
+    it.days.forEach(d => { if (d.eve.some(e => e.act === "biolum" || /bioluminiscencia/i.test(e.t))) { const mo = moonInfo(d.iso); if (!mo.dark) W.push({ bad: false, icon: "ph-moon", txt: `La noche de la bioluminiscencia (${dlong(d.date)}) hay ${mo.name} al ${mo.ill}%: se verá menos.` }); } });
+    return W;
+  }
+  function wxStatus() {
+    if (WX_BUSY) return `<i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i>Actualizando el clima...`;
+    const src = `Pronóstico de Open-Meteo (modelo europeo ECMWF) y clima típico 2016 a 2025.`;
+    if (WX_ERR) return `<i class="ph ph-wifi-slash" aria-hidden="true"></i>Sin conexión para el clima.${WX ? ` Se muestra el último guardado (${wxAge()}).` : ""} <button type="button" class="linkbtn" data-wx-refresh>Reintentar</button>`;
+    return `<i class="ph ph-cloud-sun" aria-hidden="true"></i>${WX ? `Clima actualizado ${wxAge()}. ` : ""}${src} <button type="button" class="linkbtn" data-wx-refresh>Actualizar</button>`;
+  }
+  function renderWxStrip() {
+    const el = $("[data-wx-strip]"); if (!el) return;
+    const ids = DESTS.filter(d => S.n[d.id]).map(d => d.id);
+    if (S.n.golfo + S.n.rincon > 0) ids.splice(ids.indexOf("ctg") < 0 ? ids.length : ids.indexOf("ctg"), 0, "islas");
+    el.innerHTML = `<div class="wx-row">${ids.map(k => {
+      const cur = WX && WX.loc && WX.loc[k] && WX.loc[k].current, m = cur ? wmo(cur.weather_code) : null;
+      return `<button type="button" class="wx-now c-${k}" data-wx-place="${k}" aria-label="Clima en ${WX_NAME[k]}: ${cur ? Math.round(cur.temperature_2m) + " grados, " + m.t : "sin dato"}. Ver pronóstico">
+        <span class="wn-place">${WX_NAME[k]}</span>
+        ${cur ? `<span class="wn-main"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><b class="num">${Math.round(cur.temperature_2m)}°</b></span><span class="wn-t">${k === "islas" && WX.seaNow && WX.seaNow.wave_height != null ? `Olas ${String(WX.seaNow.wave_height.toFixed(1)).replace(".", ",")} m` : m.t}</span>` : `<span class="wn-main"><i class="ph ph-cloud" aria-hidden="true"></i><b>${WX_BUSY ? "..." : "--"}</b></span><span class="wn-t">${WX_BUSY ? "Cargando" : "Sin dato"}</span>`}
+      </button>`; }).join("")}</div><p class="wx-now-note">Clima ahora${WX ? ` · ${wxAge()}` : ""}. Toca un sitio para ver los próximos días.</p>`;
+  }
+  function placeSheetHTML(k) {
+    const L = WX && WX.loc && WX.loc[k], name = k === "islas" ? "Tintipán y las islas" : DESTS.find(x => x.id === k).name;
+    const head = `<header class="sh-head c-${k}"><span class="dest-ic"><i class="ph ph-map-pin" aria-hidden="true"></i></span><div><h2>Clima en ${name}</h2><p>Pronóstico de 16 días · ${WX ? wxAge() : "sin datos"}</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>`;
+    if (!L) return head + `<div class="sh-pad"><p>${WX_ERR ? "No hay conexión para traer el pronóstico." : "Cargando el pronóstico..."}</p><div class="actions"><button type="button" class="mini primary" data-wx-refresh><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>Actualizar</button></div></div>`;
+    const cur = L.current, cm = cur ? wmo(cur.weather_code) : null;
+    const trip = new Set((LAST && LAST.it && LAST.it.days || []).filter(d => k === "islas" ? wxLoc(d) === "islas" : d.stay === k && wxLoc(d) !== "islas").map(d => d.iso));
+    const dd = L.daily, rows = dd.time.map((t, i) => {
+      const m = wmo(dd.weather_code[i]), here = trip.has(t), dt = D(t);
+      return `<div class="fc-row ${here ? "here" : ""}"><span class="fc-d"><b>${i === 0 ? "Hoy" : i === 1 ? "Mañana" : cap(WDS[dt.getDay()])}</b><small>${dt.getDate()} ${MO[dt.getMonth()]}</small></span><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true" title="${m.t}"></i><span class="fc-t">${m.t}${k === "islas" && WX.sea && WX.sea.time.indexOf(t) >= 0 && WX.sea.wave_height_max[WX.sea.time.indexOf(t)] != null ? ` · olas ${String(WX.sea.wave_height_max[WX.sea.time.indexOf(t)].toFixed(1)).replace(".", ",")} m` : ""}${here ? `<em>${k === "islas" ? "Pasadía" : "Están aquí"}</em>` : ""}</span><span class="fc-p num ${dd.precipitation_probability_max[i] >= 70 ? "hi" : ""}"><i class="ph-fill ph-drop" aria-hidden="true"></i>${dd.precipitation_probability_max[i]}%</span><span class="fc-x num"><b>${Math.round(dd.temperature_2m_max[i])}°</b> ${Math.round(dd.temperature_2m_min[i])}°</span></div>`;
+    }).join("");
+    const lastDay = dd.time[dd.time.length - 1], tripDays = [...trip].sort();
+    const note = tripDays.length && tripDays[0] > lastDay ? `<p class="fc-note">${k === "islas" ? "La pasadía" : "Sus días aquí"} (${dlabel(tripDays[0])}) todavía no entra${k === "islas" ? "" : "n"} en el pronóstico: aparece${k === "islas" ? "" : "n"} desde el ${dlabel(iso(wxStart(tripDays[0])))}. Mientras tanto, el Calendario muestra el clima típico.</p>` : "";
+    const seaNote = k === "islas" ? `<p class="fc-note">Con olas de más de 1,5 m o viento fuerte la Capitanía puede cancelar las lanchas. Las lanchas regresan antes de las 15:30 porque en la tarde el mar se pica.</p>` : "";
+    return head + `<div class="sh-pad c-${k}">${cur ? `<div class="fc-now"><i class="ph-fill ${cm.icon} wxc-${cm.k}" aria-hidden="true"></i><div><b class="num">${Math.round(cur.temperature_2m)}°</b><span>${cm.t} · se siente como ${Math.round(cur.apparent_temperature)}°</span><small>Humedad ${cur.relative_humidity_2m}% · viento ${Math.round(cur.wind_speed_10m)} km/h${k === "islas" && WX.seaNow && WX.seaNow.wave_height != null ? ` · olas ${String(WX.seaNow.wave_height.toFixed(1)).replace(".", ",")} m` : ""}</small></div></div>` : ""}${note}${seaNote}<div class="fc-list">${rows}</div><p class="fc-note">La lluvia es confiable a 1 a 5 días; después es orientativa. Fuente: Open-Meteo, modelo europeo ECMWF.</p></div>`;
+  }
+  const HOL = { "2026-01-01": "Año Nuevo", "2026-01-12": "Reyes Magos", "2026-03-23": "San José", "2026-04-02": "Jueves Santo", "2026-04-03": "Viernes Santo", "2026-05-01": "Día del Trabajo", "2026-05-18": "Ascensión", "2026-06-08": "Corpus Christi", "2026-06-15": "Sagrado Corazón", "2026-06-29": "San Pedro y San Pablo", "2026-07-20": "Día de la Independencia", "2026-08-07": "Batalla de Boyacá", "2026-08-17": "Asunción de la Virgen", "2026-10-12": "Día de la Raza", "2026-11-02": "Todos los Santos", "2026-11-16": "Independencia de Cartagena", "2026-12-08": "Inmaculada Concepción", "2026-12-25": "Navidad" };
+  function holList(g0, g1, byDate) {
+    const hs = Object.entries(HOL).filter(([k]) => D(k) >= g0 && D(k) <= g1);
+    if (!hs.length) return "";
+    return `<div class="hol-list"><h4><i class="ph-fill ph-flag-banner" aria-hidden="true"></i>Festivos en Colombia</h4>${hs.map(([k, n]) => { const dt = D(k), inTrip = !!byDate[k]; return `<div class="hol-row ${inTrip ? "in" : ""}"><b class="num">${cap(WDS[dt.getDay()])} ${dt.getDate()} ${MO[dt.getMonth()]}</b><span>${n}${k === P().festivo ? " · su puente" : inTrip ? " · durante el viaje" : ""}</span></div>`; }).join("")}<p class="fc-note">Los lunes festivos llenan las playas y suben precios de lanchas y hoteles.</p></div>`;
+  }
+  function renderCal(C) {
+    if (sumNights() !== totalNights()) { $("[data-cal]").innerHTML = emptyItin(); return; }
+    const it = C.it, days = it.days, byDate = Object.fromEntries(days.map(d => [d.iso, d]));
+    const first = days[0].date, lastD = days[days.length - 1].date;
+    const endM = new Date(lastD.getFullYear(), lastD.getMonth() + 1, 0, 12), startM = new Date(lastD.getFullYear(), lastD.getMonth(), 1, 12);
+    const from = first.getMonth() === lastD.getMonth() ? startM : first;
+    const g0 = addDays(from, -((from.getDay() + 6) % 7)), g1 = addDays(endM, (7 - endM.getDay()) % 7), cells = [];
+    for (let dt = new Date(g0); dt <= g1; dt = addDays(dt, 1)) {
+      const k = iso(dt), n = dt.getDate(), d = byDate[k], fest = !!HOL[k], mo = (n === 1 || +dt === +g0) ? `<span class="mo">${MO[dt.getMonth()]}</span>` : "";
+      if (dt > endM) { cells.push(`<div class="cell blank" aria-hidden="true"></div>`); continue; }
+      if (!d) { cells.push(`<div class="cell out ${fest ? "hol" : ""}" ${fest ? `title="Festivo: ${HOL[k]}"` : `aria-hidden="true"`}><span class="dn"><span class="num">${n}</span>${mo}</span>${fest ? `<span class="hol-t">Festivo</span><i class="ph-fill ph-flag-banner hol-i" aria-hidden="true"></i>` : ""}${wxCell(null, k)}</div>`); continue; }
+      const m = dayMain(d, it), loc = d.stay, fly = d.i === 0 || d.i === it.N, eve = d.eve.length > 0;
+      cells.push(`<button type="button" class="cell c-${loc} ${fly ? "fly" : ""}" data-day="${k}" aria-label="${dlong(dt)}: ${esc(m.lb)}${eve ? ", con plan de noche" : ""}${fest ? ", festivo" : ""}"><span class="dn"><span class="num">${n}</span>${eve ? `<i class="ph-fill ph-moon-stars moon" aria-hidden="true"></i>` : ""}${mo}</span><i class="${m.fly ? "ph-fill" : "ph"} ${m.icon} ci" aria-hidden="true"></i><span class="lb">${esc(m.lb)}</span>${wxCell(d)}${fest ? `<span class="fe">Festivo</span><i class="ph-fill ph-flag-banner hol-i" aria-hidden="true"></i>` : ""}${S.notes[k] ? `<i class="ph ph-note-pencil nt" aria-hidden="true"></i>` : ""}</button>`);
+    }
+    const months = [...new Set([first, lastD].map(d => MN[d.getMonth()]))].join(" y ");
+    const legend = `<div class="cal-legend">${DESTS.filter(d => S.n[d.id]).map(d => `<span class="c-${d.id}"><i class="sw" aria-hidden="true"></i>${d.name}</span>`).join("")}<span><i class="sw fly" aria-hidden="true"></i>Día de vuelo</span><span class="c-rincon"><i class="ph-fill ph-moon-stars" style="color:var(--dc)" aria-hidden="true"></i>Plan de noche</span><span><i class="ph ph-note-pencil" aria-hidden="true"></i>Con nota</span></div><div class="cal-legend wx-legend"><span><i class="ph-fill ph-sun wxc-sol" aria-hidden="true"></i>Seco</span><span><i class="ph-fill ph-cloud-sun wxc-par" aria-hidden="true"></i>Parcial</span><span><i class="ph-fill ph-cloud wxc-nub" aria-hidden="true"></i>Nublado</span><span><i class="ph-fill ph-drop wxc-llo" aria-hidden="true"></i>Llovizna</span><span><i class="ph-fill ph-cloud-rain wxc-llu" aria-hidden="true"></i>Lluvia</span><span><i class="ph-fill ph-cloud-lightning wxc-tor" aria-hidden="true"></i>Tormenta</span><span>% = probabilidad de lluvia; en cursiva, clima típico mientras llega el pronóstico</span></div><p class="wx-status">${wxStatus()}</p>`;
+    const refSel = `<div class="wx-ref"><span>Clima de:</span>${[["auto", "Según el viaje"], ["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]].map(([v, t]) => `<button type="button" class="chip-btn" aria-pressed="${WXREF === v}" data-wxref="${v}">${t}</button>`).join("")}</div><p class="fc-note" style="margin:0 0 10px">${WXREF === "auto" ? "Días del viaje con el clima de donde están; días fuera del viaje con el de Tolú." : `Todos los días con el clima de ${WX_NAME[WXREF]}.`}</p>`;
+    $("[data-cal]").innerHTML = legend + refSel + `<div class="cal"><h3>${cap(months)} de ${first.getFullYear()}</h3><div class="cal-grid">${["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(w => `<div class="wd" aria-hidden="true">${w}</div>`).join("")}${cells.join("")}</div></div>` + holList(g0, g1, byDate);
+  }
+  function moveSelect(id, d, it) {
+    const a = actById(id), al = allowedDays(a, it.days, it.N); if (al.length < 2) return "";
+    return `<label class="mover"><i class="ph ph-arrows-left-right" aria-hidden="true"></i><span class="sr">Mover ${esc(a.t)} a otro día</span><select data-pin="${id}">${al.map(x => `<option value="${x.iso}" ${x.iso === d.iso ? "selected" : ""}>${x.iso === d.iso ? "Este día: " : "Mover al "}${dlabel(x.date)}${x.fest ? ", festivo" : ""}${x.move ? ", traslado" : ""}</option>`).join("")}${S.pin[id] ? `<option value="">Volver a automático</option>` : ""}</select></label>`;
+  }
+  function renderDays(C) {
+    if (sumNights() !== totalNights()) { $("[data-itin]").innerHTML = emptyItin(); return; }
+    const it = C.it, blocks = []; let cur = null;
+    it.days.forEach(d => { if (!cur || cur.loc !== d.stay) { cur = { loc: d.stay, days: [] }; blocks.push(cur); } cur.days.push(d); });
+    $("[data-itin]").innerHTML = blocks.map(b => {
+      const dest = DESTS.find(x => x.id === b.loc), h = hotelOf(dest);
+      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${b.days.map(d => `
+        <article class="day" id="day-${d.iso}"><div class="date"><b class="num">${d.date.getDate()}</b><span>${WD[d.date.getDay()]}</span>${d.fest ? `<span class="fe">festivo</span>` : ""}</div><div class="day-body">
+          ${d.move ? `<div>${moveChip(d.move)}</div>` : ""}
+          ${d.items.map(x => itemHTML(x) + (x.k === "act" ? moveSelect(x.act, d, it) : "")).join("")}
+          ${d.eve.map(e => itemHTML({ icon: "ph-moon-stars", t: "De noche: " + e.t, d: "" }) + moveSelect(e.act, d, it)).join("")}
+          ${d.fest ? `<div><span class="chip bad"><i class="ph ph-users-three" aria-hidden="true"></i>Festivo, todo lleno</span></div>` : ""}
+          <textarea class="note" data-note="${d.iso}" rows="1" placeholder="Notas del día" aria-label="Notas del ${dlong(d.date)}">${esc(S.notes[d.iso] || "")}</textarea>
+        </div></article>`).join("")}</section>`;
+    }).join("");
+  }
+  function daySheetHTML(k) {
+    const C = LAST, it = C.it, d = it.days.find(x => x.iso === k); if (!d) return `<div class="sh-pad"><p>Ese día ya no hace parte del viaje.</p></div>`;
+    const loc = d.stay, dest = DESTS.find(x => x.id === loc), h = hotelOf(dest), last = d.i === it.N;
+    const nIdx = it.days.filter(x => x.i <= d.i && x.loc === loc).length;
+    return `<header class="sh-head c-${loc}"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h2>${cap(dlong(d.date))}</h2><p>${dest.name}${d.fest ? " · festivo" : ""}</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
+      <div class="sh-pad c-${loc}">
+        ${!last ? `<div class="kv"><i class="ph ph-bed" aria-hidden="true"></i><span><b>${h.name}</b><small>Noche ${nIdx} de ${S.n[loc]} · ${fmt(rateOf(h))} la noche</small></span></div>` : ""}
+        ${wxSheet(d)}
+        ${d.move ? `<div class="kv"><i class="ph ph-bus" aria-hidden="true"></i><span><b>Traslado: ${MOVE_MODE[d.move]}</b><small>${MOVE_T[d.move]} · ${fmt(MOVES[d.move][1])} la pareja · estimado</small></span></div>` : ""}
+        ${d.items.filter(x => x.k !== "move").map(x => `<div class="kv ${x.k === "flight" ? "flight" : ""}"><i class="${x.k === "flight" ? "ph-fill" : "ph"} ${x.icon || "ph-star"}" aria-hidden="true"></i><span><b>${esc(x.t)}${x.slot === "tarde" ? " (en la tarde)" : ""}</b><small>${esc(x.d)}${x.extra ? " Con " + x.extra.map(y => y.toLowerCase()).join(" y ") + "." : ""}</small></span></div>`).join("")}
+        ${d.eve.map(e => `<div class="kv"><i class="ph ph-moon-stars" aria-hidden="true"></i><span><b>De noche: ${esc(e.t)}</b></span></div>`).join("")}
+        <label class="field"><span>Notas del día</span><textarea data-note="${k}" rows="3" placeholder="Ej.: reservar almuerzo, llevar efectivo">${esc(S.notes[k] || "")}</textarea></label>
+        <div class="actions"><button type="button" class="mini" data-goto-day="${k}"><i class="ph ph-list-bullets" aria-hidden="true"></i>Ver en Día a día</button></div>
+      </div>`;
+  }
+  function hotelSheetHTML(id) {
+    const d = DESTS.find(x => x.id === id), n = S.n[id], avail = d.hotels.filter(h => h.rate[S.pu]), none = d.hotels.filter(h => !h.rate[S.pu]);
+    return `<header class="sh-head c-${id}"><span class="dest-ic"><i class="ph ${d.icon}" aria-hidden="true"></i></span><div><h2>Hotel en ${d.name}</h2><p>${P().label} · ${noches(n)}</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
+      <div class="sh-list" role="radiogroup" aria-label="Hoteles en ${d.name}">${avail.map(h => { const r = rateOf(h), key = `h.${S.pu}.${h.id}`, on = S.h[id] === h.id;
+        return `<div class="hopt ${on ? "on" : ""}"><button type="button" class="hopt-pick" role="radio" aria-checked="${on}" data-hotel="${id}" data-v="${h.id}"><span class="radio" aria-hidden="true"></span><span class="hopt-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span></span><span class="hopt-price"><b class="num">${fmt(r)}</b><span>la noche</span>${n ? `<span class="num">${noches(n)}: ${fmt(r * n)}</span>` : ""}</span></button>
+          <div class="hopt-tools">${tag(key)}${r > CAP ? `<span class="tag bad">Pasa el tope</span>` : ""}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button><a class="link-btn" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a><a class="link-btn" href="${h.url}" target="_blank" rel="noopener">Booking</a></div></div>`; }).join("")}</div>
+      ${none.length ? `<p class="nocupo"><i class="ph ph-prohibit" aria-hidden="true"></i><span>Sin cupo para este puente: ${none.map(h => h.name).join(", ")}.</span></p>` : ""}`;
+  }
+  function priceSheetHTML(key) {
+    const m = priceMeta(key), cur = ov(key, m.def);
+    return `<header class="sh-head"><div><h2>Editar precio</h2><p>${esc(m.label)}</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
+      <div class="sh-pad"><p class="small muted" style="margin-top:10px">Precio original: <b class="num">${fmt(m.def)}</b> · ${m.est ? "estimado" : "verificado 5 oct"}</p>
+        <label class="field"><span>Nuevo precio</span><input type="text" inputmode="numeric" autocomplete="off" data-price-input value="${fmt(cur)}"></label>
+        <div class="actions"><button type="button" class="mini primary" data-price-save="${key}">Guardar</button>${isEdited(key) ? `<button type="button" class="mini" data-price-reset="${key}"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Volver al original</button>` : ""}<button type="button" class="mini" data-close>Cancelar</button></div></div>`;
+  }
+  function customSheetHTML(id) {
+    const c = (id && S.custom.find(x => x.id === id)) || { t: "", dest: (DESTS.find(d => S.n[d.id]) || DESTS[2]).id, cost: 0, pay: "efectivo", kind: "dia" };
+    const radio = (name, v, label) => `<label><input type="radio" name="${name}" value="${v}" ${c[name] === v ? "checked" : ""}><span>${label}</span></label>`;
+    return `<header class="sh-head"><div><h2>${id ? "Editar plan" : "Agregar plan"}</h2><p>Entra al itinerario y al total como los demás.</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
+      <form class="sh-pad" data-cform="${id || ""}" novalidate>
+        <label class="field"><span>Nombre</span><input type="text" name="t" maxlength="80" required value="${esc(c.t)}" placeholder="Ej.: Clase de kayak"></label>
+        <label class="field"><span>Destino</span><select name="dest">${DESTS.map(d => `<option value="${d.id}" ${c.dest === d.id ? "selected" : ""}>${d.name}</option>`).join("")}</select></label>
+        <label class="field"><span>Costo para la pareja</span><input type="text" name="cost" inputmode="numeric" autocomplete="off" value="${c.cost ? fmt(c.cost) : ""}" placeholder="$0"></label>
+        <fieldset class="field"><legend>Duración</legend><div class="seg">${radio("kind", "dia", "Día completo")}${radio("kind", "tarde", "Medio día")}${radio("kind", "noche", "De noche")}</div></fieldset>
+        <fieldset class="field"><legend>Pago</legend><div class="seg">${radio("pay", "efectivo", "Efectivo")}${radio("pay", "tarjeta", "Tarjeta")}</div></fieldset>
+        <p class="small" style="color:var(--warn);margin-top:8px" data-cform-err hidden>Escribe un nombre para el plan.</p>
+        <div class="actions"><button type="submit" class="mini primary">Guardar</button><button type="button" class="mini" data-close>Cancelar</button></div>
+      </form>`;
+  }
+  function scenList() {
+    const l = store.get("caribe-scen", []);
+    return (Array.isArray(l) ? l : []).filter(Boolean).slice(0, 3).map((x, i) => x.st ? { name: String(x.name || `Escenario ${i + 1}`).slice(0, 40), st: x.st } : { name: `Escenario ${i + 1}`, st: x });
+  }
+  function summaryOf(st) {
+    const keep = S; let r;
+    try {
+      S = norm(st); fixHotels(); const C = costs(), p = P(), o = p.out[S.out], b = p.back[S.back];
+      r = { title: `${p.label}: ${dlabel(o.date)} a ${dlabel(b.date)}`, nights: DESTS.filter(d => S.n[d.id]).map(d => `<span class="dchip c-${d.id}">${DNAME_SHORT[d.id]} ${S.n[d.id]}</span>`).join(""), cats: C.cats, total: C.total, key: enc(S) };
+    } finally { S = keep; }
+    return r;
+  }
+  function renderScen() {
+    const list = scenList(), el = $("[data-scen]");
+    if (!list.length) { el.innerHTML = `<div class="empty"><p>Aún no hay escenarios guardados.</p><p>Guarda el plan actual, cambia algo y guarda otra versión para compararlas.</p><button type="button" class="mini primary" data-save><i class="ph ph-floppy-disk" aria-hidden="true"></i>Guardar el actual</button></div>`; return; }
+    const sums = list.map(x => summaryOf(x.st));
+    const ROWS = [["vuelos", "Vuelos"], ["hospedaje", "Hospedaje"], ["traslados", "Traslados"], ["comida", "Comida"], ["planes", "Planes"], ["otros", "Local e imprevistos"], ["total", "Total"]];
+    const body = ROWS.map(([k, l]) => {
+      const vals = sums.map(s => Math.round(k === "total" ? s.total : s.cats[k])), mn = Math.min(...vals), same = vals.every(v => v === vals[0]);
+      return `<tr class="${k === "total" ? "tot" : ""}"><th scope="row">${l}</th>${vals.map(v => `<td class="num ${!same ? (v === mn ? "min" : "dif") : ""}">${fmt(v)}${k === "total" && list.length > 1 ? (v === mn ? `<small class="best">El más barato</small>` : `<small>+${fmt(v - mn)} vs el más barato</small>`) : ""}</td>`).join("")}</tr>`;
+    }).join("");
+    el.innerHTML = `<div class="tbl-wrap"><table class="cmp"><thead><tr><th scope="col"><span class="sr">Concepto</span></th>${sums.map((s, i) => `<th scope="col"><input class="scen-name" data-scen-name="${i}" value="${esc(list[i].name)}" maxlength="40" aria-label="Nombre del escenario ${i + 1}"><small>${s.title}</small><span class="dchips">${s.nights}</span></th>`).join("")}</tr></thead>
+      <tbody>${body}<tr><th scope="row"><span class="sr">Acciones</span></th>${sums.map((s, i) => `<td class="acts-c"><button type="button" class="mini primary" data-load="${i}">Cargar</button><button type="button" class="mini" data-del="${i}">Borrar</button></td>`).join("")}</tr></tbody></table></div>
+      ${list.length < 3 ? `<div class="actions"><button type="button" class="mini" data-save><i class="ph ph-floppy-disk" aria-hidden="true"></i>Guardar el actual</button></div>` : `<p class="small muted" style="margin-top:10px">Ya hay 3 escenarios. Borra uno para guardar otro.</p>`}`;
+  }
+  function pasadiaContact(it) {
+    const d = it.pasDay; if (!d) return null;
+    return d.loc === "rincon" ? { from: "Rincón del Mar", who: "con JJ Tour del Mar (311 597 1494) o la cabaña" } : { from: "Tolú o Coveñas", who: "con Viajando con Trixie o Tolumaria" };
+  }
+  function agencyMsg(C) {
+    const p = P(), o = p.out[S.out], b = p.back[S.back], d = C.it.pasDay;
+    return `Hola. Somos 2 personas y queremos hacer una pasadía a Tintipán o Múcura${d ? ` el ${dlong(d.date)}` : ""}, saliendo desde Tolú o Coveñas. Estaremos en la zona entre el ${dlong(o.date)} y el ${dlong(b.date)}. ¿Qué precio tiene por persona, qué incluye y si recogen en el hotel?`;
+  }
+  function renderChecks(C) {
+    const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
+    const items = [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
+    let d0 = D(o.date);
+    DESTS.forEach(d => { const n = S.n[d.id]; if (!n) return; const h = hotelOf(d), ci = iso(d0), co = iso(addDays(d0, n)); d0 = addDays(d0, n);
+      items.push([`h-${d.id}-${h.id}-${ci}`, `Reservar ${h.name}`, `<a href="${h.url}?checkin=${ci}&amp;checkout=${co}&amp;group_adults=2&amp;selected_currency=COP" target="_blank" rel="noopener">${noches(n)}, del ${+ci.slice(8)} ${MO[+ci.slice(5, 7) - 1]} al ${+co.slice(8)} ${MO[+co.slice(5, 7) - 1]}</a> · <a href="${mapsURL(h, d)}" target="_blank" rel="noopener">Mapa</a>. ${h.info}`]); });
+    const pc = pasadiaContact(it);
+    if (pc) items.push([`pasadia-${it.pasDay.iso}`, "Reservar la pasadía", `Para el ${dlong(it.pasDay.date)}, desde ${pc.from}, ${pc.who}.${it.pasDay.loc === "rincon" ? "" : ` <a href="https://wa.me/573014087371?text=${encodeURIComponent(agencyMsg(C))}" target="_blank" rel="noopener">Escribir a Trixie por WhatsApp</a>.`} Preguntar si recogen en el hotel.`]);
+    const cash = cashPlan(C).reduce((s, c) => s + c.total, 0);
+    items.push(["efectivo", "Llevar efectivo", `Cerca de ${fmt(cash)} entre los dos. El detalle por destino está en Costos.`], ["bolsa", "Empacar bolsa seca y repelente", "Y careta propia si tienen."]);
+    $("[data-checks]").innerHTML = items.map(([k, t, s]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${done[k] ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b><span>${s}</span></span></label>`).join("");
+    const n = items.filter(([k]) => done[k]).length;
+    $("[data-progress]").textContent = n === items.length ? "Todo listo. Solo falta empacar." : `${n} de ${items.length} listos. Se guardan en este navegador.`;
+  }
+  function renderInfo(C) { const msg = agencyMsg(C); $$("[data-wa-agency]").forEach(a => { a.href = `https://wa.me/${a.dataset.waAgency}?text=${encodeURIComponent(msg)}`; }); }
+  function shareText(C) {
+    const p = P(), o = p.out[S.out], b = p.back[S.back], list = allActs();
+    const dests = DESTS.filter(d => S.n[d.id]).map(d => `${DNAME_SHORT[d.id]} ${noches(S.n[d.id])} (${hotelOf(d).name})`).join(", ");
+    const plans = Object.keys(C.it.placed).map(id => { const a = list.find(x => x.id === id); return a ? (SHORT[id] || a.t) : ""; }).filter(Boolean).join(", ");
+    return `Viaje al Caribe, ${p.label}: ${dlabel(o.date)} a ${dlabel(b.date)}\n${dests}\nVuelos: ${o.air} ida ${o.time.split("→")[0].trim()}, ${b.air} regreso ${b.time.split("→")[0].trim()}\nPlanes: ${plans || "ninguno"}\nTotal para los dos: ${fmt(C.total)} (${fmt(C.total / 2)} por persona)`;
+  }
+  const shareURL = () => location.href.split("#")[0] + "#p=" + enc(S);
+
+  /* ---------- Hojas inferiores ---------- */
+  const sheet = $("[data-sheet]"), sheet2 = $("[data-sheet2]");
+  function openSheet(dlg, fn) {
+    dlg._fn = fn; dlg.querySelector("[data-sheet-body]").innerHTML = fn();
+    if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); }
+    dlg.querySelector(".sheet-in").scrollTop = 0;
+  }
+  function closeSheet(dlg) { if (dlg.open) { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); } }
+  function refreshSheets() { [sheet, sheet2].forEach(d => { if (d.open && d._fn && !d._static) d.querySelector("[data-sheet-body]").innerHTML = d._fn(); }); }
+  [sheet, sheet2].forEach(d => {
+    d.addEventListener("click", e => { if (e.target === d) closeSheet(d); });
+    d.addEventListener("close", () => { d._fn = null; d._static = false; if (d === sheet && pendingShared) { pendingShared = null; render(); } });
+  });
+  function askShared() {
+    const mine = summaryOf(S), theirs = summaryOf(pendingShared);
+    sheet._static = true;
+    openSheet(sheet, () => `<header class="sh-head"><div><h2>Te compartieron un plan</h2><p>Ya tienes un plan guardado en este celular.</p></div></header>
+      <div class="sh-pad"><div class="kv"><i class="ph ph-share-network" aria-hidden="true"></i><span><b>Plan compartido: ${fmt(theirs.total)}</b><small>${theirs.title}</small></span></div>
+        <div class="kv"><i class="ph ph-user" aria-hidden="true"></i><span><b>Tu plan: ${fmt(mine.total)}</b><small>${mine.title}</small></span></div>
+        <div class="choice"><button type="button" class="mini primary" data-shared="open">Abrir el plan compartido</button><button type="button" class="mini" data-shared="keep">Seguir con el mío</button></div>
+        <p class="small muted" style="margin-top:10px">Si abres el compartido, el tuyo se reemplaza. Puedes guardarlo antes como escenario.</p>
+        <div class="choice"><button type="button" class="mini" data-shared="savekeep">Guardar el mío como escenario y abrir el compartido</button></div></div>`);
+  }
+
+  /* ---------- Eventos ---------- */
+  let undoFn = null;
+  function toast(m, undo) {
+    const el = $("[data-toast]"); el.querySelector("[data-toast-msg]").textContent = m;
+    const b = el.querySelector("[data-toast-undo]"); b.hidden = !undo; undoFn = undo || null;
+    el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => { el.classList.remove("show"); undoFn = null; }, undo ? 6000 : 3000);
+  }
+  function saveScenario() {
+    const list = scenList();
+    if (list.length >= 3) { toast("Ya hay 3 escenarios. Borra uno para guardar otro."); return false; }
+    const k = enc(norm(S)); if (list.some(x => enc(norm(x.st)) === k)) { toast("Ese plan ya está guardado como escenario."); return false; }
+    list.push({ name: `Escenario ${list.length + 1}`, st: structuredClone(S) }); store.set("caribe-scen", list); renderScen(); return true;
+  }
+  function copyText(txt, okMsg) {
+    const fallback = () => { try { window.prompt("Copia este texto:", txt); } catch (e) {} };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast(okMsg), fallback); else fallback();
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button"); if (!t) return;
+    const ds = t.dataset;
+    if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
+    if (ds.wxref) { WXREF = ds.wxref; store.set("caribe-wxref", WXREF); render(false); return; }
+    if (t.hasAttribute("data-toast-undo")) { const f = undoFn; undoFn = null; $("[data-toast]").classList.remove("show"); if (f) f(); return; }
+    if (ds.viewBtn) { showView(ds.viewBtn); return; }
+    if ("close" in ds) { closeSheet(t.closest("dialog")); return; }
+    if (ds.shared) {
+      const sh = pendingShared; pendingShared = null;
+      if (ds.shared === "savekeep") saveScenario();
+      if (ds.shared !== "keep" && sh) { S = sh; toast("Abriste el plan compartido."); }
+      closeSheet(sheet); render(); return;
+    }
+    if (ds.set) { S[ds.set] = ds.v; if (ds.set === "pu") { const p = P(); if (!p.out[S.out]) S.out = Object.keys(p.out)[0]; if (!p.back[S.back]) S.back = Object.keys(p.back)[0]; } if (ds.set !== "food") balance(); render(); return; }
+    if (ds.hotel) { S.h[ds.hotel] = ds.v; closeSheet(sheet); render(); toast("Hotel cambiado."); return; }
+    if (ds.hsheet) { const id = ds.hsheet; openSheet(sheet, () => hotelSheetHTML(id)); return; }
+    if (ds.edit) { const key = ds.edit; openSheet(sheet2, () => priceSheetHTML(key)); sheet2._static = true; const inp = sheet2.querySelector("[data-price-input]"); if (inp) { inp.focus(); inp.select(); } return; }
+    if (ds.priceSave) {
+      const key = ds.priceSave, v = parseMoney(sheet2.querySelector("[data-price-input]").value);
+      if (v === null || v > 1e8) { toast("Escribe un precio válido."); return; }
+      if (v === priceMeta(key).def) delete S.over[key]; else S.over[key] = v;
+      closeSheet(sheet2); render(); toast("Precio actualizado."); return;
+    }
+    if (ds.priceReset) { delete S.over[ds.priceReset]; closeSheet(sheet2); render(); toast("Volvió al precio original."); return; }
+    if (t.hasAttribute("data-balance")) { balance(); render(); toast("Noches repartidas."); return; }
+    if (ds.step) {
+      const id = ds.step, dv = +ds.d, d = DESTS.find(x => x.id === id);
+      if (dv > 0 && sumNights() >= totalNights()) {
+        const donor = DESTS.filter(x => x.id !== id && S.n[x.id] > x.min).sort((a, b) => S.n[b.id] - S.n[a.id])[0];
+        if (!donor) return; S.n[donor.id]--;
+      }
+      if (dv < 0 && S.n[id] <= d.min) return;
+      S.n[id] += dv; render(); return;
+    }
+    if (ds.day) { const k = ds.day; openSheet(sheet, () => daySheetHTML(k)); return; }
+    if (ds.wxPlace) { const k = ds.wxPlace; openSheet(sheet, () => placeSheetHTML(k)); return; }
+    if (ds.gotoDay) { const k = ds.gotoDay; closeSheet(sheet); showView("dias"); const el = document.getElementById("day-" + k); if (el) el.scrollIntoView({ block: "start" }); return; }
+    if (t.hasAttribute("data-intro-off")) { store.set("caribe-intro-off", true); $("[data-intro]").hidden = true; return; }
+    if (t.hasAttribute("data-share-native")) {
+      const txt = shareText(LAST), url = shareURL();
+      if (navigator.share) navigator.share({ title: "Viaje al Caribe", text: txt, url }).catch(() => {});
+      else copyText(txt + "\n" + url, "Resumen y enlace copiados.");
+      return;
+    }
+    if (t.hasAttribute("data-copy")) { copyText(shareURL(), "Enlace copiado. Al abrirlo se ve esta misma versión."); return; }
+    if (t.hasAttribute("data-save")) { if (saveScenario()) toast("Escenario guardado. Míralo en Comparar."); return; }
+    if (t.hasAttribute("data-reset")) { const prev = structuredClone(S); S = norm({}); balance(); render(); toast("Plan restablecido.", () => { S = norm(prev); render(); toast("Se recuperó tu plan."); }); return; }
+    if (ds.load) { const x = scenList()[+ds.load]; if (!x) return; S = norm(x.st); render(); showView("armar"); toast(`Cargaste "${x.name}".`); return; }
+    if (ds.del) {
+      const list = scenList(), i = +ds.del, [rm] = list.splice(i, 1); store.set("caribe-scen", list); renderScen();
+      toast("Escenario borrado.", () => { const l = scenList(); l.splice(i, 0, rm); store.set("caribe-scen", l.slice(0, 3)); renderScen(); }); return;
+    }
+    if (t.hasAttribute("data-cadd")) { openSheet(sheet2, () => customSheetHTML(null)); sheet2._static = true; const inp = sheet2.querySelector("input[name=t]"); if (inp) inp.focus(); return; }
+    if (ds.cedit) { const id = ds.cedit; openSheet(sheet2, () => customSheetHTML(id)); sheet2._static = true; return; }
+    if (ds.cdel) {
+      const id = ds.cdel, i = S.custom.findIndex(c => c.id === id); if (i < 0) return;
+      const [rm] = S.custom.splice(i, 1), was = S.acts[id], pin = S.pin[id]; delete S.acts[id]; delete S.pin[id]; render();
+      toast(`Borraste "${rm.t}".`, () => { S.custom.splice(i, 0, rm); S.acts[id] = was; if (pin) S.pin[id] = pin; render(); }); return;
+    }
+  });
+  document.addEventListener("submit", e => {
+    const f = e.target.closest("[data-cform]"); if (!f) return; e.preventDefault();
+    const fd = new FormData(f), name = undash(String(fd.get("t") || "")).trim();
+    if (!name) { f.querySelector("[data-cform-err]").hidden = false; f.querySelector("input[name=t]").focus(); return; }
+    const c = { id: f.dataset.cform || "c" + Date.now().toString(36), t: name.slice(0, 80), dest: String(fd.get("dest")), cost: parseMoney(fd.get("cost")) || 0, pay: fd.get("pay") === "tarjeta" ? "tarjeta" : "efectivo", kind: String(fd.get("kind") || "dia") };
+    const i = S.custom.findIndex(x => x.id === c.id);
+    if (i >= 0) S.custom[i] = c; else { S.custom.push(c); S.acts[c.id] = true; }
+    S = norm(S); closeSheet(sheet2); render(); toast(i >= 0 ? "Plan actualizado." : "Plan agregado.");
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-price-input]")) { e.preventDefault(); const b = sheet2.querySelector("[data-price-save]"); if (b) b.click(); } });
+  document.addEventListener("change", e => {
+    const t = e.target;
+    if (t.dataset.act) { S.acts[t.dataset.act] = t.checked; render(); return; }
+    if (t.dataset.key) { const done = store.get("caribe-checks4", {}); done[t.dataset.key] = t.checked; store.set("caribe-checks4", done); renderChecks(LAST); return; }
+    if (t.hasAttribute("data-bag-toggle")) { S.bag = t.checked; render(); return; }
+    if (t.dataset.pin) { const id = t.dataset.pin; if (t.value) S.pin[id] = t.value; else delete S.pin[id]; render(); toast(t.value ? "Plan movido." : "El plan volvió a su día automático."); return; }
+    if (t.dataset.scenName !== undefined) { const list = scenList(), i = +t.dataset.scenName; if (list[i]) { list[i].name = undash(t.value).trim().slice(0, 40) || `Escenario ${i + 1}`; store.set("caribe-scen", list); } return; }
+    if (t.dataset.note) { renderCal(LAST); return; }
+    if (t.hasAttribute("data-goal")) applyGoal(t);
+  });
+  let noteTimer = null;
+  document.addEventListener("input", e => {
+    const t = e.target;
+    if (t.dataset.note) {
+      const k = t.dataset.note, v = undash(t.value).slice(0, 1000);
+      if (v.trim()) S.notes[k] = v; else delete S.notes[k];
+      $$(`[data-note="${k}"]`).forEach(x => { if (x !== t) x.value = t.value; });
+      clearTimeout(noteTimer); noteTimer = setTimeout(persist, 400); return;
+    }
+    if (t.hasAttribute("data-cont")) { S.cont = +t.value; render(); }
+  });
+  function applyGoal(inp) {
+    const v = parseMoney(inp.value);
+    if (v !== null && v >= 500000 && v <= 50000000) { if (v !== S.goal) { S.goal = v; render(); } inp.value = fmt(S.goal); }
+    else { inp.value = fmt(S.goal); toast("La meta debe estar entre $500.000 y $50.000.000."); }
+  }
+  $("[data-goal]").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+  $$("details[name=armar]").forEach(dt => dt.addEventListener("toggle", () => {
+    if (dt.open) { $$("details[name=armar]").forEach(o => { if (o !== dt && o.open) o.open = false; }); store.set("caribe-acc", dt.dataset.acc); }
+    else if (store.get("caribe-acc", "") === dt.dataset.acc) store.set("caribe-acc", "");
+  }));
+
+  /* ---------- Navegación ---------- */
+  let curView = null; const scrollMem = {};
+  const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function showView(v) {
+    if (!document.querySelector(`[data-view="${v}"]`)) v = "armar";
+    if (v === "mas" && window.matchMedia && matchMedia("(min-width: 861px)").matches) v = "comparar";
+    if (v === curView) { window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" }); return; }
+    if (curView) scrollMem[curView] = window.scrollY;
+    $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
+    $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
+      const inMas = (v === "comparar" || v === "pendientes" || v === "info") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
+      if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+    curView = v; store.set("caribe-view", v);
+    window.scrollTo(0, scrollMem[v] || 0);
+  }
+
+  /* ---------- Inicio ---------- */
+  fixHotels(); if (sumNights() !== totalNights()) balance();
+  (function () { const a = store.get("caribe-acc", firstTime ? "fechas" : ""); const dt = a && document.querySelector(`details[data-acc="${a}"]`); if (dt) dt.open = true; })();
+  if (pendingShared) { render(false); askShared(); } else render();
+  window.addEventListener("hashchange", () => {
+    const h = hashState(); if (!h) return;
+    const n = norm(h); if (enc(n) === enc(S)) return;
+    pendingShared = n; askShared();
+  });
+  showView(store.get("caribe-view", "armar"));
+  loadWeather(false);
+</script>
+</body>
+</html>
