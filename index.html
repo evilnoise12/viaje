@@ -208,6 +208,7 @@
   .hol-row { display: flex; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; } .hol-row b { min-width: 86px; color: #c0392b; } .hol-row span { color: var(--muted); } .hol-row.in span { color: var(--text); font-weight: 500; }
   @media (max-width: 600px) { .hol-t { display: none; } .hol-i { display: block; } }
   .a2hs { position: fixed; z-index: 40; left: 50%; bottom: calc(var(--bottom) + 18px + var(--sab)); transform: translateX(-50%); width: min(92vw, 380px); background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 40px -12px rgba(13, 60, 54, .45); padding: 16px 16px 12px; }
+  .a2hs.menu .a2hs-arrow { left: auto; right: 34px; transform: rotate(45deg); }
   .a2hs.ipad { bottom: auto; top: calc(var(--top) + 14px); left: auto; right: 16px; transform: none; }
   .a2hs-x { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: transparent; font-size: 20px; color: var(--muted); cursor: pointer; }
   .a2hs-head { display: flex; gap: 12px; align-items: center; padding-right: 30px; }
@@ -1738,6 +1739,13 @@
     if (ipad) el.classList.add("ipad");
     if (inApp) { $("[data-a2hs-note]").hidden = false; el.querySelector(".a2hs-steps").hidden = true; }
     if (/CriOS|FxiOS|EdgiOS/.test(ua)) { el.querySelector(".a2hs-steps li").innerHTML = `<span class="n">1</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span> arriba a la derecha.`; el.querySelector(".a2hs-arrow").hidden = true; }
+    const sv = +((ua.match(/Version\/(\d+)/) || [])[1] || 0);
+    if (!ipad && !inApp && !/CriOS|FxiOS|EdgiOS/.test(ua) && sv >= 26) {
+      el.classList.add("menu");
+      el.querySelector(".a2hs-steps").innerHTML = `<li><span class="n">1</span>Toca <span class="key"><i class="ph-bold ph-dots-three" aria-hidden="true"></i></span> de Safari, al lado de la barra de dirección (no el "Más" de la app).</li>
+        <li><span class="n">2</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span></li>
+        <li><span class="n">3</span>Elige <span class="key"><i class="ph ph-plus-square" aria-hidden="true"></i>Agregar a inicio</span> y toca <b>Agregar</b>. <span class="alt">Si no aparece, desliza hacia abajo o toca "Ver más".</span></li>`;
+    }
     setTimeout(() => { el.hidden = false; }, 2500);
     el.addEventListener("click", e => { if (e.target.closest("[data-a2hs-close]")) { el.hidden = true; store.set("caribe-a2hs", Date.now()); } });
   })();
