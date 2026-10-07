@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-07.2">
+<meta name="app-version" content="2026-10-07.3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -259,6 +259,20 @@
   .ptr i { font-size: 16px; transition: transform .2s; } .ptr.ready i { transform: rotate(180deg); }
   .upd { position: fixed; z-index: 36; left: 50%; transform: translateX(-50%); top: calc(var(--top) + var(--sat) + 10px); display: flex; align-items: center; gap: 10px; background: var(--text); color: #fff; border-radius: 999px; padding: 6px 6px 6px 14px; font-size: 14px; box-shadow: 0 10px 24px -10px rgba(0,0,0,.5); white-space: nowrap; }
   .upd i { color: #ffd27a; } .upd button { border: 0; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
+  .sg-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  .sg-head h2 i { color: #c27c00 !important; }
+  .sg-group { margin-top: 14px; }
+  .sg-group h4 { display: flex; align-items: center; gap: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 8px; }
+  .sg-group h4 i { font-size: 16px; }
+  .sg { display: grid; grid-template-columns: auto 1fr auto; gap: 10px 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .sg + .sg { margin-top: 8px; }
+  .sg > i { font-size: 22px; color: var(--accent); }
+  .sg b { display: block; font-size: 14px; } .sg small { display: block; color: var(--muted); font-size: 13px; line-height: 1.35; margin-top: 2px; }
+  .sg .sv { text-align: right; white-space: nowrap; } .sg .sv b { color: #1f8a4c; font-size: 15px; } .sg .sv button { margin-top: 6px; }
+  .q0 { color: #1f8a4c; } .q1 { color: #b07a00; } .q2 { color: var(--warn); }
+  @media (max-width: 600px) { .sg { grid-template-columns: auto 1fr; } .sg .sv { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; text-align: left; } .sg .sv button { margin-top: 0; } }
+  .sg-banner { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 1px solid #f0d29a; background: #fff7e6; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; cursor: pointer; }
+  .sg-banner > i { font-size: 24px; color: #c27c00; flex: none; } .sg-banner b { display: block; font-size: 15px; } .sg-banner span { display: block; font-size: 13px; color: var(--muted); } .sg-banner .car { margin-left: auto; color: var(--muted); font-size: 18px; }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
   .wx-strip { margin-bottom: 14px; }
@@ -603,6 +617,7 @@
         <button type="button" class="icon-btn" data-intro-off aria-label="Cerrar la explicación"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
       <div class="wx-strip" data-wx-strip></div>
+      <div data-sg-banner></div>
       <div class="warns" data-warn-armar></div>
 
       <details class="acc" name="armar" data-acc="fechas">
@@ -679,6 +694,11 @@
           </div>
         </div>
         <div class="card"><h2 style="margin-bottom:6px"><i class="ph ph-receipt" aria-hidden="true"></i>Desglose</h2><div class="lines" data-lines></div></div>
+      </div>
+      <div class="card sugg" id="sugerencias" style="margin-top:12px">
+        <div class="sg-head"><h2><i class="ph-fill ph-magic-wand" aria-hidden="true"></i>Sugerencias para ahorrar</h2><button type="button" class="mini primary" data-sg-all hidden><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar las que no pierden calidad</button></div>
+        <p class="small muted" style="margin-top:4px">La app prueba otros hoteles, vuelos, días y planes a partir de lo que ya elegiste y recalcula el total exacto de cada cambio.</p>
+        <div data-sugg></div>
       </div>
       <div class="card" style="margin-top:12px">
         <h2><i class="ph ph-money" aria-hidden="true"></i>Efectivo a llevar por destino</h2>
@@ -1180,7 +1200,7 @@
     const fs = captureFocus();
     fixHotels();
     const C = costs(); LAST = C;
-    renderTop(C); renderWxStrip(); renderArmar(C); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
+    renderTop(C); renderWxStrip(); renderArmar(C); renderSugg(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
     refreshSheets();
     restoreFocus(fs);
     if (save) persist();
@@ -1639,6 +1659,9 @@
     const t = e.target.closest("button"); if (!t) return;
     const ds = t.dataset;
     if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
+    if (ds.sg != null) { applySugg(+ds.sg); return; }
+    if (t.hasAttribute("data-sg-all")) { applyAllFree(); return; }
+    if (t.hasAttribute("data-sg-open")) { showView("costos"); setTimeout(() => { const el = document.getElementById("sugerencias"); if (el) el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); }, 50); return; }
     if (ds.gtab) { GTAB = ds.gtab; store.set("caribe-gtab", GTAB); renderGuide(); return; }
     if (ds.wxref) { WXREF = ds.wxref; store.set("caribe-wxref", WXREF); render(false); return; }
     if (t.hasAttribute("data-toast-undo")) { const f = undoFn; undoFn = null; $("[data-toast]").classList.remove("show"); if (f) f(); return; }
@@ -1739,6 +1762,89 @@
     else if (store.get("caribe-acc", "") === dt.dataset.acc) store.set("caribe-acc", "");
   }));
 
+  /* ---------- Asesor de ahorro ---------- */
+  const QL = [{ t: "Sin perder calidad", i: "ph-seal-check", c: "q0" }, { t: "Perdiendo un poco", i: "ph-scales", c: "q1" }, { t: "Perdiendo más", i: "ph-warning", c: "q2" }];
+  const scoreNum = h => parseFloat(String(h.score).replace(",", "."));
+  function evalState(mut) {
+    const keep = S; let r = null;
+    try {
+      const st = structuredClone(keep); mut(st); S = norm(st); fixHotels(); if (sumNights() !== totalNights()) balance();
+      const C = costs(); r = { st: S, total: C.total, C, work: workdays(), nights: totalNights() };
+    } catch (e) { r = null; } finally { S = keep; }
+    return r;
+  }
+  function suggestions(base) {
+    const out = [], B = base || LAST; if (!B || sumNights() !== totalNights()) return out;
+    const add = (o, r) => { if (!r) return; const save = Math.round(B.total - r.total); if (save >= 10000) out.push(Object.assign(o, { save, st: r.st })); };
+    const p = P(), unplaced0 = B.it.unplaced.length;
+    // Hoteles
+    DESTS.forEach(d => { if (!S.n[d.id]) return; const cur = hotelOf(d), cr = rateOf(cur), cs = scoreNum(cur);
+      d.hotels.forEach(h => { if (h.id === cur.id || !h.rate[S.pu]) return; const r = ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]); if (r >= cr) return;
+        const ns = scoreNum(h), diff = cs - ns; let q = isNaN(ns) ? 1 : diff <= 0 ? 0 : diff <= .5 ? 1 : 2; const notes = [];
+        if (isNaN(ns)) notes.push("sin reseñas verificadas"); else notes.push(`nota ${h.score} vs ${cur.score}`);
+        if (/lejos/i.test(h.info)) { q = Math.max(q, 1); notes.push("queda lejos del centro"); }
+        if (/sin reembolso/i.test(h.info) && !/sin reembolso/i.test(cur.info)) { q = Math.max(q, 1); notes.push("sin reembolso"); }
+        if (/solo efectivo/i.test(h.info)) notes.push("solo efectivo");
+        if (/pequeñ/i.test(h.info)) { q = Math.max(q, 1); notes.push("cuarto pequeño"); }
+        add({ k: "hotel", icon: "ph-bed", q, t: `${h.name} en vez de ${cur.name}`, d: `${h.where}. ${cap(notes.join(", "))}.` }, evalState(st => { st.h[d.id] = h.id; }));
+      }); });
+    // Vuelos
+    ["out", "back"].forEach(side => Object.entries(p[side]).forEach(([k, v]) => { if (k === S[side]) return;
+      const r = evalState(st => { st[side] = k; }); if (!r) return;
+      let q = 0; const notes = [`${v.air} ${v.time}`];
+      if (v.warn) { q = 1; notes.push(v.warn.toLowerCase()); }
+      if (r.nights < totalNights()) { q = 2; notes.push(`${r.nights} noches en vez de ${totalNights()}`); }
+      if (r.work > workdays()) { q = Math.max(q, 1); notes.push(`${r.work - workdays()} día laboral más`); }
+      add({ k: "vuelo", icon: side === "out" ? "ph-airplane-takeoff" : "ph-airplane-landing", q, t: `${side === "out" ? "Salir" : "Regresar"} el ${dlabel(v.date)}`, d: cap(notes.join(", ")) + "." }, r);
+    }));
+    // Pasadía: otro día u otra base
+    if (B.it.placed.pasadia) {
+      const pas = actById("pasadia"), days = allowedDays(pas, B.it.days, B.it.N); let best = null;
+      days.forEach(d => { if (d.iso === B.it.placed.pasadia.iso) return; const r = evalState(st => { st.pin.pasadia = d.iso; });
+        if (!r || !r.C.it.placed.pasadia || r.C.it.unplaced.length > unplaced0) return; const save = B.total - r.total;
+        if (!best || save > best.save) best = { save, r, d }; });
+      if (best && best.save >= 10000) { const lost = B.it.backup && !best.r.C.it.backup;
+        add({ k: "pasadia", icon: "ph-island", q: lost ? 1 : 0, t: `Pasadía el ${dlabel(best.d.iso)}${best.d.loc === "rincon" ? " desde Rincón" : ""}`, d: `${best.d.loc === "rincon" ? "Desde Rincón la lancha cuesta menos. " : ""}${best.d.wkend || best.d.fest ? "" : "Entre semana es temporada baja. "}${lost ? "Queda sin día de respaldo." : "Mantiene el día de respaldo."}` }, best.r);
+      }
+    }
+    // Reparto de noches
+    DESTS.forEach(a => DESTS.forEach(b => { if (a.id === b.id || S.n[a.id] <= a.min || !S.n[b.id]) return;
+      const r = evalState(st => { st.n[a.id]--; st.n[b.id]++; });
+      if (!r || r.C.it.unplaced.length > unplaced0) return;
+      add({ k: "noches", icon: "ph-arrows-left-right", q: 0, t: `Una noche menos en ${DNAME_SHORT[a.id]} y una más en ${DNAME_SHORT[b.id]}`, d: `Mismo viaje y los mismos planes; ${DNAME_SHORT[b.id]} sale más barato por noche.` }, r);
+    }));
+    // Comida y maleta
+    const fi = FOOD.findIndex(f => f.id === S.food);
+    if (fi > 0) add({ k: "comida", icon: "ph-fork-knife", q: 1, t: `Comida ${FOOD[fi - 1].name.toLowerCase()}`, d: `${FOOD[fi - 1].sub}: más corrientazo y comida local, menos restaurante.` }, evalState(st => { st.food = FOOD[fi - 1].id; }));
+    if (S.bag) add({ k: "maleta", icon: "ph-suitcase-rolling", q: 1, t: "Viajar sin maleta de mano", d: "Solo el bolso pequeño que incluye la tarifa. Ojo: en la lancha también ayuda viajar liviano." }, evalState(st => { st.bag = false; }));
+    // Planes con costo
+    Object.keys(B.it.placed).forEach(id => { const a = allActs().find(x => x.id === id); if (!a || a.lvl === "must" || a.custom) return;
+      add({ k: "plan", icon: ACT_ICON[id] || "ph-star", q: a.lvl === "opt" ? 1 : 2, t: `Quitar: ${a.t}`, d: `Es ${LVL[a.lvl].toLowerCase()}.` }, evalState(st => { st.acts[id] = false; }));
+    });
+    // Mejor por grupo, sin repetir el mismo tipo de cambio para el mismo destino
+    out.sort((x, y) => x.q - y.q || y.save - x.save);
+    const seen = new Set();
+    return out.filter(o => { const key = o.k === "hotel" ? "h-" + o.t.split(" en vez de ")[1] : o.k === "vuelo" ? o.t.split(" ")[0] : o.k + o.t; if (seen.has(key)) return false; seen.add(key); return true; }).slice(0, 12);
+  }
+  let SG = [];
+  function renderSugg() {
+    const box = $("[data-sugg]"); if (!box) return;
+    SG = suggestions();
+    const ban = $("[data-sg-banner]");
+    if (!SG.length) { box.innerHTML = `<p class="empty" style="margin-top:10px">No encontré más ahorros con lo que hay en la app. El plan ya está bastante ajustado.</p>`; $("[data-sg-all]").hidden = true; if (ban) ban.innerHTML = ""; return; }
+    const free = SG.filter(x => x.q === 0);
+    $("[data-sg-all]").hidden = !free.length;
+    box.innerHTML = [0, 1, 2].map(q => { const g = SG.map((x, i) => [x, i]).filter(([x]) => x.q === q); if (!g.length) return "";
+      return `<div class="sg-group"><h4 class="${QL[q].c}"><i class="ph-fill ${QL[q].i}" aria-hidden="true"></i>${QL[q].t}</h4>${g.map(([x, i]) => `<div class="sg"><i class="ph ${x.icon}" aria-hidden="true"></i><div><b>${esc(x.t)}</b><small>${esc(x.d)}</small></div><div class="sv"><b class="num">-${fmt(x.save)}</b><button type="button" class="mini" data-sg="${i}">Aplicar</button></div></div>`).join("")}</div>`; }).join("");
+    if (ban) { const best = SG.reduce((m, x) => x.q === 0 ? m + 0 : m, 0); const top = free.length ? free.reduce((a, b) => a.save > b.save ? a : b) : SG[0];
+      ban.innerHTML = `<button type="button" class="sg-banner" data-sg-open><i class="ph-fill ph-magic-wand" aria-hidden="true"></i><div><b>Podrías ahorrar ${fmt(top.save)}${free.length ? " sin perder calidad" : ""}</b><span>${esc(top.t)}. Ver ${SG.length} ${SG.length === 1 ? "sugerencia" : "sugerencias"}.</span></div><i class="ph ph-caret-right car" aria-hidden="true"></i></button>`; }
+  }
+  function applySugg(i) { const x = SG[i]; if (!x) return; const prev = structuredClone(S), t0 = LAST.total; S = norm(x.st); render(); toast(`Aplicado: ahorras ${fmt(t0 - LAST.total)}.`, () => { S = norm(prev); render(); }); }
+  function applyAllFree() {
+    const prev = structuredClone(S), t0 = LAST.total; let n = 0;
+    for (let k = 0; k < 8; k++) { const free = suggestions().filter(x => x.q === 0); if (!free.length) break; S = norm(free[0].st); render(false); n++; }
+    render(); toast(`${n} ${n === 1 ? "cambio aplicado" : "cambios aplicados"}: ahorras ${fmt(t0 - LAST.total)}.`, () => { S = norm(prev); render(); });
+  }
   /* ---------- Guía ---------- */
   const GUIDE = [
     { id: "general", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
