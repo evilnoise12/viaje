@@ -211,7 +211,7 @@
   .a2hs.menu .a2hs-arrow { left: auto; right: 34px; transform: rotate(45deg); }
   .a2hs.ipad { bottom: auto; top: calc(var(--top) + 14px); left: auto; right: 16px; transform: none; }
   .a2hs-x { position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: 0; background: transparent; font-size: 20px; color: var(--muted); cursor: pointer; }
-  .a2hs-head { display: flex; gap: 12px; align-items: center; padding-right: 30px; }
+  .a2hs-head { display: flex; gap: 12px; align-items: center; }
   .a2hs-head img { border-radius: 10px; flex: none; }
   .a2hs-head b { display: block; font-size: 16px; }
   .a2hs-head span { display: block; font-size: 13px; color: var(--muted); line-height: 1.3; }
@@ -222,6 +222,10 @@
   .a2hs-steps .key i { font-size: 17px; color: #0a84ff; }
   .a2hs-steps .alt { display: block; color: var(--muted); font-size: 13px; line-height: 1.4; }
   .a2hs-note { font-size: 13px; color: var(--warn); margin: 6px 0; }
+  .a2hs-backdrop { position: fixed; inset: 0; z-index: 39; background: rgba(10, 30, 28, .55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  html.a2hs-lock, html.a2hs-lock body { overflow: hidden; }
+  html.a2hs-lock .toast { z-index: 60; }
+  .a2hs [data-a2hs-copy] { color: var(--accent-ink); background: var(--accent); border-radius: 999px; padding: 10px 18px; margin-top: 8px; }
   .a2hs-later { display: block; margin: 4px auto 0; border: 0; background: none; color: var(--muted); font-weight: 600; padding: 10px; min-height: 40px; cursor: pointer; }
   .a2hs-arrow { position: absolute; left: 50%; bottom: -11px; width: 20px; height: 20px; background: var(--surface); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: translateX(-50%) rotate(45deg); }
   .a2hs.ipad .a2hs-arrow { bottom: auto; top: -11px; left: auto; right: 24px; transform: rotate(-135deg); }
@@ -733,15 +737,15 @@
   <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
   <button data-view-btn="mas"><i class="ph ph-dots-three-outline" aria-hidden="true"></i>Más</button>
 </nav>
-<div class="a2hs" data-a2hs hidden role="dialog" aria-labelledby="a2hs-t">
-  <button type="button" class="a2hs-x" data-a2hs-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button>
+<div class="a2hs-backdrop" data-a2hs-bg hidden></div>
+<div class="a2hs" data-a2hs hidden role="dialog" aria-modal="true" aria-labelledby="a2hs-t">
   <div class="a2hs-head"><img src="apple-touch-icon.png" alt="" width="44" height="44"><div><b id="a2hs-t">Instala Vacas en tu iPhone</b><span>Se abre como app, a pantalla completa y sin la barra de Safari.</span></div></div>
   <ol class="a2hs-steps">
     <li><span class="n">1</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span> abajo en Safari. <span class="alt">Si no lo ves, toca primero <i class="ph ph-dots-three" aria-hidden="true"></i></span></li>
     <li><span class="n">2</span>Elige <span class="key"><i class="ph ph-plus-square" aria-hidden="true"></i>Agregar a inicio</span> y toca <b>Agregar</b></li>
   </ol>
   <p class="a2hs-note" data-a2hs-note hidden>Estás en un navegador dentro de otra app. Ábrela primero en Safari para poder instalarla.</p>
-  <button type="button" class="a2hs-later" data-a2hs-close>Ahora no</button>
+  <button type="button" class="a2hs-later" data-a2hs-copy hidden><i class="ph ph-link" aria-hidden="true"></i> Copiar enlace para abrir en Safari</button>
   <span class="a2hs-arrow" aria-hidden="true"></span>
 </div>
 <div class="toast" data-toast role="status" aria-live="polite"><span data-toast-msg></span><button type="button" data-toast-undo hidden>Deshacer</button></div>
@@ -1732,12 +1736,10 @@
     const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     const standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
     if (!ios || standalone) return;
-    const seen = store.get("caribe-a2hs", 0);
-    if (seen && Date.now() - seen < 7 * 864e5) return;
     const el = $("[data-a2hs]"), ipad = /iPad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     const inApp = /FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\//.test(ua) || (/CriOS|FxiOS|EdgiOS/.test(ua) ? false : !/Safari\//.test(ua));
     if (ipad) el.classList.add("ipad");
-    if (inApp) { $("[data-a2hs-note]").hidden = false; el.querySelector(".a2hs-steps").hidden = true; }
+    if (inApp) { $("[data-a2hs-note]").hidden = false; el.querySelector(".a2hs-steps").hidden = true; el.querySelector("[data-a2hs-copy]").hidden = false; el.querySelector(".a2hs-arrow").hidden = true; }
     if (/CriOS|FxiOS|EdgiOS/.test(ua)) { el.querySelector(".a2hs-steps li").innerHTML = `<span class="n">1</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span> arriba a la derecha.`; el.querySelector(".a2hs-arrow").hidden = true; }
     const sv = +((ua.match(/Version\/(\d+)/) || [])[1] || 0);
     if (!ipad && !inApp && !/CriOS|FxiOS|EdgiOS/.test(ua) && sv >= 26) {
@@ -1746,8 +1748,8 @@
         <li><span class="n">2</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span></li>
         <li><span class="n">3</span>Elige <span class="key"><i class="ph ph-plus-square" aria-hidden="true"></i>Agregar a inicio</span> y toca <b>Agregar</b>. <span class="alt">Si no aparece, desliza hacia abajo o toca "Ver más".</span></li>`;
     }
-    setTimeout(() => { el.hidden = false; }, 2500);
-    el.addEventListener("click", e => { if (e.target.closest("[data-a2hs-close]")) { el.hidden = true; store.set("caribe-a2hs", Date.now()); } });
+    setTimeout(() => { el.hidden = false; $("[data-a2hs-bg]").hidden = false; document.documentElement.classList.add("a2hs-lock"); }, 600);
+    el.addEventListener("click", e => { if (e.target.closest("[data-a2hs-copy]")) copyText(location.href.split("#")[0], "Enlace copiado. Pégalo en Safari."); });
   })();
 </script>
 </body>
