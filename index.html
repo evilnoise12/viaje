@@ -6,12 +6,13 @@
 <meta name="theme-color" content="#f4f6f5">
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
-<title>Viaje al Caribe</title>
+<title>Vacas</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Caribe">
+<meta name="apple-mobile-web-app-title" content="Vacas">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -228,6 +229,8 @@
   @keyframes a2hs-in2 { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
   @keyframes a2hs-bob { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 6px); } }
   @media (min-width: 861px) { .a2hs:not(.ipad) { bottom: 24px; } }
+  .logo-img { border-radius: 8px; flex: none; }
+  .a2hs-head img { box-shadow: 0 4px 10px -4px rgba(0,0,0,.35); }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
   .wx-strip { margin-bottom: 14px; }
@@ -544,7 +547,7 @@
 <body>
 <div class="app">
   <aside class="side" aria-label="Menú">
-    <div class="logo"><i class="ph-fill ph-sun-horizon" aria-hidden="true"></i>Viaje al Caribe</div>
+    <div class="logo"><img src="apple-touch-icon.png" alt="" width="30" height="30" class="logo-img">Vacas</div>
     <button class="nav-btn" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
     <button class="nav-btn" data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
@@ -731,7 +734,7 @@
 </nav>
 <div class="a2hs" data-a2hs hidden role="dialog" aria-labelledby="a2hs-t">
   <button type="button" class="a2hs-x" data-a2hs-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button>
-  <div class="a2hs-head"><img src="apple-touch-icon.png" alt="" width="44" height="44"><div><b id="a2hs-t">Instala Caribe en tu iPhone</b><span>Se abre como app, a pantalla completa y sin la barra de Safari.</span></div></div>
+  <div class="a2hs-head"><img src="apple-touch-icon.png" alt="" width="44" height="44"><div><b id="a2hs-t">Instala Vacas en tu iPhone</b><span>Se abre como app, a pantalla completa y sin la barra de Safari.</span></div></div>
   <ol class="a2hs-steps">
     <li><span class="n">1</span>Toca <span class="key"><i class="ph ph-export" aria-hidden="true"></i>Compartir</span> abajo en Safari. <span class="alt">Si no lo ves, toca primero <i class="ph ph-dots-three" aria-hidden="true"></i></span></li>
     <li><span class="n">2</span>Elige <span class="key"><i class="ph ph-plus-square" aria-hidden="true"></i>Agregar a inicio</span> y toca <b>Agregar</b></li>
@@ -1635,7 +1638,7 @@
     if (t.hasAttribute("data-intro-off")) { store.set("caribe-intro-off", true); $("[data-intro]").hidden = true; return; }
     if (t.hasAttribute("data-share-native")) {
       const txt = shareText(LAST), url = shareURL();
-      if (navigator.share) navigator.share({ title: "Viaje al Caribe", text: txt, url }).catch(() => {});
+      if (navigator.share) navigator.share({ title: "Vacas", text: txt, url }).catch(() => {});
       else copyText(txt + "\n" + url, "Resumen y enlace copiados.");
       return;
     }
