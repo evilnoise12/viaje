@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-07.4">
+<meta name="app-version" content="2026-10-08.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -281,6 +281,7 @@
   .ai [data-ai-ask] { margin-top: 8px; }
   .ai-ans { margin-top: 12px; background: #f7f2fd; border: 1px solid #e3d5f5; border-radius: 12px; padding: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
   .ai-ch { margin-top: 10px; }
+  .ai-note { margin-top: 8px; font-size: 12.5px; color: var(--muted, #6b7280); }
   .ai.off textarea, .ai.off [data-ai-ask], .ai.off .ai-ex { opacity: .5; pointer-events: none; }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
@@ -1916,10 +1917,12 @@
     if (AI_BUSY) { out.innerHTML = `<p class="ai-ans"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...</p>`; return; }
     if (!AI_LAST) { out.innerHTML = ""; return; }
     if (AI_LAST.error) { out.innerHTML = `<p class="ai-ans" style="background:var(--warn-soft);border-color:#f3c8b0">${esc(AI_LAST.error)}</p>`; return; }
-    const B = LAST, items = (AI_LAST.cambios || []).map(c => aiMut(c)).filter(Boolean).map(m => { const r = evalState(m.f); return r ? Object.assign(m, { save: Math.round(B.total - r.total), st: r.st }) : null; }).filter(Boolean);
+    const B = LAST; let items = (AI_LAST.cambios || []).map(c => aiMut(c)).filter(Boolean).map(m => { const r = evalState(m.f); return r ? Object.assign(m, { save: Math.round(B.total - r.total), st: r.st }) : null; }).filter(Boolean);
+    const hid = (AI_LAST.cambios || []).length - items.filter(m => m.save > 0).length;
+    items = items.filter(m => m.save > 0);
     AI_LAST.items = items;
     const all = items.length > 1 ? evalState(st => items.forEach(m => m.f(st))) : null;
-    out.innerHTML = `<div class="ai-ans">${esc(AI_LAST.respuesta || "")}</div>${items.length ? `<div class="ai-ch">${items.map((m, i) => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b><small>${m.save >= 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.</small></div><div class="sv"><b class="num" style="color:${m.save >= 0 ? "#1f8a4c" : "var(--warn)"}">${m.save >= 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b><button type="button" class="mini" data-ai-apply="${i}">Aplicar</button></div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:10px" data-ai-all><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B.total - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B.total - all.total))})</button>` : ""}</div>` : ""}`;
+    out.innerHTML = `<div class="ai-ans">${esc(AI_LAST.respuesta || "")}</div>${items.length ? `<div class="ai-ch">${items.map((m, i) => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b><small>${m.save >= 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.</small></div><div class="sv"><b class="num" style="color:${m.save >= 0 ? "#1f8a4c" : "var(--warn)"}">${m.save >= 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b><button type="button" class="mini" data-ai-apply="${i}">Aplicar</button></div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:10px" data-ai-all><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B.total - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B.total - all.total))})</button>` : ""}</div>` : ""}${hid > 0 ? `<p class="ai-note">${items.length ? `Oculté ${hid === 1 ? "1 propuesta" : hid + " propuestas"} que no ahorraba${hid === 1 ? "" : "n"} o no se podía${hid === 1 ? "" : "n"} aplicar.` : "Ninguna propuesta ahorraba plata frente a tu plan actual. Prueba con otra pregunta."}</p>` : ""}`;
   }
   async function aiAsk(q) {
     q = (q || $("[data-ai-q]").value || "").trim(); if (!q || AI_BUSY || !AI_READY) return;
