@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-08.3">
+<meta name="app-version" content="2026-10-08.4">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1959,6 +1959,7 @@
       const m = aiMut(c); if (!m) { hid++; return; }
       if ((msg.done || []).includes(ci)) { list.push(Object.assign(m, { ci, done: true })); return; }
       const r = evalState(m.f); if (!r) { hid++; return; }
+      if (JSON.stringify(r.st) === JSON.stringify(S)) return; // ya está así en el plan
       const save = Math.round(B.total - r.total);
       if (msg.ahorro && save <= 0) { hid++; return; }
       list.push(Object.assign(m, { ci, save, st: r.st }));
@@ -1982,7 +1983,7 @@
       if (msg.error) return `<div class="msg bot err">${esc(msg.error)}</div>`;
       const v = aiView(msg); msg.view = v.list.filter(m => !m.done);
       const pend = msg.view, all = pend.length > 1 ? evalState(stt => pend.forEach(m => m.f(stt))) : null;
-      return `<div class="msg-wrap"><div class="msg bot">${esc(msg.text)}</div>${v.list.length ? `<div class="ai-ch">${v.list.map(m => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b>${m.done ? "" : `<small>${m.save >= 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.</small>`}</div><div class="sv">${m.done ? `<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i>Aplicado</span>` : `<b class="num" style="color:${m.save >= 0 ? "#1f8a4c" : "var(--warn)"}">${m.save >= 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b><button type="button" class="mini" data-ai-apply="${mi}:${m.ci}">Aplicar</button>`}</div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:8px" data-ai-all="${mi}"><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B_TOTAL() - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B_TOTAL() - all.total))})</button>` : ""}</div>` : ""}${v.hid > 0 ? `<p class="ai-note">Oculté ${v.hid === 1 ? "1 propuesta" : v.hid + " propuestas"} que no ahorraba${v.hid === 1 ? "" : "n"} o no se podía${v.hid === 1 ? "" : "n"} aplicar.</p>` : ""}</div>`;
+      return `<div class="msg-wrap"><div class="msg bot">${esc(msg.text)}</div>${v.list.length ? `<div class="ai-ch">${v.list.map(m => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b>${m.done ? "" : `<small>${m.save === 0 ? "No cambia el total." : `${m.save > 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.`}</small>`}</div><div class="sv">${m.done ? `<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i>Aplicado</span>` : `${m.save === 0 ? "<span></span>" : `<b class="num" style="color:${m.save > 0 ? "#1f8a4c" : "var(--warn)"}">${m.save > 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b>`}<button type="button" class="mini" data-ai-apply="${mi}:${m.ci}">Aplicar</button>`}</div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:8px" data-ai-all="${mi}"><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B_TOTAL() - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B_TOTAL() - all.total))})</button>` : ""}</div>` : ""}${v.hid > 0 ? `<p class="ai-note">Oculté ${v.hid === 1 ? "1 propuesta" : v.hid + " propuestas"} que no ahorraba${v.hid === 1 ? "" : "n"} o no se podía${v.hid === 1 ? "" : "n"} aplicar.</p>` : ""}</div>`;
     }).join("") + (AI_BUSY ? `<div class="msg bot"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...</div>` : "");
   }
   const B_TOTAL = () => LAST.total;
