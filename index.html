@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-08.1">
+<meta name="app-version" content="2026-10-08.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -282,6 +282,27 @@
   .ai-ans { margin-top: 12px; background: #f7f2fd; border: 1px solid #e3d5f5; border-radius: 12px; padding: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
   .ai-ch { margin-top: 10px; }
   .ai-note { margin-top: 8px; font-size: 12.5px; color: var(--muted, #6b7280); }
+  .chat { display: flex; flex-direction: column; gap: 10px; }
+  .chat-empty { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .chat-empty h2 { font-size: 16px; display: flex; align-items: center; gap: 8px; } .chat-empty h2 i { color: #7a44b8; font-size: 20px; }
+  .chat-empty ul { margin: 8px 0 0 18px; font-size: 14px; color: var(--muted); line-height: 1.5; }
+  .msg { max-width: 88%; border-radius: 16px; padding: 10px 13px; font-size: 15px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.me { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
+  .msg.bot { align-self: flex-start; background: #f7f2fd; border: 1px solid #e3d5f5; border-bottom-left-radius: 5px; }
+  .msg.bot.err { background: var(--warn-soft); border-color: #f3c8b0; }
+  .msg-wrap { align-self: stretch; display: flex; flex-direction: column; }
+  .msg-wrap .ai-ch { margin-top: 6px; } .msg-wrap .sg { background: var(--surface); }
+  .sg .done { color: #1f8a4c; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+  .composer { position: sticky; bottom: 0; z-index: 5; margin-top: 12px; padding: 10px 0 6px; background: linear-gradient(to bottom, transparent, var(--bg) 30%); }
+  @media (max-width: 860px) { .composer { bottom: calc(var(--bottom) + var(--sab)); } .view[data-view="asistente"] { padding-bottom: calc(var(--bottom) + 8px + var(--sab)); } }
+  .composer .ai-ex { margin: 0 0 8px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } .composer .ai-ex::-webkit-scrollbar { display: none; } .composer .chip-btn { white-space: nowrap; }
+  .composer-row { display: flex; gap: 8px; align-items: flex-end; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 5px 5px 5px 14px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+  .composer textarea { flex: 1; border: 0; outline: 0; resize: none; font: inherit; font-size: 16px; line-height: 1.35; padding: 7px 0; max-height: 120px; background: transparent; }
+  .send-btn { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 18px; cursor: pointer; }
+  .send-btn:disabled { opacity: .4; cursor: default; }
+  .chat-status { font-size: 12.5px; color: var(--muted); margin-top: 6px; text-align: center; }
+  .ai-open { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 1px solid #e3d5f5; background: #f7f2fd; border-radius: 14px; padding: 12px 14px; margin-top: 14px; cursor: pointer; font: inherit; color: inherit; }
+  .ai-open > i { font-size: 24px; color: #7a44b8; flex: none; } .ai-open b { display: block; font-size: 15px; } .ai-open span { display: block; font-size: 13px; color: var(--muted); } .ai-open .car { margin-left: auto; color: var(--muted); font-size: 18px; }
   .ai.off textarea, .ai.off [data-ai-ask], .ai.off .ai-ex { opacity: .5; pointer-events: none; }
   .lb-ic { display: flex; align-items: center; gap: 6px; } .lb-ic i { font-size: 18px; color: var(--accent); }
   .fl-h { display: flex !important; align-items: center; gap: 6px; } .fl-h i { font-size: 17px; color: var(--accent); }
@@ -605,6 +626,7 @@
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
     <button class="nav-btn" data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
+    <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
     <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
     <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
@@ -709,14 +731,7 @@
         <div class="sg-head"><h2><i class="ph-fill ph-magic-wand" aria-hidden="true"></i>Sugerencias para ahorrar</h2><button type="button" class="mini primary" data-sg-all hidden><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar las que no pierden calidad</button></div>
         <p class="small muted" style="margin-top:4px">La app prueba otros hoteles, vuelos, días y planes a partir de lo que ya elegiste y recalcula el total exacto de cada cambio.</p>
         <div data-sugg></div>
-        <div class="ai" data-ai>
-          <h3><i class="ph-fill ph-sparkle" aria-hidden="true"></i>Preguntarle a la IA <span class="ai-tag">DeepSeek</span></h3>
-          <p class="small muted" data-ai-status>Revisando la conexión...</p>
-          <div class="ai-ex" data-ai-ex></div>
-          <label class="field"><span class="sr">Pregunta</span><textarea data-ai-q rows="2" maxlength="600" placeholder="Ej.: ¿Cómo bajo 500.000 sin dejar Rincón del Mar?"></textarea></label>
-          <button type="button" class="mini primary" data-ai-ask><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>Preguntar</button>
-          <div data-ai-out></div>
-        </div>
+        <button type="button" class="ai-open" data-view-btn="asistente"><i class="ph-fill ph-sparkle" aria-hidden="true"></i><div><b>Pregúntale al asistente</b><span>Chatea con la IA sobre tu plan, el clima y la guía.</span></div><i class="ph ph-caret-right car" aria-hidden="true"></i></button>
       </div>
       <div class="card" style="margin-top:12px">
         <h2><i class="ph ph-money" aria-hidden="true"></i>Efectivo a llevar por destino</h2>
@@ -787,9 +802,20 @@
       <div data-guide></div>
     </section>
 
+    <section class="view" data-view="asistente" hidden>
+      <div class="view-head"><div><h1>Asistente</h1><p>Chatea con la IA: ve tu plan, los precios, el clima de cada día y la guía.</p></div><button type="button" class="mini" data-ai-new hidden><i class="ph ph-plus" aria-hidden="true"></i>Nueva conversación</button></div>
+      <div class="chat" data-ai-chat></div>
+      <div class="composer" data-ai>
+        <div class="ai-ex" data-ai-ex></div>
+        <div class="composer-row"><label class="sr" for="ai-q">Mensaje</label><textarea id="ai-q" data-ai-q rows="1" maxlength="600" placeholder="Escribe tu pregunta..."></textarea><button type="button" class="send-btn" data-ai-ask aria-label="Enviar"><i class="ph-fill ph-paper-plane-right" aria-hidden="true"></i></button></div>
+        <p class="chat-status" data-ai-status>Revisando la conexión...</p>
+      </div>
+    </section>
+
     <section class="view" data-view="mas" hidden>
       <div class="view-head"><div><h1>Más</h1></div></div>
       <div class="more-list">
+        <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
         <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
         <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
@@ -1679,15 +1705,16 @@
     if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
     if (ds.sg != null) { applySugg(+ds.sg); return; }
     if (t.hasAttribute("data-ai-ask")) { aiAsk(); return; }
-    if (ds.aiExq) { $("[data-ai-q]").value = ds.aiExq; aiAsk(ds.aiExq); return; }
-    if (ds.aiApply != null) { const m = AI_LAST && AI_LAST.items && AI_LAST.items[+ds.aiApply]; if (m) aiApply(m.st); return; }
-    if (t.hasAttribute("data-ai-all")) { const its = AI_LAST && AI_LAST.items || []; const r = evalState(st => its.forEach(m => m.f(st))); if (r) aiApply(r.st); return; }
+    if (ds.aiExq) { aiAsk(ds.aiExq); return; }
+    if (ds.aiApply != null) { const [mi, ci] = ds.aiApply.split(":").map(Number); aiApplyMsg(mi, [ci]); return; }
+    if (ds.aiAll != null) { const msg = AI_CHAT[+ds.aiAll]; if (msg && msg.view) aiApplyMsg(+ds.aiAll, msg.view.map(m => m.ci)); return; }
+    if (t.hasAttribute("data-ai-new")) { if (!AI_BUSY) { AI_CHAT = []; aiSave(); renderAI(); } return; }
     if (t.hasAttribute("data-sg-all")) { applyAllFree(); return; }
     if (t.hasAttribute("data-sg-open")) { showView("costos"); setTimeout(() => { const el = document.getElementById("sugerencias"); if (el) el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); }, 50); return; }
     if (ds.gtab) { GTAB = ds.gtab; store.set("caribe-gtab", GTAB); renderGuide(); return; }
     if (ds.wxref) { WXREF = ds.wxref; store.set("caribe-wxref", WXREF); render(false); return; }
     if (t.hasAttribute("data-toast-undo")) { const f = undoFn; undoFn = null; $("[data-toast]").classList.remove("show"); if (f) f(); return; }
-    if (ds.viewBtn) { showView(ds.viewBtn); return; }
+    if (ds.viewBtn) { showView(ds.viewBtn); if (ds.viewBtn === "asistente" && AI_CHAT.length) aiScroll(); return; }
     if ("close" in ds) { closeSheet(t.closest("dialog")); return; }
     if (ds.shared) {
       const sh = pendingShared; pendingShared = null;
@@ -1778,6 +1805,9 @@
     if (v !== null && v >= 500000 && v <= 50000000) { if (v !== S.goal) { S.goal = v; render(); } inp.value = fmt(S.goal); }
     else { inp.value = fmt(S.goal); toast("La meta debe estar entre $500.000 y $50.000.000."); }
   }
+  { const ta = $("[data-ai-q]");
+    ta.addEventListener("input", () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 120) + "px"; });
+    ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing && !(window.matchMedia && matchMedia("(pointer: coarse)").matches)) { e.preventDefault(); aiAsk(); } }); }
   $("[data-goal]").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
   $$("details[name=armar]").forEach(dt => dt.addEventListener("toggle", () => {
     if (dt.open) { $$("details[name=armar]").forEach(o => { if (o !== dt && o.open) o.open = false; }); store.set("caribe-acc", dt.dataset.acc); }
@@ -1869,8 +1899,10 @@
   }
   /* ---------- IA (DeepSeek vía Worker de Cloudflare) ---------- */
   const AI_URL = "https://vacas-ia.label-printer.workers.dev";
-  let AI_READY = null, AI_BUSY = false, AI_LAST = null;
-  const AI_EX = ["¿Cómo bajo 500.000 sin dejar Rincón?", "¿Qué hotel cambio para ahorrar sin perder calidad?", "Quiero gastar máximo 4 millones, ¿qué ajusto?", "¿Vale la pena regresar un día antes?"];
+  let AI_READY = null, AI_BUSY = false, AI_CHAT = store.get("caribe-ai-chat", []);
+  if (!Array.isArray(AI_CHAT)) AI_CHAT = [];
+  const aiSave = () => store.set("caribe-ai-chat", AI_CHAT.slice(-30));
+  const AI_EX = ["¿Cómo bajo 500.000 sin perder calidad?", "¿Qué día conviene la pasadía según el clima?", "¿Qué hago en Rincón si llueve?", "¿Qué empaco para este viaje?", "¿Vale la pena regresar un día antes?"];
   async function aiCheck() {
     try { const r = await fetch(AI_URL + "/", { cache: "no-store" }); const j = await r.json(); AI_READY = !!j.ready; } catch (e) { AI_READY = false; }
     renderAI();
@@ -1889,7 +1921,18 @@
         planes: allActs().map(a => ({ id: a.id, nombre: a.t, destino: a.dest, nivel: a.lvl, costo_pareja: a.cost })),
         comida: FOOD.map(f => ({ nivel: f.id, nombre: f.name, por_persona_dia: f.v })),
         fechas_posibles_pasadia: it.placed.pasadia || actById("pasadia") ? allowedDays(actById("pasadia"), it.days, it.N).map(d => ({ fecha: d.iso, lugar: d.loc, fin_de_semana_o_festivo: d.wkend || d.fest })) : []
-      }
+      },
+      hoy: iso(new Date()),
+      dia_a_dia: it.days.map(d => {
+        const L = wxLoc(d), w = wxDay(L, d.iso), c = w ? null : climoDay(L, d.iso), mo = moonInfo(d.iso);
+        return { fecha: d.iso, dia: WDS[d.date.getDay()], duermen_en: DNAME_SHORT[d.stay] || d.stay, festivo: d.fest || undefined, traslado: d.move || undefined,
+          plan: d.items.filter(x => x.k !== "flight").map(x => x.t + (x.slot === "tarde" ? " (tarde)" : "")), noche: d.eve.map(x => x.t),
+          clima: w ? { tipo: "pronostico", lugar: WX_NAME[L], estado: wmo(w.code).t, max: w.tmax, min: w.tmin, prob_lluvia: w.prob, lluvia_manana: w.man, lluvia_tarde: w.tar, lluvia_noche: w.noc, mm: w.mm, olas_m: w.wave }
+            : c ? { tipo: "tipico_10_anos", lugar: WX_NAME[L], estado: climoState(c).t, dias_con_lluvia_pct: climoState(c).pct, mm_promedio: c.mm, max_promedio: c.tx } : null,
+          luna: `${mo.name}, ${mo.ill}%${mo.dark ? ", noche oscura (buena para bioluminiscencia)" : ""}` };
+      }),
+      guia: GUIDE.map(g => ({ destino: g.name, intro: g.intro, secciones: g.sec.map(sc => sc.t + ": " + sc.li.map(x => x.replace(/<[^>]+>/g, "")).join(" | ")) })),
+      agencias_y_consejos: (($('[data-view="info"]') || {}).innerText || "").replace(/\s+\n/g, "\n").slice(0, 5000)
     };
   }
   function aiMut(c) {
@@ -1907,33 +1950,64 @@
     }
     return null;
   }
+  function aiView(msg) {
+    const B = LAST, list = [];
+    let hid = 0;
+    (msg.cambios || []).forEach((c, ci) => {
+      const m = aiMut(c); if (!m) { hid++; return; }
+      if ((msg.done || []).includes(ci)) { list.push(Object.assign(m, { ci, done: true })); return; }
+      const r = evalState(m.f); if (!r) { hid++; return; }
+      const save = Math.round(B.total - r.total);
+      if (msg.ahorro && save <= 0) { hid++; return; }
+      list.push(Object.assign(m, { ci, save, st: r.st }));
+    });
+    return { list, hid };
+  }
   function renderAI() {
-    const box = $("[data-ai]"); if (!box) return;
-    const st = $("[data-ai-status]");
-    box.classList.toggle("off", AI_READY !== true);
-    st.textContent = AI_READY === null ? "Revisando la conexión..." : AI_READY ? "Escribe tu pregunta. La IA ve tu plan y todas las opciones con precios, y propone cambios que puedes aplicar." : "Falta conectar la clave de DeepSeek en Cloudflare. Cuando esté, esto se activa solo.";
-    $("[data-ai-ex]").innerHTML = AI_EX.map(q => `<button type="button" class="chip-btn" data-ai-exq="${esc(q)}">${esc(q)}</button>`).join("");
-    const out = $("[data-ai-out]");
-    if (AI_BUSY) { out.innerHTML = `<p class="ai-ans"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...</p>`; return; }
-    if (!AI_LAST) { out.innerHTML = ""; return; }
-    if (AI_LAST.error) { out.innerHTML = `<p class="ai-ans" style="background:var(--warn-soft);border-color:#f3c8b0">${esc(AI_LAST.error)}</p>`; return; }
-    const B = LAST; let items = (AI_LAST.cambios || []).map(c => aiMut(c)).filter(Boolean).map(m => { const r = evalState(m.f); return r ? Object.assign(m, { save: Math.round(B.total - r.total), st: r.st }) : null; }).filter(Boolean);
-    const hid = (AI_LAST.cambios || []).length - items.filter(m => m.save > 0).length;
-    items = items.filter(m => m.save > 0);
-    AI_LAST.items = items;
-    const all = items.length > 1 ? evalState(st => items.forEach(m => m.f(st))) : null;
-    out.innerHTML = `<div class="ai-ans">${esc(AI_LAST.respuesta || "")}</div>${items.length ? `<div class="ai-ch">${items.map((m, i) => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b><small>${m.save >= 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.</small></div><div class="sv"><b class="num" style="color:${m.save >= 0 ? "#1f8a4c" : "var(--warn)"}">${m.save >= 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b><button type="button" class="mini" data-ai-apply="${i}">Aplicar</button></div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:10px" data-ai-all><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B.total - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B.total - all.total))})</button>` : ""}</div>` : ""}${hid > 0 ? `<p class="ai-note">${items.length ? `Oculté ${hid === 1 ? "1 propuesta" : hid + " propuestas"} que no ahorraba${hid === 1 ? "" : "n"} o no se podía${hid === 1 ? "" : "n"} aplicar.` : "Ninguna propuesta ahorraba plata frente a tu plan actual. Prueba con otra pregunta."}</p>` : ""}`;
+    const chat = $("[data-ai-chat]"); if (!chat) return;
+    const st = $("[data-ai-status]"), q = $("[data-ai-q]"), send = $("[data-ai-ask]");
+    $("[data-ai]").classList.toggle("off", AI_READY !== true);
+    q.disabled = AI_READY !== true; send.disabled = AI_READY !== true || AI_BUSY;
+    st.textContent = AI_READY === null ? "Revisando la conexión..." : AI_READY ? "La IA puede equivocarse. Los ahorros los calcula la app." : "La IA no está disponible ahora. Revisa tu conexión.";
+    $("[data-ai-new]").hidden = !AI_CHAT.length;
+    $("[data-ai-ex]").innerHTML = AI_CHAT.length ? "" : AI_EX.map(x => `<button type="button" class="chip-btn" data-ai-exq="${esc(x)}">${esc(x)}</button>`).join("");
+    if (!AI_CHAT.length && !AI_BUSY) {
+      chat.innerHTML = `<div class="chat-empty"><h2><i class="ph-fill ph-sparkle" aria-hidden="true"></i>¿En qué te ayudo?</h2><ul><li>Ahorrar sin perder calidad, con cambios que aplicas con un toque.</li><li>Qué hacer cada día según el clima y la luna.</li><li>Dudas de la guía: transporte, comida, agencias, qué llevar.</li><li>Recuerda la conversación: puedes preguntar "¿y si mejor...?".</li></ul></div>`;
+      return;
+    }
+    chat.innerHTML = AI_CHAT.map((msg, mi) => {
+      if (msg.role === "user") return `<div class="msg me">${esc(msg.text)}</div>`;
+      if (msg.error) return `<div class="msg bot err">${esc(msg.error)}</div>`;
+      const v = aiView(msg); msg.view = v.list.filter(m => !m.done);
+      const pend = msg.view, all = pend.length > 1 ? evalState(stt => pend.forEach(m => m.f(stt))) : null;
+      return `<div class="msg-wrap"><div class="msg bot">${esc(msg.text)}</div>${v.list.length ? `<div class="ai-ch">${v.list.map(m => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b>${m.done ? "" : `<small>${m.save >= 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.</small>`}</div><div class="sv">${m.done ? `<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i>Aplicado</span>` : `<b class="num" style="color:${m.save >= 0 ? "#1f8a4c" : "var(--warn)"}">${m.save >= 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b><button type="button" class="mini" data-ai-apply="${mi}:${m.ci}">Aplicar</button>`}</div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:8px" data-ai-all="${mi}"><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B_TOTAL() - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B_TOTAL() - all.total))})</button>` : ""}</div>` : ""}${v.hid > 0 ? `<p class="ai-note">Oculté ${v.hid === 1 ? "1 propuesta" : v.hid + " propuestas"} que no ahorraba${v.hid === 1 ? "" : "n"} o no se podía${v.hid === 1 ? "" : "n"} aplicar.</p>` : ""}</div>`;
+    }).join("") + (AI_BUSY ? `<div class="msg bot"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...</div>` : "");
   }
+  const B_TOTAL = () => LAST.total;
+  function aiScroll() { requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: reduceMotion() ? "auto" : "smooth" })); }
   async function aiAsk(q) {
-    q = (q || $("[data-ai-q]").value || "").trim(); if (!q || AI_BUSY || !AI_READY) return;
-    AI_BUSY = true; AI_LAST = null; renderAI();
+    const ta = $("[data-ai-q]");
+    q = (q || ta.value || "").trim(); if (!q || AI_BUSY || !AI_READY) return;
+    const history = AI_CHAT.filter(m => !m.error).slice(-10).map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.role === "user" ? m.text : m.text + (m.cambios && m.cambios.length ? "\n[Cambios propuestos: " + JSON.stringify(m.cambios) + (m.done && m.done.length ? "; aplicados: " + JSON.stringify(m.done.map(i => m.cambios[i])) : "") + "]" : "") }));
+    AI_CHAT.push({ role: "user", text: q }); ta.value = ""; ta.style.height = "";
+    AI_BUSY = true; renderAI(); aiScroll();
+    let msg;
     try {
-      const r = await fetch(AI_URL + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, context: aiContext() }) });
-      AI_LAST = await r.json(); if (!r.ok && !AI_LAST.error) AI_LAST.error = "No se pudo consultar la IA.";
-    } catch (e) { AI_LAST = { error: "Sin conexión con la IA. Revisa tu internet." }; }
-    AI_BUSY = false; renderAI();
+      const r = await fetch(AI_URL + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, history, context: aiContext() }) });
+      const j = await r.json();
+      msg = !r.ok || j.error ? { role: "ai", error: j.error || "No se pudo consultar la IA." } : { role: "ai", text: j.respuesta || "", cambios: Array.isArray(j.cambios) ? j.cambios : [], ahorro: !!j.busca_ahorro, done: [] };
+    } catch (e) { msg = { role: "ai", error: "Sin conexión con la IA. Revisa tu internet." }; }
+    AI_CHAT.push(msg); AI_BUSY = false; aiSave(); renderAI(); aiScroll();
   }
-  function aiApply(sts) { const prev = structuredClone(S), t0 = LAST.total; S = norm(sts); render(); toast(`Aplicado: ${t0 - LAST.total >= 0 ? "ahorras" : "cuesta"} ${fmt(Math.abs(t0 - LAST.total))}.`, () => { S = norm(prev); render(); }); }
+  function aiApplyMsg(mi, cis) {
+    const msg = AI_CHAT[mi]; if (!msg || !msg.cambios) return;
+    const muts = cis.map(ci => aiMut(msg.cambios[ci])).filter(Boolean); if (!muts.length) return;
+    const r = evalState(st => muts.forEach(m => m.f(st))); if (!r) return;
+    const prev = structuredClone(S), prevDone = (msg.done || []).slice(), t0 = LAST.total;
+    msg.done = [...new Set(prevDone.concat(cis))]; aiSave();
+    S = norm(r.st); render();
+    toast(`Aplicado: ${t0 - LAST.total >= 0 ? "ahorras" : "cuesta"} ${fmt(Math.abs(t0 - LAST.total))}.`, () => { S = norm(prev); msg.done = prevDone; aiSave(); render(); });
+  }
   /* ---------- Guía ---------- */
   const GUIDE = [
     { id: "general", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
@@ -1992,7 +2066,7 @@
     if (curView) scrollMem[curView] = window.scrollY;
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
+      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos" || v === "asistente") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
