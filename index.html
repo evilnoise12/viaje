@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-08.4">
+<meta name="app-version" content="2026-10-08.5">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -294,6 +294,10 @@
   .msg.bot.err { background: var(--warn-soft); border-color: #f3c8b0; }
   .msg-wrap { align-self: stretch; display: flex; flex-direction: column; }
   .msg-wrap .ai-ch { margin-top: 6px; } .msg-wrap .sg { background: var(--surface); }
+  .ai-src { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; max-width: 88%; }
+  .ai-src > span { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .ai-src a { display: block; font-size: 13px; line-height: 1.3; color: var(--text); text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ai-src a b { display: block; font-size: 11.5px; font-weight: 600; color: var(--accent); }
   .sg .done { color: #1f8a4c; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
   .composer { position: sticky; bottom: 0; z-index: 5; margin-top: 12px; padding: 10px 0 6px; background: linear-gradient(to bottom, transparent, var(--bg) 30%); }
   @media (max-width: 860px) { .composer { bottom: calc(var(--bottom) + var(--sab)); } .view[data-view="asistente"] { padding-bottom: calc(var(--bottom) + 8px + var(--sab)); } }
@@ -1901,12 +1905,13 @@
   }
   /* ---------- IA (DeepSeek vía Worker de Cloudflare) ---------- */
   const AI_URL = "https://vacas-ia.label-printer.workers.dev";
+  let AI_SEARCH = false;
   let AI_READY = null, AI_BUSY = false, AI_CHAT = store.get("caribe-ai-chat", []);
   if (!Array.isArray(AI_CHAT)) AI_CHAT = [];
   const aiSave = () => store.set("caribe-ai-chat", AI_CHAT.slice(-30));
-  const AI_EX = ["¿Cómo bajo 500.000 sin perder calidad?", "¿Qué día conviene la pasadía según el clima?", "¿Qué hago en Rincón si llueve?", "¿Qué empaco para este viaje?", "¿Vale la pena regresar un día antes?"];
+  const AI_EX = ["¿Cómo bajo 500.000 sin perder calidad?", "¿Qué día conviene la pasadía según el clima?", "¿Qué hago en Rincón si llueve?", "¿Qué empaco para este viaje?", "¿Hay eventos en Cartagena esos días?", "¿Vale la pena regresar un día antes?"];
   async function aiCheck() {
-    try { const r = await fetch(AI_URL + "/", { cache: "no-store" }); const j = await r.json(); AI_READY = !!j.ready; } catch (e) { AI_READY = false; }
+    try { const r = await fetch(AI_URL + "/", { cache: "no-store" }); const j = await r.json(); AI_READY = !!j.ready; AI_SEARCH = !!j.search; } catch (e) { AI_READY = false; }
     renderAI();
   }
   function aiContext() {
@@ -1971,11 +1976,11 @@
     const st = $("[data-ai-status]"), q = $("[data-ai-q]"), send = $("[data-ai-ask]");
     $("[data-ai]").classList.toggle("off", AI_READY !== true);
     q.disabled = AI_READY !== true; send.disabled = AI_READY !== true || AI_BUSY;
-    st.textContent = AI_READY === null ? "Revisando la conexión..." : AI_READY ? "La IA puede equivocarse. Los ahorros los calcula la app." : "La IA no está disponible ahora. Revisa tu conexión.";
+    st.textContent = AI_READY === null ? "Revisando la conexión..." : AI_READY ? (AI_SEARCH ? "Busca en internet cuando hace falta. Puede equivocarse; los ahorros los calcula la app." : "La IA puede equivocarse. Los ahorros los calcula la app.") : "La IA no está disponible ahora. Revisa tu conexión.";
     $("[data-ai-new]").hidden = !AI_CHAT.length;
     $("[data-ai-ex]").innerHTML = AI_CHAT.length ? "" : AI_EX.map(x => `<button type="button" class="chip-btn" data-ai-exq="${esc(x)}">${esc(x)}</button>`).join("");
     if (!AI_CHAT.length && !AI_BUSY) {
-      chat.innerHTML = `<div class="chat-empty"><h2><i class="ph-fill ph-sparkle" aria-hidden="true"></i>¿En qué te ayudo?</h2><ul><li>Ahorrar sin perder calidad, con cambios que aplicas con un toque.</li><li>Qué hacer cada día según el clima y la luna.</li><li>Dudas de la guía: transporte, comida, agencias, qué llevar.</li><li>Recuerda la conversación: puedes preguntar "¿y si mejor...?".</li></ul></div>`;
+      chat.innerHTML = `<div class="chat-empty"><h2><i class="ph-fill ph-sparkle" aria-hidden="true"></i>¿En qué te ayudo?</h2><ul><li>Ahorrar sin perder calidad, con cambios que aplicas con un toque.</li><li>Qué hacer cada día según el clima y la luna.</li><li>Dudas de la guía: transporte, comida, agencias, qué llevar.</li><li>Recuerda la conversación: puedes preguntar "¿y si mejor...?".</li>${AI_SEARCH ? "<li>Busca en internet lo que no está en la app: eventos, horarios, reseñas recientes.</li>" : ""}</ul></div>`;
       return;
     }
     chat.innerHTML = AI_CHAT.map((msg, mi) => {
@@ -1983,8 +1988,10 @@
       if (msg.error) return `<div class="msg bot err">${esc(msg.error)}</div>`;
       const v = aiView(msg); msg.view = v.list.filter(m => !m.done);
       const pend = msg.view, all = pend.length > 1 ? evalState(stt => pend.forEach(m => m.f(stt))) : null;
-      return `<div class="msg-wrap"><div class="msg bot">${esc(msg.text)}</div>${v.list.length ? `<div class="ai-ch">${v.list.map(m => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b>${m.done ? "" : `<small>${m.save === 0 ? "No cambia el total." : `${m.save > 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.`}</small>`}</div><div class="sv">${m.done ? `<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i>Aplicado</span>` : `${m.save === 0 ? "<span></span>" : `<b class="num" style="color:${m.save > 0 ? "#1f8a4c" : "var(--warn)"}">${m.save > 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b>`}<button type="button" class="mini" data-ai-apply="${mi}:${m.ci}">Aplicar</button>`}</div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:8px" data-ai-all="${mi}"><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B_TOTAL() - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B_TOTAL() - all.total))})</button>` : ""}</div>` : ""}${v.hid > 0 ? `<p class="ai-note">Oculté ${v.hid === 1 ? "1 propuesta" : v.hid + " propuestas"} que no ahorraba${v.hid === 1 ? "" : "n"} o no se podía${v.hid === 1 ? "" : "n"} aplicar.</p>` : ""}</div>`;
-    }).join("") + (AI_BUSY ? `<div class="msg bot"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...</div>` : "");
+      const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; } };
+      const src = msg.busco ? `<div class="ai-src"><span><i class="ph ph-globe" aria-hidden="true"></i>Buscó en internet: “${esc(msg.busco)}”</span>${(msg.fuentes || []).filter(f => /^https?:\/\//.test(f.url)).map(f => `<a href="${esc(f.url)}" target="_blank" rel="noopener noreferrer"><b>${esc(host(f.url))}</b>${esc(f.titulo)}</a>`).join("")}</div>` : "";
+      return `<div class="msg-wrap"><div class="msg bot">${esc(msg.text)}</div>${src}${v.list.length ? `<div class="ai-ch">${v.list.map(m => `<div class="sg"><i class="ph ph-sparkle" aria-hidden="true"></i><div><b>${esc(m.t)}</b>${m.done ? "" : `<small>${m.save === 0 ? "No cambia el total." : `${m.save > 0 ? "Ahorra" : "Cuesta"} ${fmt(Math.abs(m.save))} frente a tu plan actual.`}</small>`}</div><div class="sv">${m.done ? `<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i>Aplicado</span>` : `${m.save === 0 ? "<span></span>" : `<b class="num" style="color:${m.save > 0 ? "#1f8a4c" : "var(--warn)"}">${m.save > 0 ? "-" : "+"}${fmt(Math.abs(m.save))}</b>`}<button type="button" class="mini" data-ai-apply="${mi}:${m.ci}">Aplicar</button>`}</div></div>`).join("")}${all ? `<button type="button" class="mini primary" style="margin-top:8px" data-ai-all="${mi}"><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar todo junto (${B_TOTAL() - all.total >= 0 ? "ahorra" : "cuesta"} ${fmt(Math.abs(B_TOTAL() - all.total))})</button>` : ""}</div>` : ""}${v.hid > 0 ? `<p class="ai-note">Oculté ${v.hid === 1 ? "1 propuesta" : v.hid + " propuestas"} que no ahorraba${v.hid === 1 ? "" : "n"} o no se podía${v.hid === 1 ? "" : "n"} aplicar.</p>` : ""}</div>`;
+    }).join("") + (AI_BUSY ? `<div class="msg bot"><i class="ph ph-arrows-clockwise spin" aria-hidden="true"></i> Pensando...${AI_SEARCH ? " Si necesita buscar en internet, tarda un poco más." : ""}</div>` : "");
   }
   const B_TOTAL = () => LAST.total;
   function aiScroll() { requestAnimationFrame(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: reduceMotion() ? "auto" : "smooth" })); }
@@ -1996,11 +2003,11 @@
     AI_BUSY = true; renderAI(); aiScroll();
     let msg;
     try {
-      const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 60000);
+      const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 90000);
       const r = await fetch(AI_URL + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, history, context: aiContext() }), signal: ctl.signal });
       clearTimeout(tm);
       const j = await r.json();
-      msg = !r.ok || j.error ? { role: "ai", error: j.error || "No se pudo consultar la IA." } : { role: "ai", text: j.respuesta || "", cambios: Array.isArray(j.cambios) ? j.cambios : [], ahorro: !!j.busca_ahorro, done: [] };
+      msg = !r.ok || j.error ? { role: "ai", error: j.error || "No se pudo consultar la IA." } : { role: "ai", text: j.respuesta || "", cambios: Array.isArray(j.cambios) ? j.cambios : [], ahorro: !!j.busca_ahorro, done: [], busco: j.busco || null, fuentes: Array.isArray(j.fuentes) ? j.fuentes.slice(0, 5) : [] };
     } catch (e) { msg = { role: "ai", error: e && e.name === "AbortError" ? "La IA se demoró demasiado. Intenta de nuevo." : "Sin conexión con la IA. Revisa tu internet." }; }
     AI_CHAT.push(msg); AI_BUSY = false; aiSave(); renderAI(); aiScroll();
   }
