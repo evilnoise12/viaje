@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-08.2">
+<meta name="app-version" content="2026-10-08.3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -96,9 +96,11 @@
     .topbar .trip b { font-size: 15px; }
     .topbar .tot b { font-size: 17px; }
     .view { padding: 16px 16px calc(var(--bottom) + 24px + var(--sab)); }
-    .bottom { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; z-index: 20; left: 0; right: 0; bottom: 0; height: calc(var(--bottom) + var(--sab)); padding-bottom: var(--sab); background: var(--surface); border-top: 1px solid var(--line); }
+    .bottom { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; z-index: 20; left: 0; right: 0; bottom: 0; height: calc(var(--bottom) + var(--sab)); padding-bottom: var(--sab); background: var(--surface); border-top: 1px solid var(--line); }
     .bottom button { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 12px; color: var(--muted); cursor: pointer; min-height: 44px; -webkit-user-select: none; user-select: none; }
     .bottom button i { font-size: 23px; }
+    .bottom button { font-size: 11px; letter-spacing: -0.01em; }
+    .bottom .nav-ai i { color: #7a44b8; } .bottom .nav-ai[aria-current="page"] { color: #7a44b8; }
     .bottom button[aria-current="page"] { color: var(--accent); font-weight: 600; }
     .bottom button:active { background: var(--surface-2); }
   }
@@ -815,7 +817,6 @@
     <section class="view" data-view="mas" hidden>
       <div class="view-head"><div><h1>Más</h1></div></div>
       <div class="more-list">
-        <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
         <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
         <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
@@ -831,6 +832,7 @@
   <button data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Días</button>
   <button data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
   <button data-view-btn="mas"><i class="ph ph-dots-three-outline" aria-hidden="true"></i>Más</button>
+  <button data-view-btn="asistente" class="nav-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente</button>
 </nav>
 <div class="a2hs-backdrop" data-a2hs-bg hidden></div>
 <div class="a2hs" data-a2hs hidden role="dialog" aria-modal="true" aria-labelledby="a2hs-t">
@@ -1993,10 +1995,12 @@
     AI_BUSY = true; renderAI(); aiScroll();
     let msg;
     try {
-      const r = await fetch(AI_URL + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, history, context: aiContext() }) });
+      const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 60000);
+      const r = await fetch(AI_URL + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, history, context: aiContext() }), signal: ctl.signal });
+      clearTimeout(tm);
       const j = await r.json();
       msg = !r.ok || j.error ? { role: "ai", error: j.error || "No se pudo consultar la IA." } : { role: "ai", text: j.respuesta || "", cambios: Array.isArray(j.cambios) ? j.cambios : [], ahorro: !!j.busca_ahorro, done: [] };
-    } catch (e) { msg = { role: "ai", error: "Sin conexión con la IA. Revisa tu internet." }; }
+    } catch (e) { msg = { role: "ai", error: e && e.name === "AbortError" ? "La IA se demoró demasiado. Intenta de nuevo." : "Sin conexión con la IA. Revisa tu internet." }; }
     AI_CHAT.push(msg); AI_BUSY = false; aiSave(); renderAI(); aiScroll();
   }
   function aiApplyMsg(mi, cis) {
@@ -2066,7 +2070,7 @@
     if (curView) scrollMem[curView] = window.scrollY;
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos" || v === "asistente") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
+      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
