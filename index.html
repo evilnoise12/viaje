@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-08.5">
+<meta name="app-version" content="2026-10-19.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -335,7 +335,7 @@
   .fc-row > i { font-size: 24px; }
   .fc-d b { display: block; font-size: 14px; } .fc-d small { color: var(--muted); font-size: 12px; }
   .fc-t { color: var(--muted); font-size: 13px; line-height: 1.2; } .fc-t em { display: block; font-style: normal; font-weight: 600; color: var(--dc); font-size: 12px; }
-  .fc-p { font-size: 13px; color: #2563b0; white-space: nowrap; } .fc-p i { font-size: 12px; margin-right: 2px; } .fc-p.hi { font-weight: 700; }
+  .fc-p { font-size: 13px; color: #2563b0; white-space: nowrap; } .fc-p.sun { color: #b07a00; } .fc-p.sun.hi { color: var(--warn); } .fc-p i { font-size: 12px; margin-right: 2px; } .fc-p.hi { font-weight: 700; }
   .fc-x { text-align: right; color: var(--muted); white-space: nowrap; } .fc-x b { color: var(--text); }
   .fc-note { font-size: 13px; color: var(--muted); margin: 12px 0; }
   @media (max-width: 380px) { .fc-row { grid-template-columns: 58px 26px 1fr auto 62px; gap: 6px; } .fc-t { font-size: 12px; } }
@@ -1375,7 +1375,7 @@
   const WX_PTS = { golfo: [9.52, -75.58], rincon: [9.77, -75.64], islas: [9.79, -75.84], ctg: [10.42, -75.54] };
   const WX_NAME = { golfo: "Tolú", rincon: "Rincón", islas: "Tintipán", ctg: "Cartagena" };
   const WX_SEA = [9.75, -75.85];
-  const WX_KEY = "caribe-wx1", CLIMO_KEY = "caribe-climo1";
+  const WX_KEY = "caribe-wx2", CLIMO_KEY = "caribe-climo2";
   let WX = store.get(WX_KEY, null), CLIMO = store.get(CLIMO_KEY, null), WX_BUSY = false, WX_ERR = false;
   function wmo(c) {
     if (c == null) return { icon: "ph-cloud", t: "Sin dato", k: "nub" };
@@ -1398,7 +1398,7 @@
     WX_BUSY = true; WX_ERR = false; render(false);
     try {
       if (!fresh || force) {
-        const base = "https://api.open-meteo.com/v1/forecast?timezone=America%2FBogota&forecast_days=16&models=ecmwf_ifs025&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&hourly=precipitation_probability,precipitation,weather_code&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,wind_speed_10m,precipitation";
+        const base = "https://api.open-meteo.com/v1/forecast?timezone=America%2FBogota&forecast_days=16&models=ecmwf_ifs025&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,sunshine_duration,daylight_duration&hourly=precipitation_probability,precipitation,weather_code&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,wind_speed_10m,precipitation";
         const ids = Object.keys(WX_PTS);
         const res = await Promise.all(ids.map(k => fetchJSON(`${base}&latitude=${WX_PTS[k][0]}&longitude=${WX_PTS[k][1]}`)));
         const sea = await fetchJSON(`https://marine-api.open-meteo.com/v1/marine?latitude=${WX_SEA[0]}&longitude=${WX_SEA[1]}&daily=wave_height_max&current=wave_height&timezone=America%2FBogota&forecast_days=16`).catch(() => null);
@@ -1410,10 +1410,17 @@
         const c = CLIMO || {};
         for (const k of Object.keys(WX_PTS)) {
           if (c[k]) continue;
-          const j = await fetchJSON(`https://archive-api.open-meteo.com/v1/archive?latitude=${WX_PTS[k][0]}&longitude=${WX_PTS[k][1]}&start_date=2016-01-01&end_date=2025-12-31&daily=precipitation_sum,temperature_2m_max&timezone=America%2FBogota`);
-          const agg = {};
-          j.daily.time.forEach((t, i) => { const md = t.slice(5); if (md < "10-25" || md > "11-30") return; const a = agg[md] || (agg[md] = { n: 0, wet: 0, mm: 0, tx: 0 }); const p = j.daily.precipitation_sum[i] || 0; a.n++; a.mm += p; a.tx += j.daily.temperature_2m_max[i] || 0; if (p >= 1) a.wet++; });
-          c[k] = Object.fromEntries(Object.entries(agg).map(([md, a]) => [md, { wet: a.wet, n: a.n, mm: +(a.mm / a.n).toFixed(1), tx: Math.round(a.tx / a.n) }]));
+          const j = await fetchJSON(`https://archive-api.open-meteo.com/v1/archive?latitude=${WX_PTS[k][0]}&longitude=${WX_PTS[k][1]}&start_date=2016-01-01&end_date=2025-12-31&daily=precipitation_sum,temperature_2m_max,sunshine_duration,daylight_duration&timezone=America%2FBogota`);
+          const agg = {}, J = j.daily;
+          J.time.forEach((t, i) => {
+            const md = t.slice(5); if (md < "10-25" || md > "11-30") return;
+            const a = agg[md] || (agg[md] = { n: 0, wet: 0, mm: 0, tx: 0, sun: 0, dl: 0, sunny: 0, strong: 0, all: [] });
+            const p = J.precipitation_sum[i] || 0, sun = (J.sunshine_duration[i] || 0) / 3600, dl = (J.daylight_duration[i] || 0) / 3600;
+            a.n++; a.mm += p; a.all.push(p); a.tx += J.temperature_2m_max[i] || 0; a.sun += sun; a.dl += dl;
+            if (p >= 1) a.wet++; if (p >= 15) a.strong++; if (dl && sun / dl >= 0.6) a.sunny++;
+          });
+          const med = v => { const x = v.slice().sort((p, q) => p - q), h = x.length >> 1; return x.length % 2 ? x[h] : (x[h - 1] + x[h]) / 2; };
+          c[k] = Object.fromEntries(Object.entries(agg).map(([md, a]) => [md, { wet: a.wet, n: a.n, mm: +(a.mm / a.n).toFixed(1), med: +med(a.all).toFixed(1), tx: Math.round(a.tx / a.n), sun: +(a.sun / a.n).toFixed(1), dl: +(a.dl / a.n).toFixed(1), sunny: a.sunny, strong: a.strong }]));
         }
         CLIMO = c; store.set(CLIMO_KEY, CLIMO);
       }
@@ -1425,9 +1432,25 @@
     const i = L.daily.time.indexOf(k); if (i < 0) return null;
     const dd = L.daily, slot = (h0, h1) => { let m = 0; L.hourly.time.forEach((t, j) => { if (t.slice(0, 10) === k) { const h = +t.slice(11, 13); if (h >= h0 && h < h1) m = Math.max(m, L.hourly.precipitation_probability[j] || 0); } }); return m; };
     const si = WX.sea ? WX.sea.time.indexOf(k) : -1, wv = si >= 0 ? WX.sea.wave_height_max[si] : null;
-    return { code: dd.weather_code[i], tmax: Math.round(dd.temperature_2m_max[i]), tmin: Math.round(dd.temperature_2m_min[i]), mm: +(dd.precipitation_sum[i] || 0).toFixed(1), prob: dd.precipitation_probability_max[i], wind: Math.round(dd.wind_speed_10m_max[i]),
+    const sun = dd.sunshine_duration && dd.sunshine_duration[i] != null ? dd.sunshine_duration[i] / 3600 : null, dayH = dd.daylight_duration && dd.daylight_duration[i] != null ? dd.daylight_duration[i] / 3600 : null;
+    if (dd.weather_code[i] == null && sun == null) return null; // último día del pronóstico, incompleto
+    const mm = +(dd.precipitation_sum[i] || 0).toFixed(1);
+    return { sun, dayH, look: dayLook(sun, dayH, mm, dd.weather_code[i]) || wmo(dd.weather_code[i]), code: dd.weather_code[i], tmax: Math.round(dd.temperature_2m_max[i]), tmin: Math.round(dd.temperature_2m_min[i]), mm: +(dd.precipitation_sum[i] || 0).toFixed(1), prob: dd.precipitation_probability_max[i], wind: Math.round(dd.wind_speed_10m_max[i]),
       man: slot(6, 12), tar: slot(12, 18), noc: slot(18, 24), wave: wv == null ? null : wv, lead: Math.round((D(k) - D(iso(new Date()))) / 864e5) };
   }
+  /* Cómo se ve el día para pasear: horas de sol y cuánta lluvia cae, no solo la probabilidad de que caiga algo */
+  const rainLabel = mm => mm < 0.5 ? "sin lluvia" : mm < 5 ? "lluvia poca" : mm < 15 ? "lluvia moderada" : "aguacero fuerte";
+  const hrs = h => String(Math.round(h * 2) / 2).replace(".", ",");
+  function dayLook(sun, dayH, mm, code) {
+    const f = sun != null && dayH ? sun / dayH : null;
+    if (code != null && code >= 95 && mm >= 5) return { icon: "ph-cloud-lightning", k: "tor", t: "Tormenta eléctrica", bad: true };
+    if (mm >= 15) return { icon: "ph-cloud-rain", k: "llu", t: f != null && f >= 0.5 ? "Sol y un aguacero fuerte" : "Día con aguacero fuerte", bad: true };
+    if (f == null) return null;
+    if (f >= 0.6) return mm < 0.5 ? { icon: "ph-sun", k: "sol", t: "Soleado" } : mm < 5 ? { icon: "ph-sun", k: "sol", t: "Soleado, con lluvias cortas" } : { icon: "ph-cloud-sun", k: "par", t: "Soleado, con chubascos" };
+    if (f >= 0.35) return { icon: "ph-cloud-sun", k: "par", t: mm < 0.5 ? "Sol a ratos" : mm < 5 ? "Sol a ratos, con lluvias cortas" : "Sol a ratos, con chubascos" };
+    return mm < 5 ? { icon: "ph-cloud", k: "nub", t: mm < 0.5 ? "Mayormente nublado" : "Nublado, con lluvias cortas", bad: true } : { icon: "ph-cloud-rain", k: "llu", t: "Nublado y lluvioso", bad: true };
+  }
+  const climoLook = c => (c.sun != null && dayLook(c.sun, c.dl, c.med != null ? c.med : c.mm)) || climoState(c);
   function climoState(c) {
     const pct = Math.round(c.wet / c.n * 100);
     if (pct >= 70 && c.mm >= 5) return { icon: "ph-cloud-rain", t: "Lluvioso", pct, k: "llu" };
@@ -1453,22 +1476,22 @@
   function wxCell(d, k) {
     const L = refLoc(d, k), key = d ? d.iso : k;
     const w = wxDay(L, key);
-    if (w) { const m = wmo(w.code); return `<span class="wx" title="${m.t}"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><span class="num">${w.tmax}°</span><span class="num pr ${w.prob >= 70 ? "hi" : ""}">${w.prob}%</span></span>`; }
+    if (w) { const m = w.look; return `<span class="wx" title="${m.t}${w.sun != null ? ` · ${hrs(w.sun)} h de sol` : ""} · ${rainLabel(w.mm)}"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><span class="num">${w.tmax}°</span>${w.sun != null ? `<span class="num pr ${m.bad ? "hi" : ""}">${hrs(w.sun)}h</span>` : `<span class="num pr ${w.prob >= 70 ? "hi" : ""}">${w.prob}%</span>`}</span>`; }
     const c = climoDay(L, key);
     if (!c) return "";
-    const st = climoState(c);
-    return `<span class="wx typ" title="Clima típico: ${st.t}"><i class="ph-fill ${st.icon} wxc-${st.k}" aria-hidden="true"></i><span class="num pr ${st.pct >= 70 ? "hi" : ""}">${st.pct}%</span></span>`;
+    const st = climoLook(c);
+    return `<span class="wx typ" title="Clima típico: ${st.t}${c.sun != null ? ` · ${hrs(c.sun)} h de sol` : ""}"><i class="ph-fill ${st.icon} wxc-${st.k}" aria-hidden="true"></i>${c.sun != null ? `<span class="num pr ${st.bad ? "hi" : ""}">${hrs(c.sun)}h</span>` : `<span class="num pr ${st.pct >= 70 ? "hi" : ""}">${st.pct}%</span>`}</span>`;
   }
   function wxSheet(d) {
     const wl = wxLoc(d), w = wxDay(wl, d.iso), c = climoDay(wl, d.iso), place = WX_NAME[wl];
     let html = "";
     if (w) {
-      const m = wmo(w.code);
-      html += `<div class="kv wxk"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><span><b>${m.t} en ${place} · ${w.tmax}° / ${w.tmin}°</b><small>${wl === "islas" ? "Día de pasadía: clima en las islas. " : ""}Lluvia ${w.prob}% (${String(w.mm).replace(".", ",")} mm). Mañana ${w.man}% · tarde ${w.tar}% · noche ${w.noc}%. Viento hasta ${w.wind} km/h.${w.lead > 5 ? " A más de 5 días la lluvia es orientativa." : ""}</small></span></div>`;
+      const m = w.look;
+      html += `<div class="kv wxk"><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true"></i><span><b>${m.t} en ${place} · ${w.tmax}° / ${w.tmin}°</b><small>${wl === "islas" ? "Día de pasadía: clima en las islas. " : ""}${w.sun != null ? `${hrs(w.sun)} h de sol de ${hrs(w.dayH)} h de luz. ` : ""}${cap(rainLabel(w.mm))} (${String(w.mm).replace(".", ",")} mm en todo el día).${w.mm >= 0.5 ? ` Cuándo es más probable: mañana ${w.man}% · tarde ${w.tar}% · noche ${w.noc}%.` : ""} Viento hasta ${w.wind} km/h.${w.lead > 5 ? " A más de 5 días es orientativo." : ""}</small></span></div>`;
       if (d.items.some(x => x.act === "pasadia") && w.wave != null) html += `<div class="kv wxk ${w.wave >= 1.5 ? "bad" : ""}"><i class="ph ph-waves" aria-hidden="true"></i><span><b>Olas hasta ${w.wave.toFixed(1).replace(".", ",")} m cerca de las islas</b><small>${w.wave >= 1.5 ? "Mar picado: la Capitanía puede cancelar la lancha. Tengan listo el día de respaldo." : "Mar en buen estado para la lancha."}</small></span></div>`;
     } else if (c) {
-      const st = climoState(c);
-      html += `<div class="kv wxk typ"><i class="ph-fill ${st.icon} wxc-${st.k}" aria-hidden="true"></i><span><b>Clima típico en ${place}: ${st.t.toLowerCase()} · ${c.tx}°</b><small>En esta misma fecha llovió en ${c.wet} de los últimos ${c.n} años (${st.pct}% de probabilidad), con ${String(c.mm).replace(".", ",")} mm en promedio. Todavía no hay pronóstico: aparece desde el ${dlabel(iso(wxStart(d.iso)))}.</small></span></div>`;
+      const st = climoLook(c);
+      html += `<div class="kv wxk typ"><i class="ph-fill ${st.icon} wxc-${st.k}" aria-hidden="true"></i><span><b>Clima típico en ${place}: ${st.t.toLowerCase()} · ${c.tx}°</b><small>${c.sun != null ? `En esta fecha, en los últimos ${c.n} años: ${hrs(c.sun)} h de sol de ${hrs(c.dl)} h de luz en promedio. ${c.sunny} de ${c.n} años fue mayormente soleado y ${c.strong} de ${c.n} tuvo un aguacero fuerte.` : `En esta misma fecha llovió en ${c.wet} de los últimos ${c.n} años, con ${String(c.mm).replace(".", ",")} mm en promedio.`} Todavía no hay pronóstico: aparece desde el ${dlabel(iso(wxStart(d.iso)))}.</small></span></div>`;
     }
     if (d.eve.some(e => e.act === "biolum" || /bioluminiscencia/i.test(e.t))) { const mo = moonInfo(d.iso); html += `<div class="kv wxk ${mo.dark ? "" : "bad"}"><i class="ph ph-moon" aria-hidden="true"></i><span><b>Luna: ${mo.dark ? "buena noche para la bioluminiscencia" : "mucha luz para la bioluminiscencia"}</b><small>${mo.txt}</small></span></div>`; }
     return html;
@@ -1511,13 +1534,15 @@
     const cur = L.current, cm = cur ? wmo(cur.weather_code) : null;
     const trip = new Set((LAST && LAST.it && LAST.it.days || []).filter(d => k === "islas" ? wxLoc(d) === "islas" : d.stay === k && wxLoc(d) !== "islas").map(d => d.iso));
     const dd = L.daily, rows = dd.time.map((t, i) => {
-      const m = wmo(dd.weather_code[i]), here = trip.has(t), dt = D(t);
-      return `<div class="fc-row ${here ? "here" : ""}"><span class="fc-d"><b>${i === 0 ? "Hoy" : i === 1 ? "Mañana" : cap(WDS[dt.getDay()])}</b><small>${dt.getDate()} ${MO[dt.getMonth()]}</small></span><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true" title="${m.t}"></i><span class="fc-t">${m.t}${k === "islas" && WX.sea && WX.sea.time.indexOf(t) >= 0 && WX.sea.wave_height_max[WX.sea.time.indexOf(t)] != null ? ` · olas ${String(WX.sea.wave_height_max[WX.sea.time.indexOf(t)].toFixed(1)).replace(".", ",")} m` : ""}${here ? `<em>${k === "islas" ? "Pasadía" : "Están aquí"}</em>` : ""}</span><span class="fc-p num ${dd.precipitation_probability_max[i] >= 70 ? "hi" : ""}"><i class="ph-fill ph-drop" aria-hidden="true"></i>${dd.precipitation_probability_max[i]}%</span><span class="fc-x num"><b>${Math.round(dd.temperature_2m_max[i])}°</b> ${Math.round(dd.temperature_2m_min[i])}°</span></div>`;
+      const sun = dd.sunshine_duration && dd.sunshine_duration[i] != null ? dd.sunshine_duration[i] / 3600 : null, dl = dd.daylight_duration ? dd.daylight_duration[i] / 3600 : null;
+      if (dd.weather_code[i] == null && sun == null) return "";
+      const m = dayLook(sun, dl, dd.precipitation_sum[i] || 0, dd.weather_code[i]) || wmo(dd.weather_code[i]), here = trip.has(t), dt = D(t);
+      return `<div class="fc-row ${here ? "here" : ""}"><span class="fc-d"><b>${i === 0 ? "Hoy" : i === 1 ? "Mañana" : cap(WDS[dt.getDay()])}</b><small>${dt.getDate()} ${MO[dt.getMonth()]}</small></span><i class="ph-fill ${m.icon} wxc-${m.k}" aria-hidden="true" title="${m.t}"></i><span class="fc-t">${m.t}${k === "islas" && WX.sea && WX.sea.time.indexOf(t) >= 0 && WX.sea.wave_height_max[WX.sea.time.indexOf(t)] != null ? ` · olas ${String(WX.sea.wave_height_max[WX.sea.time.indexOf(t)].toFixed(1)).replace(".", ",")} m` : ""}${here ? `<em>${k === "islas" ? "Pasadía" : "Están aquí"}</em>` : ""}</span>${sun != null ? `<span class="fc-p sun num ${m.bad ? "hi" : ""}" title="Horas de sol"><i class="ph-fill ph-sun" aria-hidden="true"></i>${hrs(sun)} h</span>` : `<span class="fc-p num ${dd.precipitation_probability_max[i] >= 70 ? "hi" : ""}"><i class="ph-fill ph-drop" aria-hidden="true"></i>${dd.precipitation_probability_max[i]}%</span>`}<span class="fc-x num"><b>${Math.round(dd.temperature_2m_max[i])}°</b> ${Math.round(dd.temperature_2m_min[i])}°</span></div>`;
     }).join("");
     const lastDay = dd.time[dd.time.length - 1], tripDays = [...trip].sort();
     const note = tripDays.length && tripDays[0] > lastDay ? `<p class="fc-note">${k === "islas" ? "La pasadía" : "Sus días aquí"} (${dlabel(tripDays[0])}) todavía no entra${k === "islas" ? "" : "n"} en el pronóstico: aparece${k === "islas" ? "" : "n"} desde el ${dlabel(iso(wxStart(tripDays[0])))}. Mientras tanto, el Calendario muestra el clima típico.</p>` : "";
     const seaNote = k === "islas" ? `<p class="fc-note">Con olas de más de 1,5 m o viento fuerte la Capitanía puede cancelar las lanchas. Las lanchas regresan antes de las 15:30 porque en la tarde el mar se pica.</p>` : "";
-    return head + `<div class="sh-pad c-${k}">${cur ? `<div class="fc-now"><i class="ph-fill ${cm.icon} wxc-${cm.k}" aria-hidden="true"></i><div><b class="num">${Math.round(cur.temperature_2m)}°</b><span>${cm.t} · se siente como ${Math.round(cur.apparent_temperature)}°</span><small>Humedad ${cur.relative_humidity_2m}% · viento ${Math.round(cur.wind_speed_10m)} km/h${k === "islas" && WX.seaNow && WX.seaNow.wave_height != null ? ` · olas ${String(WX.seaNow.wave_height.toFixed(1)).replace(".", ",")} m` : ""}</small></div></div>` : ""}${note}${seaNote}<div class="fc-list">${rows}</div><p class="fc-note">La lluvia es confiable a 1 a 5 días; después es orientativa. Fuente: Open-Meteo, modelo europeo ECMWF.</p></div>`;
+    return head + `<div class="sh-pad c-${k}">${cur ? `<div class="fc-now"><i class="ph-fill ${cm.icon} wxc-${cm.k}" aria-hidden="true"></i><div><b class="num">${Math.round(cur.temperature_2m)}°</b><span>${cm.t} · se siente como ${Math.round(cur.apparent_temperature)}°</span><small>Humedad ${cur.relative_humidity_2m}% · viento ${Math.round(cur.wind_speed_10m)} km/h${k === "islas" && WX.seaNow && WX.seaNow.wave_height != null ? ` · olas ${String(WX.seaNow.wave_height.toFixed(1)).replace(".", ",")} m` : ""}</small></div></div>` : ""}${note}${seaNote}<div class="fc-list">${rows}</div><p class="fc-note"><i class="ph-fill ph-sun" aria-hidden="true"></i> = horas de sol del día (de unas 12 de luz). "Lluvias cortas" es poca agua en todo el día (menos de 5 mm): unos chubascos y el resto con sol o nubes. Es confiable a 1 a 5 días; después es orientativo. Fuente: Open-Meteo, modelo europeo ECMWF.</p></div>`;
   }
   const HOL = { "2026-01-01": "Año Nuevo", "2026-01-12": "Reyes Magos", "2026-03-23": "San José", "2026-04-02": "Jueves Santo", "2026-04-03": "Viernes Santo", "2026-05-01": "Día del Trabajo", "2026-05-18": "Ascensión", "2026-06-08": "Corpus Christi", "2026-06-15": "Sagrado Corazón", "2026-06-29": "San Pedro y San Pablo", "2026-07-20": "Día de la Independencia", "2026-08-07": "Batalla de Boyacá", "2026-08-17": "Asunción de la Virgen", "2026-10-12": "Día de la Raza", "2026-11-02": "Todos los Santos", "2026-11-16": "Independencia de Cartagena", "2026-12-08": "Inmaculada Concepción", "2026-12-25": "Navidad" };
   function holList(g0, g1, byDate) {
@@ -1540,7 +1565,7 @@
       cells.push(`<button type="button" class="cell c-${loc} ${fly ? "fly" : ""}" data-day="${k}" aria-label="${dlong(dt)}: ${esc(m.lb)}${eve ? ", con plan de noche" : ""}${fest ? ", festivo" : ""}"><span class="dn"><span class="num">${n}</span>${eve ? `<i class="ph-fill ph-moon-stars moon" aria-hidden="true"></i>` : ""}${mo}</span><i class="${m.fly ? "ph-fill" : "ph"} ${m.icon} ci" aria-hidden="true"></i><span class="lb">${esc(m.lb)}</span>${wxCell(d)}${fest ? `<span class="fe">Festivo</span><i class="ph-fill ph-flag-banner hol-i" aria-hidden="true"></i>` : ""}${S.notes[k] ? `<i class="ph ph-note-pencil nt" aria-hidden="true"></i>` : ""}</button>`);
     }
     const months = [...new Set([first, lastD].map(d => MN[d.getMonth()]))].join(" y ");
-    const legend = `<div class="cal-legend">${DESTS.filter(d => S.n[d.id]).map(d => `<span class="c-${d.id}"><i class="sw" aria-hidden="true"></i>${d.name}</span>`).join("")}<span><i class="sw fly" aria-hidden="true"></i>Día de vuelo</span><span class="c-rincon"><i class="ph-fill ph-moon-stars" style="color:var(--dc)" aria-hidden="true"></i>Plan de noche</span><span><i class="ph ph-note-pencil" aria-hidden="true"></i>Con nota</span></div><div class="cal-legend wx-legend"><span><i class="ph-fill ph-sun wxc-sol" aria-hidden="true"></i>Seco</span><span><i class="ph-fill ph-cloud-sun wxc-par" aria-hidden="true"></i>Parcial</span><span><i class="ph-fill ph-cloud wxc-nub" aria-hidden="true"></i>Nublado</span><span><i class="ph-fill ph-drop wxc-llo" aria-hidden="true"></i>Llovizna</span><span><i class="ph-fill ph-cloud-rain wxc-llu" aria-hidden="true"></i>Lluvia</span><span><i class="ph-fill ph-cloud-lightning wxc-tor" aria-hidden="true"></i>Tormenta</span><span>% = probabilidad de lluvia; en cursiva, clima típico mientras llega el pronóstico</span></div><p class="wx-status">${wxStatus()}</p>`;
+    const legend = `<div class="cal-legend">${DESTS.filter(d => S.n[d.id]).map(d => `<span class="c-${d.id}"><i class="sw" aria-hidden="true"></i>${d.name}</span>`).join("")}<span><i class="sw fly" aria-hidden="true"></i>Día de vuelo</span><span class="c-rincon"><i class="ph-fill ph-moon-stars" style="color:var(--dc)" aria-hidden="true"></i>Plan de noche</span><span><i class="ph ph-note-pencil" aria-hidden="true"></i>Con nota</span></div><div class="cal-legend wx-legend"><span><i class="ph-fill ph-sun wxc-sol" aria-hidden="true"></i>Soleado</span><span><i class="ph-fill ph-cloud-sun wxc-par" aria-hidden="true"></i>Sol a ratos</span><span><i class="ph-fill ph-cloud wxc-nub" aria-hidden="true"></i>Nublado</span><span><i class="ph-fill ph-cloud-rain wxc-llu" aria-hidden="true"></i>Aguacero</span><span><i class="ph-fill ph-cloud-lightning wxc-tor" aria-hidden="true"></i>Tormenta</span><span>8h = horas de sol del día; en cursiva, clima típico mientras llega el pronóstico</span></div><p class="wx-status">${wxStatus()}</p>`;
     const refSel = `<div class="wx-ref"><span>Clima de:</span>${[["auto", "Según el viaje"], ["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]].map(([v, t]) => `<button type="button" class="chip-btn" aria-pressed="${WXREF === v}" data-wxref="${v}">${t}</button>`).join("")}</div><p class="fc-note" style="margin:0 0 10px">${WXREF === "auto" ? "Días del viaje con el clima de donde están; días fuera del viaje con el de Tolú." : `Todos los días con el clima de ${WX_NAME[WXREF]}.`}</p>`;
     $("[data-cal]").innerHTML = legend + refSel + `<div class="cal"><h3>${cap(months)} de ${first.getFullYear()}</h3><div class="cal-grid">${["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(w => `<div class="wd" aria-hidden="true">${w}</div>`).join("")}${cells.join("")}</div></div>` + holList(g0, g1, byDate);
   }
@@ -1934,8 +1959,8 @@
         const L = wxLoc(d), w = wxDay(L, d.iso), c = w ? null : climoDay(L, d.iso), mo = moonInfo(d.iso);
         return { fecha: d.iso, dia: WDS[d.date.getDay()], duermen_en: DNAME_SHORT[d.stay] || d.stay, festivo: d.fest || undefined, traslado: d.move || undefined,
           plan: d.items.filter(x => x.k !== "flight").map(x => x.t + (x.slot === "tarde" ? " (tarde)" : "")), noche: d.eve.map(x => x.t),
-          clima: w ? { tipo: "pronostico", lugar: WX_NAME[L], estado: wmo(w.code).t, max: w.tmax, min: w.tmin, prob_lluvia: w.prob, lluvia_manana: w.man, lluvia_tarde: w.tar, lluvia_noche: w.noc, mm: w.mm, olas_m: w.wave }
-            : c ? { tipo: "tipico_10_anos", lugar: WX_NAME[L], estado: climoState(c).t, dias_con_lluvia_pct: climoState(c).pct, mm_promedio: c.mm, max_promedio: c.tx } : null,
+          clima: w ? { tipo: "pronostico", lugar: WX_NAME[L], estado: w.look.t, horas_sol: w.sun != null ? +w.sun.toFixed(1) : null, horas_luz: w.dayH != null ? +w.dayH.toFixed(1) : null, lluvia: rainLabel(w.mm), mm_dia: w.mm, prob_algo_de_lluvia: w.prob, lluvia_manana: w.man, lluvia_tarde: w.tar, lluvia_noche: w.noc, max: w.tmax, min: w.tmin, olas_m: w.wave }
+            : c ? { tipo: "tipico_10_anos", lugar: WX_NAME[L], estado: climoLook(c).t, horas_sol_promedio: c.sun, horas_luz: c.dl, anos_mayormente_soleados: `${c.sunny} de ${c.n}`, anos_con_aguacero_fuerte: `${c.strong} de ${c.n}`, mm_dia_tipico: c.med, max_promedio: c.tx } : null,
           luna: `${mo.name}, ${mo.ill}%${mo.dark ? ", noche oscura (buena para bioluminiscencia)" : ""}` };
       }),
       guia: GUIDE.map(g => ({ destino: g.name, intro: g.intro, secciones: g.sec.map(sc => sc.t + ": " + sc.li.map(x => x.replace(/<[^>]+>/g, "")).join(" | ")) })),
