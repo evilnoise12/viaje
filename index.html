@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-19.1">
+<meta name="app-version" content="2026-10-19.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -27,13 +27,20 @@
     color-scheme: light;
     --bg: #f4f6f5; --surface: #ffffff; --surface-2: #eef2f1; --text: #13201d; --muted: #55645f; --line: #dfe6e4;
     --accent: #0d7468; --accent-ink: #f3fbf9; --accent-soft: #d9efeb; --warn: #b4561f; --warn-soft: #fbeee6; --ok: #1f8a4c;
-    --golfo: #2366a8; --golfo-soft: #e4eef8; --rincon: #a86a00; --rincon-soft: #fcf0d9; --ctg: #b0306a; --ctg-soft: #f8e5ee;
+    --golfo: #2366a8; --golfo-soft: #e4eef8; --rincon: #a86a00; --rincon-soft: #fcf0d9; --ctg: #b0306a; --ctg-soft: #f8e5ee; --minca: #2e7d4f; --minca-soft: #e2f2e7;
     --radius: 14px; --pill: 999px; --side: 232px; --top: 60px; --bottom: 64px;
     --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
   }
   .c-golfo, .c-islas { --dc: var(--golfo); --dcs: var(--golfo-soft); }
   .c-rincon { --dc: var(--rincon); --dcs: var(--rincon-soft); }
   .c-ctg { --dc: var(--ctg); --dcs: var(--ctg-soft); }
+  .c-minca { --dc: var(--minca); --dcs: var(--minca-soft); }
+  .route-sw { margin-bottom: 14px; }
+  .rs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .rs { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 10px 12px; cursor: pointer; font: inherit; color: inherit; min-height: 44px; }
+  .rs i { font-size: 21px; color: var(--muted); } .rs b { font-size: 15px; } .rs small { font-size: 12px; color: var(--muted); line-height: 1.3; } .rs .rs-t { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .rs[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); } .rs[aria-pressed="true"] i { color: var(--accent); }
+  .rs-note { font-size: 12.5px; color: var(--muted); margin: 6px 2px 0; }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -654,6 +661,7 @@
         <p><b>Así funciona:</b> abre cada sección, ajusta noches, hoteles y planes, y el total de arriba se recalcula solo. Todo queda guardado en este celular y con el botón de compartir le mandas el plan a tu pareja.</p>
         <button type="button" class="icon-btn" data-intro-off aria-label="Cerrar la explicación"><i class="ph ph-x" aria-hidden="true"></i></button>
       </div>
+      <div class="route-sw" data-route-sw></div>
       <div class="wx-strip" data-wx-strip></div>
       <div data-sg-banner></div>
       <div class="warns" data-warn-armar></div>
@@ -759,6 +767,7 @@
 
     <section class="view" data-view="info" hidden>
       <div class="view-head"><div><h1>Agencias y consejos</h1><p>Contactos que dejaron los viajeros en sus videos de YouTube.</p></div></div>
+      <div data-only="golfo">
       <div class="grid2">
         <div>
           <div class="card agency"><div><b>Viajando con Trixie</b><small>Coveñas y Tolú · Experimento Nómada, 2025</small></div><a class="wa num" data-wa-agency="573014087371" href="https://wa.me/573014087371" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>301 408 7371</a><p>La más recomendada. Recoge en el hotel a las 7:20, almuerzo isleño, regreso 16:30. $100.000 p/p en temporada baja, $140.000 en alta. El botón abre WhatsApp con el mensaje listo.</p></div>
@@ -798,6 +807,43 @@
         <div class="tip"><i class="ph ph-sun" aria-hidden="true"></i><div><b>Rincón del Mar</b><span>Corrientazo en el pueblo $15.000 a $16.000. Mar Blanco: pescado con sopa $25.000, ceviche $35.000, camarones $40.000. El Tropical desde $10.000.</span></div></div>
         <div class="tip"><i class="ph ph-island" aria-hidden="true"></i><div><b>Islas</b><span>Mojarra en Tintipán unos $35.000. En Puerto Caracol, el caserío de Múcura, pescado fresco a $40.000. Langosta $70.000 a $120.000. Llevar agua desde tierra.</span></div></div>
         <div class="tip"><i class="ph ph-castle-turret" aria-hidden="true"></i><div><b>Cartagena</b><span>Corrientazo $15.000 a $17.000 por fuera de la zona turística. En el Centro un plato ronda $35.000. Revisar la carta y si la propina viene incluida.</span></div></div>
+      </div>
+            </div>
+      <div data-only="sierra" hidden>
+      <div class="grid2">
+        <div>
+          <div class="card agency"><div><b>Finca La Victoria</b><small>Minca · sitio oficial, 2026</small></div><a class="wa num" href="https://wa.me/573242401129" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>324 240 1129</a><p>Tour de café de 50 minutos (40.000 p/p) y avistamiento de aves a las 6:00 o 16:00 (120.000 p/p, con reserva).</p></div>
+          <div class="card agency"><div><b>Sula · ColombiaFrank</b><small>Minca · video de YouTube, 2025</small></div><a class="wa num" href="https://wa.me/573013374741" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>301 337 4741</a><p>Planes y transporte en Minca. Confirmar precios por WhatsApp.</p></div>
+          <div class="card agency"><div><b>Neyer, guía local</b><small>Minca · video de YouTube</small></div><a class="wa num" href="https://wa.me/573005500964" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>300 550 0964</a><p>Guía para cascadas y aves. Instagram @neyeralmazo.</p></div>
+          <div class="card agency"><div><b>Marsol</b><small>Van Santa Marta → Cartagena</small></div><a class="wa num" href="https://wa.me/573042016254" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>304 201 6254</a><p>100.000 p/p, unas 5 horas, de su oficina en Santa Marta (Carrera 4 #24-20) a la de Cartagena en Marbella. Salidas a las 5:30 y cada hora de 7:00 a 11:00.</p></div>
+          <div class="card places">
+            <h2 style="margin-bottom:6px"><i class="ph ph-map-trifold" aria-hidden="true"></i>Lugares clave</h2>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Aeropuerto%20Sim%C3%B3n%20Bol%C3%ADvar%2C%20Santa%20Marta" target="_blank" rel="noopener"><i class="ph ph-airplane-landing" aria-hidden="true"></i><span>Aeropuerto de Santa Marta</span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Mercado%20P%C3%BAblico%2C%20Carrera%209%20con%20Calle%2012%2C%20Santa%20Marta" target="_blank" rel="noopener"><i class="ph ph-van" aria-hidden="true"></i><span>Colectivo a Minca: Carrera 9 con Calle 12, detrás del Mercado Público</span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Minca%2C%20Santa%20Marta%2C%20Magdalena" target="_blank" rel="noopener"><i class="ph ph-mountains" aria-hidden="true"></i><span>Minca</span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Pozo%20Azul%2C%20Minca" target="_blank" rel="noopener"><i class="ph ph-drop" aria-hidden="true"></i><span>Pozo Azul</span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Finca%20La%20Victoria%2C%20Minca" target="_blank" rel="noopener"><i class="ph ph-coffee" aria-hidden="true"></i><span>Finca La Victoria</span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Terminal%20de%20Transportes%20de%20Santa%20Marta" target="_blank" rel="noopener"><i class="ph ph-bus" aria-hidden="true"></i><span>Terminal de Santa Marta (buses a Cartagena)</span></a>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Aeropuerto%20Internacional%20Rafael%20N%C3%BA%C3%B1ez%2C%20Cartagena" target="_blank" rel="noopener"><i class="ph ph-airplane-takeoff" aria-hidden="true"></i><span>Aeropuerto de Cartagena</span></a>
+          </div>
+        </div>
+        <div class="card">
+          <h2 style="margin-bottom:4px"><i class="ph ph-lightbulb" aria-hidden="true"></i>Consejos de los viajeros</h2>
+          <div class="tip"><i class="ph ph-money" aria-hidden="true"></i><div><b>Subir con efectivo</b><span>En Minca no hay cajeros. Sacar plata en Santa Marta y llevar billetes pequeños: Marinka y los mototaxis solo reciben efectivo.</span></div></div>
+          <div class="tip"><i class="ph ph-clock-countdown" aria-hidden="true"></i><div><b>Último colectivo</b><span>Sale del mercado hacia las 6 p. m. Conviene aterrizar antes de las 4 p. m. El taxi o Uber hasta Minca cobra 79.000 a 130.000.</span></div></div>
+          <div class="tip"><i class="ph ph-motorcycle" aria-hidden="true"></i><div><b>Mototaxi</b><span>Acordar el precio antes de subir: unos 10.000 a 15.000 por persona a cada plan.</span></div></div>
+          <div class="tip"><i class="ph ph-cloud-rain" aria-hidden="true"></i><div><b>Planes en la mañana</b><span>En octubre y noviembre llueve fuerte en la tarde y hay barro. Pozo Azul se llena: ir a las 8 a. m.</span></div></div>
+          <div class="tip"><i class="ph ph-waves" aria-hidden="true"></i><div><b>Crecientes del río</b><span>Si llovió fuerte, no meterse a los pozos: el río puede crecer de golpe.</span></div></div>
+          <div class="tip"><i class="ph ph-bug" aria-hidden="true"></i><div><b>Jejenes y zancudos</b><span>Manga larga y repelente al atardecer. Mejor habitación con toldillo.</span></div></div>
+          <div class="tip"><i class="ph ph-speaker-high" aria-hidden="true"></i><div><b>Fines de semana</b><span>En puentes se llena y hay ruido de bares: elegir hospedaje un poco retirado de la calle principal.</span></div></div>
+          <div class="tip"><i class="ph ph-shield-warning" aria-hidden="true"></i><div><b>Orden público</b><span>En septiembre de 2026 hubo un paro armado en la zona. Revisar noticias unos días antes y reservar con cancelación gratis.</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:4px"><i class="ph ph-fork-knife" aria-hidden="true"></i>Dónde comer, según los viajeros</h2>
+        <div class="tip"><i class="ph ph-mountains" aria-hidden="true"></i><div><b>Minca</b><span>Menú del día $18.000 a $25.000 y platos a la carta de $25.000 a $40.000. Recomendados: Donde Orfi, Doña Ana (sancocho junto al río), Lazy Cat ($40.000 a $60.000 p/p), Santisabella, Mamo y el pan de chocolate de La Miga. Café y cacao en Casa Jocolate.</span></div></div>
+        <div class="tip"><i class="ph ph-castle-turret" aria-hidden="true"></i><div><b>Cartagena</b><span>Corrientazo $15.000 a $17.000 por fuera de la zona turística. En el Centro un plato ronda $35.000. Revisar si la propina viene incluida.</span></div></div>
+      </div>
       </div>
       <p class="credits">Basado en 27 videos de viajeros en YouTube. Hoteles y vuelos verificados el 5 de octubre de 2026; lo marcado como estimado es aproximado.</p>
     </section>
@@ -876,7 +922,7 @@
               lun: { date: "2026-11-23", air: "Wingo", time: "3:01 → 4:30", price: 274600, warn: "Madrugada" } } }
   };
   const DAYNAME = { vie: "Viernes", sab: "Sábado", dom: "Domingo", lun: "Lunes" };
-  const DESTS = [
+  const DESTS_GOLFO = [
     { id: "golfo", name: "Tolú o Coveñas", icon: "ph-umbrella-simple", min: 0,
       blurb: "Playa, Ciénaga La Caimanera y malecón. Base para la pasadía a las islas.",
       hotels: [
@@ -900,7 +946,7 @@
         { id: "dakema", name: "Posada Dakema", where: "Canapote, lejos del centro", score: "8,5", rate: { p2: 80000, p16: 72000 }, info: "Aire, balcón. Hay que moverse en taxi.", url: "https://www.booking.com/hotel/co/posada-dakema-cartagena.es.html" }
       ] }
   ];
-  const MOVES = {
+  const MOVES_GOLFO = {
     "air-golfo": ["Colectivo desde la entrada 5 del aeropuerto de Montería, puerta a puerta hasta el hotel (30.000 a 40.000 p/p, 1 h 30 a 1 h 40). Más barato: caminar 1 km hasta la Troncal y tomar Sotracor, Torcoroma o Tucurá (25.000 a 28.000 p/p, el último pasa hacia las 6 pm)", 70000],
     "air-rincon": ["Colectivo del aeropuerto a Tolú o Coveñas, bus a San Onofre y moto o tuk-tuk a Rincón (15.000 a 17.500 p/p), unas 3 horas", 130000],
     "air-ctg": ["Colectivo y bus de Montería a Cartagena, unas 5 horas", 150000],
@@ -908,14 +954,14 @@
     "golfo-ctg": ["Bus a Cartagena, unas 3 horas, y taxi al hotel", 139000],
     "rincon-ctg": ["Moto a San Onofre (15.000 p/p), bus Brasilia a Cartagena (35.000 p/p, 2 horas) y taxi del terminal al hotel", 115000]
   };
-  const MOVE_T = { "air-golfo": "1 h 40", "air-rincon": "3 h", "air-ctg": "5 h", "golfo-rincon": "1 h 30", "golfo-ctg": "3 h", "rincon-ctg": "2 h 30" };
-  const MOVE_MODE = { "air-golfo": "Colectivo", "air-rincon": "Colectivo, bus y mototaxi", "air-ctg": "Colectivo y bus", "golfo-rincon": "Bus y mototaxi", "golfo-ctg": "Bus", "rincon-ctg": "Mototaxi y bus" };
+  const MOVE_T_GOLFO = { "air-golfo": "1 h 40", "air-rincon": "3 h", "air-ctg": "5 h", "golfo-rincon": "1 h 30", "golfo-ctg": "3 h", "rincon-ctg": "2 h 30" };
+  const MOVE_MODE_GOLFO = { "air-golfo": "Colectivo", "air-rincon": "Colectivo, bus y mototaxi", "air-ctg": "Colectivo y bus", "golfo-rincon": "Bus y mototaxi", "golfo-ctg": "Bus", "rincon-ctg": "Mototaxi y bus" };
   const FOOD = [
     { id: "aj", name: "Ajustado", sub: "$60.000 p/p al día", v: 60000 },
     { id: "no", name: "Normal", sub: "$80.000 p/p al día", v: 80000 },
     { id: "ge", name: "Generoso", sub: "$110.000 p/p al día", v: 110000 }
   ];
-  const ACTS = [
+  const ACTS_GOLFO = [
     { id: "cienaga", dest: "golfo", t: "Canoa por la Ciénaga La Caimanera", d: "2 horas entre manglares, sin motor, con ostras al final. Mejor temprano.", lvl: "must", cost: 60000 },
     { id: "pasadia", dest: "islas", t: "Pasadía a Tintipán o Múcura", d: "Parada en Santa Cruz del Islote y día de playa. Desde Tolú o Coveñas incluye almuerzo isleño. Desde Rincón es más cerca y cuesta 70.000 p/p solo la lancha (8:30 a 15:30): el almuerzo va aparte (mojarra unos 35.000) y se puede llevar comida.", lvl: "must", cost: 242000 },
     { id: "biolum", dest: "rincon", t: "Bioluminiscencia en Rincón del Mar", d: "Con Isla de los Pájaros al atardecer. Se ve mejor sin luna: del 3 al 6 de noviembre las primeras horas de la noche están oscuras. En lancha grande y en buen estado. Precio por confirmar con JJ Tour del Mar.", lvl: "must", cost: 90000, night: true },
@@ -944,10 +990,77 @@
   const BAG = 90000, LOWCOST = ["JetSMART", "Wingo"], LUNCH = 0.35, CAP = 150000, AVG = 120000;
   const CASH_FOOD = { golfo: 0.5, rincon: 1, ctg: 0 };
 
+  /* ---------- Rutas: cada una es un plan aparte, con sus propias noches, hoteles y planes ---------- */
+  const DESTS_SIERRA = [
+    { id: "minca", name: "Minca", icon: "ph-mountains", min: 1,
+      blurb: "Pueblo de montaña en la Sierra Nevada, a 45 minutos de Santa Marta y más fresco que la costa. Para descansar: pozos del río, café, cacao y atardeceres, sin caminatas largas.",
+      hotels: [
+        { id: "casablanca", name: "Casa Blanca", where: "Minca, calle principal: todo a pie", score: "8,7", rate: { p2: 110000, p16: 110000 }, ver: "19 oct", info: "Doble con baño privado y vista a la montaña. Se anuncia como hostal. Pagas al llegar; cancelación gratis.", url: "https://www.booking.com/hotel/co/casa-blanca-minca.es.html" },
+        { id: "btc", name: "BTC Minca Base Camp", where: "A 100 m del centro, plano", score: "8,5", rate: { p2: 70688, p16: 70688 }, ver: "19 oct", info: "Doble pequeña con baño privado y piscina. Se paga por adelantado; cancelación gratis hasta 2 días antes.", url: "https://www.booking.com/hotel/co/brisas-de-minca.es.html" },
+        { id: "cabanita", name: "La cabañita VIP", where: "A 300 m del centro, con una subida corta", score: "8,8", rate: { p2: 124236, p16: 119952 }, ver: "19 oct", info: "Doble con balcón y vista; se oye el río. Pagas al llegar.", url: "https://www.booking.com/hotel/co/la-cabanita-vip.es.html" },
+        { id: "tibiki", name: "Cabaña Tibiki", where: "A 250 m del centro, a pie", score: "8,6", rate: { p2: 117000, p16: 117000 }, ver: "19 oct", info: "Doble con cocineta, balcón y toldillo. Pocas reseñas (12). Sin reembolso.", url: "https://www.booking.com/hotel/co/finca-tibiki-santa-marta.es.html" },
+        { id: "dunarinka", name: "Dunarinka", where: "A 700 m de subida: mejor en mototaxi", score: "8,7", rate: { p2: 90372, p16: 109812 }, ver: "19 oct", info: "Doble con baño privado y vista. Sin reembolso.", url: "https://www.booking.com/hotel/co/dunarinka.es.html" },
+        { id: "tribu", name: "Tribu Hostal", where: "A 600 m, junto al río", score: "9,6", rate: { p2: 142000, p16: null }, ver: "19 oct", info: "Doble con balcón y desayuno incluido. Se anuncia como hostal; es nuevo (13 reseñas).", url: "https://www.booking.com/hotel/co/tribu-hostal-santa-marta.es.html" },
+        { id: "refugio", name: "El Refugio Minca", where: "A 2 min de la calle principal, por una calle empinada", score: "9,0", rate: { p2: 144100, p16: 156752 }, ver: "19 oct", info: "Aire, piscina y desayuno incluido; terraza para el atardecer. Cancelación gratis.", url: "https://www.booking.com/hotel/co/el-refugio-minca.es.html" },
+        { id: "altomontana", name: "Alto de la Montaña", where: "A 1,8 km, al lado de Pozo Azul", score: "8,7", rate: { p2: 148500, p16: 148500 }, ver: "19 oct", info: "Desayuno incluido, vista a la Sierra y aves. Queda lejos del pueblo: mototaxi para ir a comer.", url: "https://www.booking.com/hotel/co/hostal-alto-de-la-montana.es.html" }
+      ] },
+    DESTS_GOLFO.find(d => d.id === "ctg")
+  ];
+  const MOVES_SIERRA = {
+    "air-minca": ["Buseta por la Troncal del aeropuerto al Mercado Público de Santa Marta (3.000 p/p, 45 a 60 min) y colectivo Cootrasminca desde la Carrera 9 con Calle 12, detrás del mercado (10.000 p/p, 45 min), que sale cuando se llena entre las 7 de la mañana y las 6 de la tarde", 26000],
+    "air-ctg": ["Buseta al terminal de Santa Marta y bus a Cartagena (unos 76.000 p/p, 4 a 5 horas)", 170000],
+    "minca-ctg": ["Colectivo a Santa Marta (10.000 p/p), buseta o taxi al terminal y bus a Cartagena (Expreso Brasilia o Unitransco, unos 76.000 p/p, 4 a 5 horas) y taxi al hotel. Más cómodo: van de Marsol, 100.000 p/p, de su oficina en Santa Marta a la de Cartagena", 200000]
+  };
+  const MOVE_T_SIERRA = { "air-minca": "2 h", "air-ctg": "6 h", "minca-ctg": "6 h" };
+  const MOVE_MODE_SIERRA = { "air-minca": "Buseta y colectivo", "air-ctg": "Buseta y bus", "minca-ctg": "Colectivo y bus" };
+  const ACTS_SIERRA = [
+    { id: "pozoazul", dest: "minca", t: "Pozo Azul", d: "Pozos del río para bañarse. Mototaxi de 10 minutos y 15 minutos a pie. Ir a las 8 a. m.: después se llena. Incluye entrada (6.000 p/p) y mototaxi ida y vuelta.", lvl: "must", cost: 52000, light: true, est: true },
+    { id: "marinka", dest: "minca", t: "Cascadas de Marinka", d: "Cascadas con hamacas, café y restaurante para almorzar. Mototaxi de 10 a 15 minutos y 10 a 20 minutos de sendero. Entrada de 23.000 p/p, solo efectivo, más mototaxi ida y vuelta.", lvl: "must", cost: 106000, est: true },
+    { id: "victoria", dest: "minca", t: "Tour de café en Finca La Victoria", d: "Finca cafetera de 1892 con su maquinaria original; en octubre empieza la cosecha. 50 minutos, incluye 2 cafés (40.000 p/p) más mototaxi de subida. Todos los días de 9:00 a 16:30; reservar por WhatsApp 324 240 1129.", lvl: "must", cost: 140000, light: true, ver: "19 oct" },
+    { id: "cacao", dest: "minca", t: "Taller de cacao", d: "En Casa Jocolate, en el pueblo y a pie, o en la finca La Candelaria (40.000 p/p, 20 minutos en moto). Una o dos horas haciendo chocolate desde el grano.", lvl: "good", cost: 80000, light: true, est: true },
+    { id: "atardecer", dest: "minca", t: "Atardecer en un mirador", d: "Terraza de El Refugio, la Torre del Sol o un mirador en la vía que cobra 5.000 y te lo devuelven en consumo.", lvl: "good", cost: 10000, night: true, est: true },
+    { id: "masaje", dest: "minca", t: "Masaje para los dos", d: "60 a 90 minutos en el pueblo. Reservar el día anterior.", lvl: "good", cost: 160000, light: true, est: true },
+    { id: "oido", dest: "minca", t: "Oído del Mundo", d: "Pozos poco hondos en la vía a Marinka, a unos 20 minutos a pie del pueblo. Entrada de 10.000 p/p.", lvl: "opt", cost: 20000, light: true, est: true },
+    { id: "aves", dest: "minca", t: "Avistamiento de aves en La Victoria", d: "Dos horas y media con guía, a las 6:00 o a las 16:00 (120.000 p/p) más mototaxi. Hay que reservar.", lvl: "opt", cost: 300000, light: true, ver: "19 oct" },
+    { id: "elemento", dest: "minca", t: "Pasadía con hamacas y piscina", d: "En Coffee House o Sierra Minca (unos 50.000 p/p). Sierra Minca, antes Casa Elemento, tiene las hamacas gigantes, pero queda a 35 minutos de trocha: con lluvia solo sube el 4x4 (120.000 a 140.000).", lvl: "opt", cost: 160000, est: true },
+    { id: "lospinos", dest: "minca", t: "Mirador Los Pinos", d: "Vista a la Sierra y, en día claro, al mar. Mototaxi de 20.000 a 30.000 por trayecto por trocha, incómodo. No vale la pena con lluvia.", lvl: "opt", cost: 100000, light: true, est: true }
+  ].concat(ACTS_GOLFO.filter(a => a.dest === "ctg"));
+  Object.assign(ACT_ICON, { pozoazul: "ph-drop", marinka: "ph-waves", victoria: "ph-coffee", cacao: "ph-cookie", atardecer: "ph-sun-horizon", masaje: "ph-hand-heart", oido: "ph-ear", aves: "ph-bird", elemento: "ph-tree", lospinos: "ph-binoculars" });
+  Object.assign(SHORT, { pozoazul: "Pozo Azul", marinka: "Marinka", victoria: "La Victoria", cacao: "Cacao", atardecer: "Atardecer", masaje: "Masaje", oido: "Oído del Mundo", aves: "Aves", elemento: "Hamacas", lospinos: "Los Pinos" });
+  DNAME_SHORT.minca = "Minca"; CASH_FOOD.minca = 1;
+  const ROUTES = {
+    golfo: { name: "Golfo e islas", sub: "Tolú, Rincón del Mar, Tintipán y Cartagena", icon: "ph-island", key: "caribe-v5",
+      dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
+      out: { p2: PUENTES.p2.out, p16: PUENTES.p16.out }, airport: "Montería", lateAt: 18 * 60,
+      lateTxt: "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.",
+      n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "floral", rincon: "cangrejo", ctg: "sanfelipe" }, groups: ["golfo", "islas", "rincon", "ctg"],
+      local: n => ((n.golfo || 0) + (n.rincon || 0) > 0 ? 40000 : 0) + (n.ctg ? 60000 : 0), cashLocal: (id, n) => id === "ctg" ? 60000 : (id === "golfo" || !n.golfo ? 40000 : 0),
+      rest: "Playa, hamaca y nada más.", wxRef: [["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]] },
+    sierra: { name: "Minca", sub: "Montaña en la Sierra Nevada y Cartagena", icon: "ph-mountains", key: "caribe-sierra-v1",
+      dests: DESTS_SIERRA, moves: MOVES_SIERRA, moveT: MOVE_T_SIERRA, moveMode: MOVE_MODE_SIERRA, acts: ACTS_SIERRA,
+      out: {
+        p2: { vie: { date: "2026-10-30", air: "JetSMART", time: "11:05 → 12:42", price: 261940, ver: "19 oct" },
+              sab: { date: "2026-10-31", air: "Wingo", time: "11:20 → 12:55", price: 194643, ver: "19 oct", note: "Sin maleta de mano incluida" } },
+        p16: { vie: { date: "2026-11-13", air: "LATAM", time: "13:10 → 14:45", price: 496250, ver: "19 oct", warn: "Muy caro ese día" },
+               sab: { date: "2026-11-14", air: "LATAM", time: "13:35 → 15:10", price: 334530, ver: "19 oct" } } },
+      airport: "Santa Marta", lateAt: 16 * 60 + 30,
+      lateTxt: "Llegas tarde: el último colectivo a Minca sale hacia las 6 p. m. del mercado de Santa Marta. Toca dormir en Santa Marta (no está en el presupuesto) o pagar taxi privado hasta Minca, que cobra $79.000 a $130.000.",
+      n: { minca: 5, ctg: 3 }, h: { minca: "casablanca", ctg: "sanfelipe" }, groups: ["minca", "ctg"],
+      local: n => (n.minca ? 60000 : 0) + (n.ctg ? 60000 : 0), cashLocal: id => 60000,
+      rest: "Hamaca, río y nada más.", wxRef: [["minca", "Minca"], ["ctg", "Cartagena"]] }
+  };
+  let RUTA = "golfo", R = ROUTES.golfo, DESTS, MOVES, MOVE_T, MOVE_MODE, ACTS;
+  function applyRoute(id) {
+    RUTA = ROUTES[id] ? id : "golfo"; R = ROUTES[RUTA];
+    DESTS = R.dests; MOVES = R.moves; MOVE_T = R.moveT; MOVE_MODE = R.moveMode; ACTS = R.acts;
+    for (const k in PUENTES) PUENTES[k].out = R.out[k];
+  }
+  function withRoute(id, fn) { const prev = RUTA; if (!ROUTES[id] || id === prev) return fn(); applyRoute(id); try { return fn(); } finally { applyRoute(prev); } }
+  applyRoute("golfo");
+
   /* ---------- Estado ---------- */
-  const KEY = "caribe-v5";
-  const DEFAULT = { pu: "p2", out: "sab", back: "dom", n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "floral", rincon: "cangrejo", ctg: "sanfelipe" }, food: "no",
-    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: {}, over: {}, custom: [] };
+  const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "sab", back: "dom", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "no",
+    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: {}, over: {}, custom: [] });
   const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
                   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
   const enc = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -955,11 +1068,11 @@
   const undash = s => String(s == null ? "" : s).replace(/[\u2013\u2014]/g, "-");
   const isObj = o => o && typeof o === "object" && !Array.isArray(o);
   function norm(o) {
-    const s = structuredClone(DEFAULT); if (!isObj(o)) return s;
+    const s = defaultState(); if (!isObj(o)) return s;
     if (PUENTES[o.pu]) s.pu = o.pu;
     const p = PUENTES[s.pu];
-    s.out = p.out[o.out] ? o.out : (p.out[DEFAULT.out] ? DEFAULT.out : Object.keys(p.out)[0]);
-    s.back = p.back[o.back] ? o.back : (p.back[DEFAULT.back] ? DEFAULT.back : Object.keys(p.back)[0]);
+    s.out = p.out[o.out] ? o.out : (p.out.sab ? "sab" : Object.keys(p.out)[0]);
+    s.back = p.back[o.back] ? o.back : (p.back.dom ? "dom" : Object.keys(p.back)[0]);
     DESTS.forEach(d => {
       const v = isObj(o.n) ? Number(o.n[d.id]) : NaN; if (Number.isFinite(v) && v >= d.min && v <= 20) s.n[d.id] = Math.round(v);
       if (isObj(o.h) && d.hotels.some(h => h.id === o.h[d.id])) s.h[d.id] = o.h[d.id];
@@ -974,13 +1087,14 @@
     if (isObj(o.over)) for (const k in o.over) { const v = Number(o.over[k]); if (Number.isFinite(v) && v >= 0 && v < 1e8 && /^(h|f|a|pas|bag)\b/.test(k)) s.over[k] = Math.round(v); }
     if (Array.isArray(o.custom)) s.custom = o.custom.filter(c => isObj(c) && c.id && c.t).slice(0, 30).map(c => ({
       id: String(c.id).replace(/[^\w-]/g, "").slice(0, 20) || "c" + Math.random().toString(36).slice(2, 8), t: undash(c.t).slice(0, 80),
-      dest: DESTS.some(d => d.id === c.dest) ? c.dest : "golfo", cost: Math.max(0, Math.round(Number(c.cost) || 0)),
+      dest: DESTS.some(d => d.id === c.dest) ? c.dest : DESTS[0].id, cost: Math.max(0, Math.round(Number(c.cost) || 0)),
       pay: c.pay === "tarjeta" ? "tarjeta" : "efectivo", kind: ["dia", "tarde", "noche"].includes(c.kind) ? c.kind : "dia" }));
     return s;
   }
   function hashState() { const m = location.hash.match(/p=([\w-]+)/); if (!m) return null; try { return dec(m[1]); } catch (e) { return null; } }
-  let saved = store.get(KEY, null); if (!saved) saved = store.get("caribe-v4", null);
   const HS = hashState();
+  applyRoute(HS ? (ROUTES[HS.ruta] ? HS.ruta : "golfo") : store.get("caribe-ruta", "golfo"));
+  let saved = store.get(R.key, null); if (!saved && RUTA === "golfo") saved = store.get("caribe-v4", null);
   const firstTime = !saved && !HS;
   let S, pendingShared = null;
   if (HS && saved && enc(norm(HS)) !== enc(norm(saved))) { S = norm(saved); pendingShared = norm(HS); }
@@ -1018,9 +1132,9 @@
   const alHora = min => (Math.floor((((min % 1440) + 1440) % 1440) / 60) === 1 ? "a la " : "a las ") + hmStr(min);
   const depOf = f => hm(f.time.split("→")[0]);
   const arrOf = f => { const p = f.time.split("→"); return p[1] ? hm(p[1]) : null; };
-  const lateArrival = f => { const a = arrOf(f); return a !== null && a >= 18 * 60; };
+  const lateArrival = f => { const a = arrOf(f); return a !== null && a >= R.lateAt; };
   const earlyBack = f => depOf(f) < 9 * 60;
-  const mapsURL = (h, d) => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${h.name}, ${d.id === "golfo" ? h.where.split(",")[0] + ", Sucre" : d.id === "rincon" ? "Rincón del Mar, San Onofre, Sucre" : "Cartagena, Bolívar"}, Colombia`);
+  const mapsURL = (h, d) => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${h.name}, ${d.id === "golfo" ? h.where.split(",")[0] + ", Sucre" : d.id === "rincon" ? "Rincón del Mar, San Onofre, Sucre" : d.id === "minca" ? "Minca, Santa Marta, Magdalena" : "Cartagena, Bolívar"}, Colombia`);
   function parseMoney(str) {
     const s = String(str).toLowerCase().replace(/\s+/g, "");
     if (!s) return null;
@@ -1046,15 +1160,15 @@
   }
   function priceMeta(key) {
     const [k, a, b, c] = key.split(".");
-    if (k === "h") { for (const d of DESTS) { const h = d.hotels.find(x => x.id === b); if (h) return { label: `${h.name}, la noche (${PUENTES[a].label})`, def: h.rate[a] || 0, est: false }; } }
-    if (k === "f") { const v = PUENTES[a][b][c]; return { label: `Vuelo ${b === "out" ? "de ida" : "de regreso"}: ${v.air} ${DAYNAME[c].toLowerCase()} ${dlabel(v.date).split(" ").slice(1).join(" ")}, por persona`, def: v.price, est: false }; }
-    if (k === "a") { const x = ACTS.find(y => y.id === a); return { label: `${x.t}, para la pareja`, def: x.cost, est: false }; }
+    if (k === "h") { for (const d of DESTS) { const h = d.hotels.find(x => x.id === b); if (h) return { label: `${h.name}, la noche (${PUENTES[a].label})`, def: h.rate[a] || 0, est: false, ver: h.ver }; } }
+    if (k === "f") { const v = PUENTES[a][b][c]; return { label: `Vuelo ${b === "out" ? "de ida" : "de regreso"}: ${v.air} ${DAYNAME[c].toLowerCase()} ${dlabel(v.date).split(" ").slice(1).join(" ")}, por persona`, def: v.price, est: false, ver: v.ver }; }
+    if (k === "a") { const x = ACTS.find(y => y.id === a); return { label: `${x.t}, para la pareja`, def: x.cost, est: !!x.est, ver: x.ver }; }
     if (k === "pas") return { label: `Pasadía en temporada ${a === "hi" ? "alta (puente o fin de semana)" : "baja (entre semana)"}, por persona, sin parque ni Islote`, def: PAS[a], est: true };
     if (k === "bag") return { label: "Maleta de mano, por trayecto y por persona", def: BAG, est: true };
     return { label: key, def: 0, est: true };
   }
   const isEdited = key => Object.prototype.hasOwnProperty.call(S.over, key);
-  const tag = key => isEdited(key) ? `<span class="tag ed">editado</span>` : priceMeta(key).est ? `<span class="tag est">estimado</span>` : `<span class="tag ok">verificado 5 oct</span>`;
+  const tag = key => isEdited(key) ? `<span class="tag ed">editado</span>` : priceMeta(key).est ? `<span class="tag est">estimado</span>` : `<span class="tag ok">verificado ${priceMeta(key).ver || "5 oct"}</span>`;
 
   /* ---------- Planes ---------- */
   function allActs() {
@@ -1098,8 +1212,8 @@
       days.push({ i, date, iso: k, loc, stay: loc || seq[N - 1], fest: k === p.festivo, wkend: w === 0 || w === 6, move: i < N && loc !== prev ? prev + "-" + loc : null, items: [], eve: [], tarde: false, backup: false });
     }
     days[0].late = late;
-    days[0].items.push({ k: "flight", icon: "ph-airplane-takeoff", t: "Vuelo a Montería", d: `${out.air}, ${out.time}. ` + (late
-      ? "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más."
+    days[0].items.push({ k: "flight", icon: "ph-airplane-takeoff", t: `Vuelo a ${R.airport}`, d: `${out.air}, ${out.time}. ` + (late
+      ? R.lateTxt
       : MOVES["air-" + days[0].loc][0] + ".") });
     days.forEach(d => { if (d.i > 0 && d.move) d.items.push({ k: "move", icon: "ph-bus", t: "Traslado a " + destName(d.loc), d: MOVES[d.move][0] + "." }); });
     const acts = allActs().filter(a => S.acts[a.id] && feasible(a).ok), placed = {};
@@ -1153,7 +1267,7 @@
       if (backup) { backup.backup = true; backup.items.push({ k: "backup", icon: "ph-arrow-clockwise", t: "Respaldo de la pasadía", d: hasAct(backup) ? "Si el mar canceló la pasadía, se hace hoy y el plan de este día se cambia por playa." : "Si el mar canceló la pasadía, se hace hoy. Si no, playa y hamaca sin afán." }); }
     }
     // 6. Días libres
-    days.forEach(d => { if (d.i < N && !d.items.length) d.items.push({ k: "rest", icon: "ph-coffee", t: "Día libre", d: d.loc === "ctg" ? "Getsemaní sin afán, piscina o siesta y una buena comida." : "Playa, hamaca y nada más." }); });
+    days.forEach(d => { if (d.i < N && !d.items.length) d.items.push({ k: "rest", icon: "ph-coffee", t: "Día libre", d: d.loc === "ctg" ? "Getsemaní sin afán, piscina o siesta y una buena comida." : R.rest }); });
     // 7. Regreso: salir al aeropuerto 1 h 30 antes del vuelo
     const dep = depOf(back), early = dep < 9 * 60;
     days[N].items.push({ k: "flight", icon: "ph-airplane-landing", t: "Regreso a Bogotá", d: `${back.air}, ${back.time}. ` + (early
@@ -1173,7 +1287,7 @@
     DESTS.forEach(d => { const n = S.n[d.id]; if (!n) return; const h = hotelOf(d), r = rateOf(h) || 0; lodging += r * n; rows.push({ t: `${h.name}, ${noches(n)}`, v: r * n, cat: "hospedaje" }); });
     let mv = 0, prev = "air"; seq.forEach(l => { if (l !== prev) { mv += MOVES[prev + "-" + l][1]; prev = l; } });
     rows.push({ t: "Traslados en colectivo y bus", v: mv, cat: "traslados", est: true });
-    const local = (S.n.golfo + S.n.rincon > 0 ? 40000 : 0) + (S.n.ctg > 0 ? 60000 : 0);
+    const local = R.local(S.n);
     rows.push({ t: "Transporte local (bicitaxi, mototaxi, bus urbano)", v: local, cat: "otros", est: true });
     const days = totalNights() + 1, f = FOOD.find(x => x.id === S.food).v, lunch = Math.round(f * LUNCH);
     rows.push({ t: `Comida, ${days} días`, v: f * 2 * days, cat: "comida" });
@@ -1192,7 +1306,7 @@
     if (diff) W.push({ bad: true, icon: "ph-bed", txt: diff > 0 ? `Falta repartir ${noches(diff)}: van ${SN} de ${TN}.` : `Sobran ${noches(-diff)}: van ${SN} de ${TN}.`, btn: `<button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button>` });
     DESTS.forEach(d => { if (!S.n[d.id]) return; const h = hotelOf(d), r = rateOf(h); if (r > CAP) W.push({ bad: true, icon: "ph-warning", txt: `${h.name} cuesta ${fmt(r)} la noche: pasa el tope de ${fmt(CAP)}.` }); });
     const avg = C.lodging / Math.max(1, SN); if (avg > AVG) W.push({ bad: true, icon: "ph-warning", txt: `La noche promedio es ${fmt(avg)}: pasa el promedio de ${fmt(AVG)}.` });
-    if (lateArrival(out)) W.push({ bad: true, icon: "ph-moon", txt: `El vuelo de ida llega a Montería a las ${hmStr(arrOf(out))} y ya no hay colectivos. Toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.` });
+    if (lateArrival(out)) W.push({ bad: true, icon: "ph-moon", txt: `El vuelo de ida llega a ${R.airport} a las ${hmStr(arrOf(out))}. ${R.lateTxt}` });
     if (earlyBack(back)) {
       const dep = depOf(back), bd = D(back.date), prevDay = WD[addDays(bd, -1).getDay()];
       W.push(dep < 300
@@ -1223,7 +1337,7 @@
       if (MOVES[mvKey]) lines.push(["Traslado para llegar", MOVES[mvKey][1]]);
       Object.entries(it.placed).forEach(([id, pl]) => { const a = list.find(x => x.id === id); if (a && pl.loc === d.id && a.pay !== "tarjeta") { const v = actCost(a, it); if (v) lines.push([SHORT[id] || a.t, v]); } });
       if (CASH_FOOD[d.id]) lines.push([CASH_FOOD[d.id] === 1 ? "Comida, todo en efectivo" : "Comida, la mitad en efectivo", f * 2 * n * CASH_FOOD[d.id]]);
-      const loc = d.id === "ctg" ? 60000 : (d.id === "golfo" || !S.n.golfo ? 40000 : 0); if (loc) lines.push(["Transporte local", loc]);
+      const loc = R.cashLocal(d.id, S.n); if (loc) lines.push([d.id === "minca" ? "Mototaxis y transporte local" : "Transporte local", loc]);
       const total = Math.ceil(lines.reduce((s, l) => s + l[1], 0) / 10000) * 10000;
       return { d, lines, total };
     });
@@ -1243,17 +1357,31 @@
     const el = root.querySelector(f.sel); if (el && document.activeElement !== el) { try { el.focus({ preventScroll: true }); } catch (e) {} }
   }
   function persist() {
-    store.set(KEY, S);
+    store.set(R.key, S); store.set("caribe-ruta", RUTA);
     try { history.replaceState(null, "", location.pathname + location.search + "#p=" + enc(S)); } catch (e) {}
   }
   function render(save = true) {
     const fs = captureFocus();
     fixHotels();
     const C = costs(); LAST = C;
-    renderTop(C); renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
+    renderTop(C); renderRoute(); $$("[data-only]").forEach(el => { el.hidden = el.dataset.only !== RUTA; }); if (renderGuide.r !== RUTA) { renderGuide.r = RUTA; renderGuide(); } renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
     refreshSheets();
     restoreFocus(fs);
     if (save) persist();
+  }
+  function routeTotal(k) {
+    if (k === RUTA) return LAST ? LAST.total : null;
+    return withRoute(k, () => { const keep = S; try { S = norm(store.get(R.key, null)); fixHotels(); if (sumNights() !== totalNights()) balance(); return costs().total; } catch (e) { return null; } finally { S = keep; } });
+  }
+  function renderRoute() {
+    const el = $("[data-route-sw]"); if (!el) return;
+    el.innerHTML = `<div class="rs-row" role="group" aria-label="Ruta del viaje">${Object.entries(ROUTES).map(([k, r]) => { const t = routeTotal(k);
+      return `<button type="button" class="rs" aria-pressed="${k === RUTA}" data-route="${k}"><i class="ph ${r.icon}" aria-hidden="true"></i><b>${r.name}</b><small>${r.sub}</small>${t ? `<span class="rs-t num">${fmt(t)}</span>` : ""}</button>`; }).join("")}</div><p class="rs-note">Cada ruta es un plan aparte y guarda sus propias noches, hoteles y planes.</p>`;
+  }
+  function switchRoute(id) {
+    if (!ROUTES[id] || id === RUTA) return;
+    persist(); applyRoute(id); S = norm(store.get(R.key, null)); prevTotal = null; GTAB = "general";
+    render(); window.scrollTo({ top: 0 }); toast(`Ruta ${R.name}. La otra queda guardada tal como estaba.`);
   }
   function renderTop(C) {
     const p = P(), TN = totalNights(), SN = sumNights(), diff = TN - SN, nd = DESTS.filter(d => S.n[d.id]);
@@ -1315,7 +1443,7 @@
     const un = C.it.unplaced.length;
     $("[data-sum=planes]").innerHTML = `${C.plansN} ${C.plansN === 1 ? "plan" : "planes"} · ${fmt(C.plansV)}${un ? ` · <span class="cnt bad">${un} no ${un === 1 ? "cabe" : "caben"}</span>` : ""}`;
     const list = allActs();
-    $("[data-acts]").innerHTML = ["golfo", "islas", "rincon", "ctg"].map(g => {
+    $("[data-acts]").innerHTML = R.groups.map(g => {
       const acts = list.filter(a => a.dest === g); if (!acts.length) return "";
       return `<div class="stage-opts c-${g}"><h3><i class="ph ${g === "islas" ? "ph-island" : DESTS.find(d => d.id === g).icon}" aria-hidden="true"></i>${destName(g)}</h3><div class="acts">${acts.map(a => actRow(a, C)).join("")}</div></div>`;
     }).join("");
@@ -1372,8 +1500,8 @@
   }
   const emptyItin = () => `<div class="empty"><p>Faltan o sobran noches: van ${sumNights()} de ${totalNights()}.</p><p>Repártelas en Armar o deja que la app lo haga.</p><button type="button" class="mini primary" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button></div>`;
   /* ---------- Clima (Open-Meteo, sin clave) ---------- */
-  const WX_PTS = { golfo: [9.52, -75.58], rincon: [9.77, -75.64], islas: [9.79, -75.84], ctg: [10.42, -75.54] };
-  const WX_NAME = { golfo: "Tolú", rincon: "Rincón", islas: "Tintipán", ctg: "Cartagena" };
+  const WX_PTS = { golfo: [9.52, -75.58], rincon: [9.77, -75.64], islas: [9.79, -75.84], ctg: [10.42, -75.54], minca: [11.14, -74.12] };
+  const WX_NAME = { golfo: "Tolú", rincon: "Rincón", islas: "Tintipán", ctg: "Cartagena", minca: "Minca" };
   const WX_SEA = [9.75, -75.85];
   const WX_KEY = "caribe-wx2", CLIMO_KEY = "caribe-climo2";
   let WX = store.get(WX_KEY, null), CLIMO = store.get(CLIMO_KEY, null), WX_BUSY = false, WX_ERR = false;
@@ -1392,7 +1520,7 @@
   async function fetchJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
   async function loadWeather(force) {
     if (WX_BUSY) return;
-    const fresh = WX && Date.now() - WX.at < (WX.loc && Object.values(WX.loc).every(l => l.current) && WX.loc.islas ? 30 * 60e3 : 0);
+    const fresh = WX && Date.now() - WX.at < (WX.loc && Object.keys(WX_PTS).every(k => WX.loc[k] && WX.loc[k].current) ? 30 * 60e3 : 0);
     const needClimo = !CLIMO || Object.keys(WX_PTS).some(k => !CLIMO[k]);
     if (fresh && !force && !needClimo) return;
     WX_BUSY = true; WX_ERR = false; render(false);
@@ -1472,7 +1600,7 @@
   }
   const wxLoc = d => d.items && d.items.some(x => x.act === "pasadia") ? "islas" : d.stay;
   let WXREF = store.get("caribe-wxref", "auto");
-  const refLoc = (d, k) => WXREF !== "auto" ? WXREF : d ? wxLoc(d) : "golfo";
+  const refLoc = (d, k) => WXREF !== "auto" && R.wxRef.some(x => x[0] === WXREF) ? WXREF : d ? wxLoc(d) : DESTS[0].id;
   function wxCell(d, k) {
     const L = refLoc(d, k), key = d ? d.iso : k;
     const w = wxDay(L, key);
@@ -1519,7 +1647,7 @@
   function renderWxStrip() {
     const el = $("[data-wx-strip]"); if (!el) return;
     const ids = DESTS.filter(d => S.n[d.id]).map(d => d.id);
-    if (S.n.golfo + S.n.rincon > 0) ids.splice(ids.indexOf("ctg") < 0 ? ids.length : ids.indexOf("ctg"), 0, "islas");
+    if ((S.n.golfo || 0) + (S.n.rincon || 0) > 0) ids.splice(ids.indexOf("ctg") < 0 ? ids.length : ids.indexOf("ctg"), 0, "islas");
     el.innerHTML = `<div class="wx-row">${ids.map(k => {
       const cur = WX && WX.loc && WX.loc[k] && WX.loc[k].current, m = cur ? wmo(cur.weather_code) : null;
       return `<button type="button" class="wx-now c-${k}" data-wx-place="${k}" aria-label="Clima en ${WX_NAME[k]}: ${cur ? Math.round(cur.temperature_2m) + " grados, " + m.t : "sin dato"}. Ver pronóstico">
@@ -1566,7 +1694,8 @@
     }
     const months = [...new Set([first, lastD].map(d => MN[d.getMonth()]))].join(" y ");
     const legend = `<div class="cal-legend">${DESTS.filter(d => S.n[d.id]).map(d => `<span class="c-${d.id}"><i class="sw" aria-hidden="true"></i>${d.name}</span>`).join("")}<span><i class="sw fly" aria-hidden="true"></i>Día de vuelo</span><span class="c-rincon"><i class="ph-fill ph-moon-stars" style="color:var(--dc)" aria-hidden="true"></i>Plan de noche</span><span><i class="ph ph-note-pencil" aria-hidden="true"></i>Con nota</span></div><div class="cal-legend wx-legend"><span><i class="ph-fill ph-sun wxc-sol" aria-hidden="true"></i>Soleado</span><span><i class="ph-fill ph-cloud-sun wxc-par" aria-hidden="true"></i>Sol a ratos</span><span><i class="ph-fill ph-cloud wxc-nub" aria-hidden="true"></i>Nublado</span><span><i class="ph-fill ph-cloud-rain wxc-llu" aria-hidden="true"></i>Aguacero</span><span><i class="ph-fill ph-cloud-lightning wxc-tor" aria-hidden="true"></i>Tormenta</span><span>8h = horas de sol del día; en cursiva, clima típico mientras llega el pronóstico</span></div><p class="wx-status">${wxStatus()}</p>`;
-    const refSel = `<div class="wx-ref"><span>Clima de:</span>${[["auto", "Según el viaje"], ["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]].map(([v, t]) => `<button type="button" class="chip-btn" aria-pressed="${WXREF === v}" data-wxref="${v}">${t}</button>`).join("")}</div><p class="fc-note" style="margin:0 0 10px">${WXREF === "auto" ? "Días del viaje con el clima de donde están; días fuera del viaje con el de Tolú." : `Todos los días con el clima de ${WX_NAME[WXREF]}.`}</p>`;
+    const refSelV = R.wxRef.some(x => x[0] === WXREF) ? WXREF : "auto";
+    const refSel = `<div class="wx-ref"><span>Clima de:</span>${[["auto", "Según el viaje"]].concat(R.wxRef).map(([v, t]) => `<button type="button" class="chip-btn" aria-pressed="${refSelV === v}" data-wxref="${v}">${t}</button>`).join("")}</div><p class="fc-note" style="margin:0 0 10px">${refSelV === "auto" ? `Días del viaje con el clima de donde están; días fuera del viaje con el de ${WX_NAME[DESTS[0].id]}.` : `Todos los días con el clima de ${WX_NAME[WXREF]}.`}</p>`;
     $("[data-cal]").innerHTML = legend + refSel + `<div class="cal"><h3>${cap(months)} de ${first.getFullYear()}</h3><div class="cal-grid">${["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(w => `<div class="wd" aria-hidden="true">${w}</div>`).join("")}${cells.join("")}</div></div>` + holList(g0, g1, byDate);
   }
   function moveSelect(id, d, it) {
@@ -1637,11 +1766,12 @@
     const l = store.get("caribe-scen", []);
     return (Array.isArray(l) ? l : []).filter(Boolean).slice(0, 3).map((x, i) => x.st ? { name: String(x.name || `Escenario ${i + 1}`).slice(0, 40), st: x.st } : { name: `Escenario ${i + 1}`, st: x });
   }
-  function summaryOf(st) {
+  function summaryOf(st) { return withRoute(st && ROUTES[st.ruta] ? st.ruta : "golfo", () => summaryIn(st)); }
+  function summaryIn(st) {
     const keep = S; let r;
     try {
       S = norm(st); fixHotels(); const C = costs(), p = P(), o = p.out[S.out], b = p.back[S.back];
-      r = { title: `${p.label}: ${dlabel(o.date)} a ${dlabel(b.date)}`, nights: DESTS.filter(d => S.n[d.id]).map(d => `<span class="dchip c-${d.id}">${DNAME_SHORT[d.id]} ${S.n[d.id]}</span>`).join(""), cats: C.cats, total: C.total, key: enc(S) };
+      r = { title: `${R.name} · ${p.label}: ${dlabel(o.date)} a ${dlabel(b.date)}`, nights: DESTS.filter(d => S.n[d.id]).map(d => `<span class="dchip c-${d.id}">${DNAME_SHORT[d.id]} ${S.n[d.id]}</span>`).join(""), cats: C.cats, total: C.total, key: enc(S) };
     } finally { S = keep; }
     return r;
   }
@@ -1675,7 +1805,9 @@
     const pc = pasadiaContact(it);
     if (pc) items.push([`pasadia-${it.pasDay.iso}`, "Reservar la pasadía", `Para el ${dlong(it.pasDay.date)}, desde ${pc.from}, ${pc.who}.${it.pasDay.loc === "rincon" ? "" : ` <a href="https://wa.me/573014087371?text=${encodeURIComponent(agencyMsg(C))}" target="_blank" rel="noopener">Escribir a Trixie por WhatsApp</a>.`} Preguntar si recogen en el hotel.`]);
     const cash = cashPlan(C).reduce((s, c) => s + c.total, 0);
-    items.push(["efectivo", "Llevar efectivo", `Cerca de ${fmt(cash)} entre los dos. El detalle por destino está en Costos.`], ["bolsa", "Empacar bolsa seca y repelente", "Y careta propia si tienen."]);
+    if (RUTA === "sierra") items.push(["noticias", "Revisar noticias de orden público", "Unos días antes de viajar: en septiembre de 2026 hubo un paro armado en la zona de Santa Marta."]);
+    items.push(["efectivo", "Llevar efectivo", `Cerca de ${fmt(cash)} entre los dos.${RUTA === "sierra" ? " En Minca no hay cajeros: sácalo en Santa Marta." : ""} El detalle por destino está en Costos.`],
+      RUTA === "sierra" ? ["empacar-s", "Empacar impermeable y repelente", "Más sandalias o tenis que se puedan mojar, vestido de baño y manga larga para el atardecer."] : ["bolsa", "Empacar bolsa seca y repelente", "Y careta propia si tienen."]);
     $("[data-checks]").innerHTML = items.map(([k, t, s]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${done[k] ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b><span>${s}</span></span></label>`).join("");
     const n = items.filter(([k]) => done[k]).length;
     $("[data-progress]").textContent = n === items.length ? "Todo listo. Solo falta empacar." : `${n} de ${items.length} listos. Se guardan en este navegador.`;
@@ -1743,6 +1875,7 @@
     if (t.hasAttribute("data-sg-all")) { applyAllFree(); return; }
     if (t.hasAttribute("data-sg-open")) { showView("costos"); setTimeout(() => { const el = document.getElementById("sugerencias"); if (el) el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "start" }); }, 50); return; }
     if (ds.gtab) { GTAB = ds.gtab; store.set("caribe-gtab", GTAB); renderGuide(); return; }
+    if (ds.route) { switchRoute(ds.route); return; }
     if (ds.wxref) { WXREF = ds.wxref; store.set("caribe-wxref", WXREF); render(false); return; }
     if (t.hasAttribute("data-toast-undo")) { const f = undoFn; undoFn = null; $("[data-toast]").classList.remove("show"); if (f) f(); return; }
     if (ds.viewBtn) { showView(ds.viewBtn); if (ds.viewBtn === "asistente" && AI_CHAT.length) aiScroll(); return; }
@@ -1787,7 +1920,7 @@
     if (t.hasAttribute("data-copy")) { copyText(shareURL(), "Enlace copiado. Al abrirlo se ve esta misma versión."); return; }
     if (t.hasAttribute("data-save")) { if (saveScenario()) toast("Escenario guardado. Míralo en Comparar."); return; }
     if (t.hasAttribute("data-reset")) { const prev = structuredClone(S); S = norm({}); balance(); render(); toast("Plan restablecido.", () => { S = norm(prev); render(); toast("Se recuperó tu plan."); }); return; }
-    if (ds.load) { const x = scenList()[+ds.load]; if (!x) return; S = norm(x.st); render(); showView("armar"); toast(`Cargaste "${x.name}".`); return; }
+    if (ds.load) { const x = scenList()[+ds.load]; if (!x) return; const rid = x.st && ROUTES[x.st.ruta] ? x.st.ruta : "golfo"; if (rid !== RUTA) { persist(); applyRoute(rid); } S = norm(x.st); render(); showView("armar"); toast(`Cargaste "${x.name}".`); return; }
     if (ds.del) {
       const list = scenList(), i = +ds.del, [rm] = list.splice(i, 1); store.set("caribe-scen", list); renderScen();
       toast("Escenario borrado.", () => { const l = scenList(); l.splice(i, 0, rm); store.set("caribe-scen", l.slice(0, 3)); renderScen(); }); return;
@@ -1934,6 +2067,7 @@
   let AI_READY = null, AI_BUSY = false, AI_CHAT = store.get("caribe-ai-chat", []);
   if (!Array.isArray(AI_CHAT)) AI_CHAT = [];
   const aiSave = () => store.set("caribe-ai-chat", AI_CHAT.slice(-30));
+  const AI_EX_S = ["¿Cómo bajo 300.000 sin perder calidad?", "¿Qué hago en Minca si llueve?", "¿Qué día conviene Marinka según el clima?", "¿Qué empaco para Minca?", "¿Hay eventos en Cartagena esos días?"];
   const AI_EX = ["¿Cómo bajo 500.000 sin perder calidad?", "¿Qué día conviene la pasadía según el clima?", "¿Qué hago en Rincón si llueve?", "¿Qué empaco para este viaje?", "¿Hay eventos en Cartagena esos días?", "¿Vale la pena regresar un día antes?"];
   async function aiCheck() {
     try { const r = await fetch(AI_URL + "/", { cache: "no-store" }); const j = await r.json(); AI_READY = !!j.ready; AI_SEARCH = !!j.search; } catch (e) { AI_READY = false; }
@@ -1943,6 +2077,7 @@
     const C = LAST, it = C.it, p = P();
     const fl = side => Object.fromEntries(Object.entries(p[side]).map(([k, v]) => [k, { fecha: v.date, aerolinea: v.air, hora: v.time, precio_pp: fPrice(side, k), aviso: v.warn || "" }]));
     return {
+      ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
         planes_activos: Object.keys(it.placed), pasadia_fecha: it.placed.pasadia ? it.placed.pasadia.iso : null, total_pareja: Math.round(C.total), meta: S.goal,
         desglose: C.rows.map(r => [r.t, Math.round(r.v)]) },
@@ -1971,7 +2106,7 @@
     const ok = v => v != null;
     switch (c.op) {
       case "hotel": { const d = DESTS.find(x => x.id === c.dest); if (!d || !d.hotels.some(h => h.id === c.hotel)) return null; return { t: `Hotel en ${DNAME_SHORT[c.dest]}: ${d.hotels.find(h => h.id === c.hotel).name}`, f: st => { st.h[c.dest] = c.hotel; } }; }
-      case "noches": { const n = { golfo: +c.golfo || 0, rincon: +c.rincon || 0, ctg: +c.ctg || 0 }; if (n.ctg < 1) return null; return { t: `Noches: Tolú ${n.golfo}, Rincón ${n.rincon}, Cartagena ${n.ctg}`, f: st => { st.n = n; } }; }
+      case "noches": { const n = Object.fromEntries(DESTS.map(d => [d.id, Math.max(0, Math.round(+c[d.id] || 0))])); if (DESTS.some(d => n[d.id] < d.min)) return null; return { t: "Noches: " + DESTS.map(d => `${DNAME_SHORT[d.id]} ${n[d.id]}`).join(", "), f: st => { st.n = n; } }; }
       case "salida": if (!P().out[c.dia]) return null; return { t: `Salir el ${dlabel(P().out[c.dia].date)}`, f: st => { st.out = c.dia; } };
       case "regreso": if (!P().back[c.dia]) return null; return { t: `Regresar el ${dlabel(P().back[c.dia].date)}`, f: st => { st.back = c.dia; } };
       case "puente": if (!PUENTES[c.id]) return null; return { t: `Cambiar al ${PUENTES[c.id].label}`, f: st => { st.pu = c.id; } };
@@ -2003,7 +2138,7 @@
     q.disabled = AI_READY !== true; send.disabled = AI_READY !== true || AI_BUSY;
     st.textContent = AI_READY === null ? "Revisando la conexión..." : AI_READY ? (AI_SEARCH ? "Busca en internet cuando hace falta. Puede equivocarse; los ahorros los calcula la app." : "La IA puede equivocarse. Los ahorros los calcula la app.") : "La IA no está disponible ahora. Revisa tu conexión.";
     $("[data-ai-new]").hidden = !AI_CHAT.length;
-    $("[data-ai-ex]").innerHTML = AI_CHAT.length ? "" : AI_EX.map(x => `<button type="button" class="chip-btn" data-ai-exq="${esc(x)}">${esc(x)}</button>`).join("");
+    $("[data-ai-ex]").innerHTML = AI_CHAT.length ? "" : (RUTA === "sierra" ? AI_EX_S : AI_EX).map(x => `<button type="button" class="chip-btn" data-ai-exq="${esc(x)}">${esc(x)}</button>`).join("");
     if (!AI_CHAT.length && !AI_BUSY) {
       chat.innerHTML = `<div class="chat-empty"><h2><i class="ph-fill ph-sparkle" aria-hidden="true"></i>¿En qué te ayudo?</h2><ul><li>Ahorrar sin perder calidad, con cambios que aplicas con un toque.</li><li>Qué hacer cada día según el clima y la luna.</li><li>Dudas de la guía: transporte, comida, agencias, qué llevar.</li><li>Recuerda la conversación: puedes preguntar "¿y si mejor...?".</li>${AI_SEARCH ? "<li>Busca en internet lo que no está en la app: eventos, horarios, reseñas recientes.</li>" : ""}</ul></div>`;
       return;
@@ -2047,36 +2182,50 @@
   }
   /* ---------- Guía ---------- */
   const GUIDE = [
-    { id: "general", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
+    { id: "general", r: "golfo", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
       { i: "ph-cloud-sun", t: "Cuándo ir", li: ["Agosto a noviembre es temporada de lluvias: aguaceros sobre todo en la tarde. Las mañanas sirven para las lanchas.", "Los puentes festivos llenan todo y suben lanchas y pasadías.", "La pasadía conviene entre semana."] },
       { i: "ph-bus", t: "Cómo moverse", li: ["Vuelo a Montería: el aeropuerto barato más cercano. A Tolú y Corozal solo vuela Satena, y es caro.", "Colectivo en la entrada 5 del aeropuerto, puerta a puerta (30.000 a 40.000 p/p, 1 h 40).", "Más barato: bus en la Troncal a 1 km del aeropuerto (25.000 a 28.000, el último hacia las 6 pm).", "Ojo: el taxi cobra 160.000 a 195.000 y en el aeropuerto suben el precio al llegar."] },
       { i: "ph-money", t: "Plata", li: ["Llevar efectivo: varios hospedajes no reciben tarjeta y en Rincón y las islas casi no hay datáfono ni cajero.", "Negociar los tours: cobran según la cara de turista.", "Reservar con tarjeta de crédito y pedir por escrito las condiciones de cancelación."] },
       { i: "ph-backpack", t: "Qué llevar", li: ["Repelente: los zancudos pican al atardecer.", "Bolsa seca y funda para el celular: a la lancha se sube desde la playa con el agua a la rodilla.", "Careta propia: sale mejor que la alquilada.", "Calzado para arena."] },
       { i: "ph-lifebuoy", t: "En el mar", li: ["Pedir capitán certificado por la Capitanía y chalecos.", "Regresar de las islas antes de las 15:30: en la tarde el mar se pica.", "Si te mareas, siéntate atrás o en el medio de la lancha.", "Con mar picado la Capitanía cancela: dejar un día de respaldo."] }
     ] },
-    { id: "golfo", name: "Tolú y Coveñas", icon: "ph-umbrella-simple", cls: "c-golfo", intro: "Base de playa del Golfo de Morrosquillo. Coveñas tiene mejor playa; Tolú, el malecón y el muelle.", sec: [
+    { id: "golfo", r: "golfo", name: "Tolú y Coveñas", icon: "ph-umbrella-simple", cls: "c-golfo", intro: "Base de playa del Golfo de Morrosquillo. Coveñas tiene mejor playa; Tolú, el malecón y el muelle.", sec: [
       { i: "ph-compass", t: "Qué hacer", li: ["<b>Imperdible:</b> canoa por la Ciénaga La Caimanera, 2 horas entre manglares sin motor y con ostras al final (20.000 a 40.000 p/p).", "Malecón renovado de Tolú al atardecer (bicitaxi 5.000).", "Playa El Francés para caretear, a 20 minutos en mototaxi.", "Museo de Infantería de Marina, gratis y con guía.", "Boca de la Ciénaga: playa tranquila con kayak y snorkel."] },
       { i: "ph-fork-knife", t: "Comer", li: ["El Parito Feliz (Coveñas): arroz de mariscos con vista al atardecer.", "Plato típico (pescado frito, arroz con coco, patacón): 20.000 a 30.000.", "Arepa de huevo en el malecón: 3.000 a 5.000, con suero costeño."] },
       { i: "ph-warning", t: "Ojo", warn: true, li: ["Revisar que el hospedaje no quede pegado a una discoteca o picó.", "Tolú casi no tiene playa propia.", "Si duermen en Rincón, la pasadía sale más barata desde allá."] },
       { i: "ph-phone", t: "Contactos", li: ["Viajando con Trixie: <a href=\"https://wa.me/573014087371\" target=\"_blank\" rel=\"noopener\">301 408 7371</a>. Pasadía con recogida en el hotel.", "Club Náutico Tolumaria: <a href=\"https://wa.me/573023665427\" target=\"_blank\" rel=\"noopener\">302 366 5427</a>.", "Navegar Club Tolú: <a href=\"https://www.instagram.com/navegarclubtolu\" target=\"_blank\" rel=\"noopener\">@navegarclubtolu</a>."] }
     ] },
-    { id: "anteros", name: "San Antero", icon: "ph-mountains", cls: "c-golfo", intro: "A unos 30 minutos de Coveñas. Con medio día alcanza.", sec: [
+    { id: "anteros", r: "golfo", name: "San Antero", icon: "ph-mountains", cls: "c-golfo", intro: "A unos 30 minutos de Coveñas. Con medio día alcanza.", sec: [
       { i: "ph-compass", t: "Qué hacer", li: ["Tour de 2 horas por la bahía de Cispatá: caimanes y tortugas albinas en Asocaimán, túnel de manglar y cultivo de ostras (30.000 a 40.000 p/p).", "Playa Blanca: 3 km de playa, carpas a 30.000 negociables.", "El volcán de lodo El Tesoro colapsó; solo queda una poza.", "Punta Bolívar: tranquila, pero con algas."] },
       { i: "ph-bus", t: "Cómo llegar", li: ["Van desde la vía a Lorica, frente al módulo de Brasilia en Coveñas (4.000 p/p), y moto hasta la playa (10.000)."] },
       { i: "ph-fork-knife", t: "Comer", li: ["Casa flotante de Cispatá: almuerzo desde 25.000.", "Bucaneros en Playa Blanca: desde 30.000."] }
     ] },
-    { id: "islas", name: "Islas", icon: "ph-island", cls: "c-islas", intro: "Tintipán, Múcura y Santa Cruz del Islote, en el Parque Nacional Corales del Rosario y San Bernardo. Se visitan en pasadía.", sec: [
+    { id: "islas", r: "golfo", name: "Islas", icon: "ph-island", cls: "c-islas", intro: "Tintipán, Múcura y Santa Cruz del Islote, en el Parque Nacional Corales del Rosario y San Bernardo. Se visitan en pasadía.", sec: [
       { i: "ph-compass", t: "Cuál escoger", li: ["Tintipán: tranquilidad. Es la isla más grande, con manglares.", "Múcura: más ambiente; su playa pública se llena de pasadías hasta las 3 pm.", "Santa Cruz del Islote: la isla más densamente poblada del mundo. Recorrido y acuario por 10.000."] },
       { i: "ph-boat", t: "Pasadía", li: ["Desde Tolú o Coveñas: 100.000 p/p en temporada baja y 140.000 en alta, con almuerzo.", "Desde Rincón del Mar: 70.000 p/p solo la lancha (8:30 a 15:30). Almuerzo aparte; se puede llevar comida.", "Más el parque nacional, unos 11.000 p/p."] },
       { i: "ph-fork-knife", t: "Comer", li: ["Mojarra en Tintipán: unos 35.000.", "Pescado en Puerto Caracol, el caserío de Múcura: 40.000.", "Langosta: 70.000 a 120.000.", "Llevar agua desde tierra: en la isla es mucho más cara."] },
       { i: "ph-warning", t: "Ojo", warn: true, li: ["Dormir en las islas cuesta 160.000 o más la noche.", "Isla Palma no vale para este plan: 330.000 a 370.000 p/p por unas 5 horas, sin poder llevar comida.", "Un viajero denunció un cobro del 100% sin aviso en el Hotel Isla Múcura.", "Después de oleaje fuerte pueden aparecer fragatas portuguesas."] }
     ] },
-    { id: "rincon", name: "Rincón del Mar", icon: "ph-sun", cls: "c-rincon", intro: "Pueblo pesquero tranquilo, de agua clara y lo más cerca de las islas. Recomiendan 2 noches.", sec: [
+    { id: "rincon", r: "golfo", name: "Rincón del Mar", icon: "ph-sun", cls: "c-rincon", intro: "Pueblo pesquero tranquilo, de agua clara y lo más cerca de las islas. Recomiendan 2 noches.", sec: [
       { i: "ph-bus", t: "Cómo llegar", li: ["Desde Tolú o Coveñas: bus a San Onofre y moto o tuk-tuk a Rincón (15.000 a 17.500 p/p, 20 min). Cerca de 1 h 30 en total.", "Hacia Cartagena: moto a San Onofre (15.000) y bus Brasilia (35.000 p/p, 2 horas)."] },
       { i: "ph-compass", t: "Qué hacer", li: ["Bioluminiscencia con Isla de los Pájaros al atardecer; se ve mejor en noches sin luna.", "Manglar con guías locales de Mundo Verde; el 10% va a la comunidad.", "Playa Tranquila de día.", "Pasadía a las islas saliendo de la playa del hotel."] },
       { i: "ph-fork-knife", t: "Comer", li: ["Corrientazo en el pueblo: 15.000 a 16.000.", "Mar Blanco: pescado con sopa 25.000, ceviche 35.000, camarones 40.000.", "El Tropical: desde 10.000."] },
       { i: "ph-warning", t: "Ojo", warn: true, li: ["Calles de arena y tubos sueltos: buen calzado.", "No ir de noche a Playa Tranquila: la marea sube.", "En la mañana hay basura que trae el mar.", "Casi no hay cajeros: llevar efectivo y comprar lo que falte en San Onofre."] },
       { i: "ph-phone", t: "Contactos", li: ["JJ Tour del Mar (Jader Jiménez): <a href=\"https://wa.me/573115971494\" target=\"_blank\" rel=\"noopener\">311 597 1494</a>. Islas y bioluminiscencia."] }
+    ] },
+    { id: "general-s", r: "sierra", name: "General", icon: "ph-compass", cls: "", intro: "Lo básico para la ruta de Minca y Cartagena, según 24 videos de viajeros y la investigación de precios del 19 de octubre.", sec: [
+      { i: "ph-cloud-sun", t: "Cuándo ir", li: ["Octubre y noviembre son los meses más lluviosos en la Sierra: aguaceros fuertes en la tarde, barro y a veces derrumbes en la vía. Los planes, en la mañana.", "En octubre empieza la cosecha de café.", "Los puentes llenan Minca y hay ruido de bares."] },
+      { i: "ph-bus", t: "Cómo moverse", li: ["Vuelo a Santa Marta (aeropuerto Simón Bolívar).", "Buseta por la Troncal del aeropuerto al Mercado Público (3.000 p/p, 45 a 60 min).", "Colectivo Cootrasminca desde la Carrera 9 con Calle 12, detrás del mercado (10.000 p/p, 45 min). Sale cuando se llena, de 7 a. m. a 6 p. m.: conviene aterrizar antes de las 4 p. m.", "En Minca, mototaxi a cada plan: 10.000 a 15.000 por persona. Acordar el precio antes.", "A Cartagena: colectivo a Santa Marta y bus desde el terminal (unos 76.000 p/p, 4 a 5 horas) o van de Marsol (100.000 p/p).", "Ojo: el taxi o Uber hasta Minca cobra 79.000 a 130.000, y de bajada un mototaxi pide 40.000 a 60.000."] },
+      { i: "ph-money", t: "Plata", li: ["En Minca no hay cajeros: subir con efectivo desde Santa Marta. Hay quien da efectivo contra tarjeta, con comisión.", "Billetes pequeños para entradas y mototaxis.", "Reservar con cancelación gratis."] },
+      { i: "ph-backpack", t: "Qué llevar", li: ["Impermeable o poncho.", "Sandalias con agarre o tenis que se puedan mojar, y vestido de baño para los pozos.", "Repelente y manga larga al atardecer: hay jejenes y zancudos.", "Bolsa seca para el celular y un buzo liviano: de noche refresca."] },
+      { i: "ph-shield-warning", t: "Seguridad", warn: true, li: ["Del 21 al 25 de septiembre de 2026 hubo un paro armado en la zona: suspendieron clases en Minca y prohibieron llevar parrillero en moto. Un video de octubre cuenta que el turismo en Santa Marta cayó mucho.", "Revisar noticias unos días antes. Si vuelven a prohibir el parrillero, los mototaxis no pueden llevar pasajeros.", "No caminar de noche por los senderos ni llevar objetos de valor al río. Si llovió fuerte, no meterse a los pozos: el río crece de golpe."] }
+    ] },
+    { id: "minca", r: "sierra", name: "Minca", icon: "ph-mountains", cls: "c-minca", intro: "Pueblo de montaña a unos 650 m de altura, más fresco que la costa. Para descansar: pozos, café, cacao y hamacas, sin caminatas largas.", sec: [
+      { i: "ph-compass", t: "Qué hacer sin caminar mucho", li: ["<b>Pozo Azul:</b> mototaxi de 10 minutos y 15 a pie. Entrada de 6.000. Ir a las 8 a. m.", "<b>Cascadas de Marinka:</b> mototaxi (15.000 p/p) y 10 a 20 minutos de sendero. Entrada de 23.000, solo efectivo. Hay hamacas y restaurante.", "<b>Finca La Victoria:</b> tour de café de 50 minutos (40.000 p/p), todos los días de 9:00 a 16:30.", "<b>Cacao:</b> Casa Jocolate en el pueblo, o La Candelaria (40.000 p/p, 20 minutos en moto).", "Oído del Mundo (10.000), masaje (unos 80.000 p/p) y atardecer en un mirador.", "Para no moverse: pasadías con piscina y hamacas en Coffee House o Sierra Minca (unos 50.000 p/p).", "Solo si no llueve: hamacas gigantes de Sierra Minca y mirador Los Pinos, por trocha."] },
+      { i: "ph-fork-knife", t: "Comer", li: ["Menú del día 18.000 a 25.000; a la carta 25.000 a 40.000.", "Donde Orfi, Palacio del Frito, Doña Ana (sancocho junto al río), Mamo, La Casa de la Pasta.", "Lazy Cat, con terraza sobre el río: 40.000 a 60.000 p/p.", "Pan de chocolate de La Miga y café en Casa Jocolate."] },
+      { i: "ph-bed", t: "Dónde dormir", li: ["En el pueblo o muy cerca se llega a pie con maleta: Casa Blanca, BTC Base Camp, Tibiki, La cabañita VIP.", "Dunarinka, El Refugio y Tribu quedan de subida o a 600 m: mejor mototaxi con equipaje.", "Sierra Minca y Loma Nevada exigen 4x4 por trocha con barro y se pasan del presupuesto."] },
+      { i: "ph-warning", t: "Ojo", warn: true, li: ["Las piedras del río resbalan.", "La señal es débil: descargar mapas sin conexión.", "Fines de semana y festivos: más gente y ruido."] },
+      { i: "ph-phone", t: "Contactos", li: ["Finca La Victoria: <a href=\"https://wa.me/573242401129\" target=\"_blank\" rel=\"noopener\">324 240 1129</a>. Café y aves.", "Sula, ColombiaFrank: <a href=\"https://wa.me/573013374741\" target=\"_blank\" rel=\"noopener\">301 337 4741</a>.", "Neyer, guía local: <a href=\"https://wa.me/573005500964\" target=\"_blank\" rel=\"noopener\">300 550 0964</a>.", "Marsol, van a Cartagena: <a href=\"https://wa.me/573042016254\" target=\"_blank\" rel=\"noopener\">304 201 6254</a>."] }
     ] },
     { id: "ctg", name: "Cartagena", icon: "ph-castle-turret", cls: "c-ctg", intro: "Plan de caminar y comer bien, sin lanchas. Aún faltan 17 videos de Cartagena por revisar.", sec: [
       { i: "ph-compass", t: "Qué hacer", li: ["Getsemaní: murales del Callejón Angosto y la Plaza de la Trinidad de noche.", "Ciudad Amurallada y San Diego a pie, Las Bóvedas y el Museo del Oro (gratis).", "Atardecer sobre la muralla."] },
@@ -2087,10 +2236,11 @@
   let GTAB = store.get("caribe-gtab", "general");
   function renderGuide() {
     const tabs = $("[data-gtabs]"), box = $("[data-guide]"); if (!tabs || !box) return;
-    if (!GUIDE.some(g => g.id === GTAB)) GTAB = "general";
-    tabs.innerHTML = GUIDE.map(g => `<button type="button" role="tab" class="g-tab ${g.cls}" aria-selected="${g.id === GTAB}" data-gtab="${g.id}"><i class="ph ${g.icon}" aria-hidden="true"></i>${g.name}</button>`).join("");
+    const GV = GUIDE.filter(g => !g.r || g.r === RUTA);
+    if (!GV.some(g => g.id === GTAB)) GTAB = GV[0].id;
+    tabs.innerHTML = GV.map(g => `<button type="button" role="tab" class="g-tab ${g.cls}" aria-selected="${g.id === GTAB}" data-gtab="${g.id}"><i class="ph ${g.icon}" aria-hidden="true"></i>${g.name}</button>`).join("");
     const sel = tabs.querySelector('[aria-selected="true"]'); if (sel) tabs.scrollLeft = Math.max(0, sel.offsetLeft - (tabs.clientWidth - sel.offsetWidth) / 2);
-    const g = GUIDE.find(x => x.id === GTAB);
+    const g = GV.find(x => x.id === GTAB);
     box.innerHTML = `<div class="${g.cls}"><div class="g-intro"><i class="ph-fill ${g.icon}" aria-hidden="true"></i><div><b>${g.name}</b><p>${g.intro}</p></div></div><div class="g-grid">${g.sec.map(sc => `<div class="g-card ${sc.warn ? "warn" : ""}"><h3><i class="ph ${sc.i}" aria-hidden="true"></i>${sc.t}</h3><ul>${sc.li.map(x => `<li>${x}</li>`).join("")}</ul></div>`).join("")}</div></div>`;
   }
   /* ---------- Navegación ---------- */
