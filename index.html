@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-19.3">
+<meta name="app-version" content="2026-10-19.4">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1084,6 +1084,24 @@
   DESTS_GOLFO.concat(DESTS_SIERRA).forEach(d => d.hotels.forEach(h => { if (HOTEL_PICS[h.id]) Object.assign(h, HOTEL_PICS[h.id]); }));
   /* Otros que recomiendan los viajeros en YouTube, sin precio verificado para las fechas */
   const HOTEL_YT = {
+    golfo: [
+      { id: "playadivina", name: "Hotel Playa Divina", where: "Coveñas, segunda ensenada, frente al mar", score: "7,1", rc: 688, priceTxt: "130.000 con desayuno en un video de 2024; en Booking sale cerca de 330.000 la noche en el puente", over: true, yt: "Frente al mar y con desayuno.", url: "https://www.booking.com/hotel/co/playa-divina-covenas2.es.html", img: ["914499276?k=6abf2f3d965afb403e3b335fac4de4f0d5d1d652810bc52d7e30a841ba703626", "397007992?k=46d83054397ea063621cb0c8edeb2160ad63e8f775c8381fbf9bab62c8ba9058", "397007544?k=6fbb007fd74b95623b6c03cff1878d4699ff31c9e6da5fa52215111a3176b7a5"] },
+      { id: "marazul", name: "Aparta-hotel Mar Azul", where: "Coveñas, La Coquerita, cerca de la playa", score: "–", priceTxt: "80.000 a 100.000 en temporada baja; 160.000 a 200.000 en temporada alta (2025)", yt: "Baño privado y aire confirmados en el video. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Aparta+Hotel+Mar+Azul+Coveñas" },
+      { id: "ninosanfelipe", name: "Hotel Niño San Felipe", where: "Coveñas, La Coquerita", score: "–", priceTxt: "80.000, 100.000 o 120.000 según la temporada (2025)", yt: "Falta confirmar que el baño sea privado. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Niño+San+Felipe+Coveñas" },
+      { id: "artista", name: "Hotel El Artista", where: "Coveñas, La Coquerita", score: "–", priceTxt: "100.000 en temporada baja; 130.000 a 140.000 en alta", yt: "Falta confirmar que el baño sea privado. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+El+Artista+Coveñas" },
+      { id: "mediterraneo", name: "Hotel Mediterráneo", where: "Coveñas, frente a la plazoleta y la playa", score: "–", priceTxt: "120.000 a 150.000", yt: "Frente a la playa. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Mediterraneo+Coveñas" }
+    ],
+    rincon: [
+      { id: "puntacoral", name: "Punta Coral", where: "Rincón del Mar, después del puente peatonal", score: "–", priceTxt: "Precio por confirmar", yt: "Baño privado y aire confirmados en el video. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Punta+Coral+Rincón+del+Mar" },
+      { id: "satva", name: "Casa Satva Eco Beach House", where: "Rincón del Mar, frente al mar", score: "–", priceTxt: "Precio por confirmar", yt: "Baño privado, sin aire. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Casa+Satva+Rincón+del+Mar" },
+      { id: "milimar", name: "Hostal Milimar", where: "Rincón del Mar", score: "–", priceTxt: "175.000 la noche con desayuno (2025)", over: true, yt: "Aire y baño privado. Se pasa unos 25.000 del tope. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Milimar+Rincón+del+Mar" }
+    ],
+    ctg: [
+      { id: "marie", name: "Hotel Marie Real", where: "Centro, frente al Éxito de La Matuna", score: "7,9", rc: 1657, priceTxt: "Sin precio en los videos; en Booking no había cupo para tus fechas", yt: "Baño privado y aire confirmados en un video de 2026.", url: "https://www.booking.com/hotel/co/apartamento-centro-amurallado.es.html", img: ["900661135?k=df46c175b053b321c90e3cd2a600a180d885f595ea7bc8082f8c066d4804c4cb", "578895037?k=511186a31aff50edb457adbaad41707b68d7a85ebc2a0bae84f2c13d36ecbeaa", "665850304?k=d39eff6726d4211873e7fda5e734a97f523dc38479b48332fe90a045331d6f02"] },
+      { id: "stil", name: "Hotel Stil Cartagena", where: "La Matuna, Centro", score: "7,5", rc: 2888, priceTxt: "Un video de 2023 lo llama el más barato del Centro; en Booking no había cupo para tus fechas", yt: "Céntrico, a pocas cuadras de la Ciudad Amurallada.", url: "https://www.booking.com/hotel/co/stil-cartagena.es.html", img: ["583174500?k=5f04295dad48d8fa045d58d9fd55e870a556638c9ac1411092ffa01333b97a6e", "583161916?k=c3ecdca60a994d13b73499ab1c9e0fb1cf54852929ec7a20f5003fce369c7877", "583162008?k=c3bd920227f6bbde52ca7a3f68dfb5149ee39b9520fca05acc2007b03398e9f9"] },
+      { id: "viajero", name: "Hotel El Viajero Centro", where: "Calle del Porvenir, Centro", score: "7,9", rc: 375, priceTxt: "175.000 a 180.000 la doble (2025)", over: true, yt: "Baño privado y aire.", url: "https://www.booking.com/hotel/co/el-viajero-cartagena.es.html", img: ["281291574?k=81d076b5884e30ef6fbce85c277c40ad53ff62f9c8de18f0be5839753acdaf5d", "158280539?k=f217ecdb82e5f3cb376cb6888224d26582d99a9861fe887c0b8d998516c149be", "158280516?k=f458f9d10df27261278698949ab03edaeedb5cf94394d53fd43db1c86f14bf5f"] },
+      { id: "kim", name: "Hotel Kim Getsemaní", where: "Getsemaní", score: "–", priceTxt: "Precio por confirmar", yt: "Baño privado y aire confirmados en un video de 2026. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Kim+Getsemaní+Cartagena" }
+    ],
     minca: [
       { id: "mariposas", name: "Hostal Las Mariposas", where: "Cabañas sobre el río, a pie del pueblo", score: "8,7", rc: 338, priceTxt: "100.000 a 140.000 la noche según los videos; el chalet sobre el río sale 166.600 en Booking", yt: "Cabañas con baño privado junto al río. Los videos no coinciden en el precio: confirmar.", url: "https://www.booking.com/hotel/co/hostal-las-mariposas-minca.es.html", img: ["810440644?k=5d2d21107bcd843c5d64fbfc9ed49fa534a81e72980074eef9e35b2bd1c0003c", "807736389?k=70fd93ece7adc9b01e3eeafbe86fcbf1ae42baf332c7e3c2a25eb4cc54cd615e", "621397475?k=ffde7b97e1521481bed9f67076f2accb79b107be23e0a4aa8ac6894ea49bec71"] },
       { id: "rioelemento", name: "Río Elemento", where: "A 5 o 7 minutos a pie de la plaza", score: "8,5", rc: 54, priceTxt: "Precio por confirmar", yt: "Habitación con baño privado, piscina de agua de río y yoga. También tiene dormitorios: pedir la privada.", url: "https://www.booking.com/hotel/co/rio-elemento-minca.es.html", img: ["908411850?k=b1f5329f9bc615649dcb4de536cec62c10b0e4c8e6ab1f1cd076dcc756b83c4f", "904690002?k=ef4e7bff15dabe2f6cf9d75301ddc6a785ef3706c5aec297051eaceb60376e01", "904690038?k=cd1d3b69c6b76896ac71239ae375763c39305d2c6945d94e36cd0e5c5b196f05"] },
@@ -1798,7 +1816,7 @@
   /* ---------- Hoteles con fotos ---------- */
   let HTAB = null;
   const picURL = (h, i = 0, size = "max500") => h.img && h.img[i] ? `https://cf.bstatic.com/xdata/images/hotel/${size}/${h.img[i].replace("?k=", ".jpg?k=")}&o=` : null;
-  const scoreLabel = sc => { const v = parseFloat(String(sc).replace(",", ".")); return isNaN(v) ? "Sin nota" : v >= 9 ? "Fantástico" : v >= 8.6 ? "Fabuloso" : v >= 8 ? "Muy bien" : v >= 7 ? "Bien" : "Aceptable"; };
+  const scoreLabel = sc => { const v = parseFloat(String(sc).replace(",", ".")); return isNaN(v) ? "Sin nota en Booking" : v >= 9 ? "Fantástico" : v >= 8.6 ? "Fabuloso" : v >= 8 ? "Muy bien" : v >= 7 ? "Bien" : "Aceptable"; };
   const CITY = { golfo: "Tolú Coveñas Sucre", rincon: "Rincón del Mar Sucre", ctg: "Cartagena", minca: "Minca Santa Marta" };
   function stayOf(id) {
     let d0 = D(P().out[S.out].date);
