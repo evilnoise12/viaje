@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-19.2">
+<meta name="app-version" content="2026-10-19.3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,6 +36,30 @@
   .c-ctg { --dc: var(--ctg); --dcs: var(--ctg-soft); }
   .c-minca { --dc: var(--minca); --dcs: var(--minca-soft); }
   .route-sw { margin-bottom: 14px; }
+  .hl-head { font-size: 13px; color: var(--muted); margin: 4px 2px 10px; }
+  .hl-sub { font-size: 15px; font-weight: 700; margin: 18px 2px 8px; display: flex; align-items: center; gap: 6px; } .hl-sub i { color: #c4302b; font-size: 18px; }
+  .hc { display: grid; grid-template-columns: 118px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; margin-bottom: 10px; }
+  .hc.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .hc.dim { opacity: .62; }
+  .hc-img { position: relative; display: block; border-radius: 10px; overflow: hidden; background: var(--surface-2); align-self: start; aspect-ratio: 4 / 5; }
+  .hc-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hc-noimg { display: grid; place-items: center; width: 100%; height: 100%; color: var(--muted); font-size: 34px; }
+  .hc-flag { position: absolute; left: 6px; top: 6px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 6px; }
+  .hc-n { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,.55); color: #fff; font-size: 11px; border-radius: 6px; padding: 1px 6px; display: flex; align-items: center; gap: 3px; }
+  .hc-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .hc-name { font-size: 16px; font-weight: 700; color: #1d5fa8; text-decoration: none; line-height: 1.25; }
+  .hc-score { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+  .hc-score .sc { background: #1d3f8a; color: #fff; font-weight: 700; font-size: 13px; border-radius: 6px 6px 6px 0; padding: 3px 6px; }
+  .hc-score b { color: var(--text); font-weight: 600; }
+  .hc-where { font-size: 12.5px; color: var(--muted); display: flex; gap: 4px; align-items: flex-start; } .hc-where i { margin-top: 2px; }
+  .hc-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .hc-tags span { font-size: 11.5px; border-radius: 6px; padding: 2px 6px; background: var(--surface-2); color: var(--text); }
+  .hc-tags .ok { background: #e3f4ea; color: #1f6b3d; } .hc-tags .bad { background: var(--warn-soft); color: var(--warn); } .hc-tags .yt { background: #fde8e7; color: #a32520; }
+  .hc-info { font-size: 12.5px; color: var(--muted); margin: 0; line-height: 1.35; }
+  .hc-foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 4px; }
+  .hc-price b { display: block; font-size: 18px; } .hc-price small { display: block; font-size: 12px; color: var(--muted); }
+  .hc-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  @media (min-width: 700px) { .hc { grid-template-columns: 190px 1fr; } }
   .rs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .rs { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); padding: 10px 12px; cursor: pointer; font: inherit; color: inherit; min-height: 44px; }
   .rs i { font-size: 21px; color: var(--muted); } .rs b { font-size: 15px; } .rs small { font-size: 12px; color: var(--muted); line-height: 1.3; } .rs .rs-t { font-size: 13px; font-weight: 600; margin-top: 4px; }
@@ -638,6 +662,7 @@
     <button class="nav-btn" data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
     <button class="nav-btn" data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
+    <button class="nav-btn" data-view-btn="hoteles"><i class="ph ph-buildings" aria-hidden="true"></i>Hoteles</button>
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
     <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
@@ -854,6 +879,12 @@
       <div data-guide></div>
     </section>
 
+    <section class="view" data-view="hoteles" hidden>
+      <div class="view-head"><div><h1>Hoteles</h1><p>Fotos y precios de Booking para tu ruta. Toca uno para abrirlo con tus fechas.</p></div></div>
+      <div class="g-tabs" role="tablist" data-htabs></div>
+      <div data-hlist></div>
+    </section>
+
     <section class="view" data-view="asistente" hidden>
       <div class="view-head"><div><h1>Asistente</h1><p>Chatea con la IA: ve tu plan, los precios, el clima de cada día y la guía.</p></div><button type="button" class="mini" data-ai-new hidden><i class="ph ph-plus" aria-hidden="true"></i>Nueva conversación</button></div>
       <div class="chat" data-ai-chat></div>
@@ -867,6 +898,7 @@
     <section class="view" data-view="mas" hidden>
       <div class="view-head"><div><h1>Más</h1></div></div>
       <div class="more-list">
+        <button class="nav-btn" data-view-btn="hoteles"><i class="ph ph-buildings" aria-hidden="true"></i>Hoteles con fotos</button>
         <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
         <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
@@ -1028,6 +1060,36 @@
   Object.assign(ACT_ICON, { pozoazul: "ph-drop", marinka: "ph-waves", victoria: "ph-coffee", cacao: "ph-cookie", atardecer: "ph-sun-horizon", masaje: "ph-hand-heart", oido: "ph-ear", aves: "ph-bird", elemento: "ph-tree", lospinos: "ph-binoculars" });
   Object.assign(SHORT, { pozoazul: "Pozo Azul", marinka: "Marinka", victoria: "La Victoria", cacao: "Cacao", atardecer: "Atardecer", masaje: "Masaje", oido: "Oído del Mundo", aves: "Aves", elemento: "Hamacas", lospinos: "Los Pinos" });
   DNAME_SHORT.minca = "Minca"; CASH_FOOD.minca = 1;
+  /* Fotos y puntajes de Booking (consultados el 19 oct 2026) */
+  const HOTEL_PICS = {
+    floral: { rc: 83, score: "9,1", img: ["843482435?k=257b30cb295bf16326d655a506d1015b394d02b990d26af211080750acec1fe5", "843482374?k=858601457ab3c3910408fb2f9441139005f978addb7d6a30d1478d07f14844df", "843482378?k=734d299141f3330ce17680e9548a415ff793c3bf4bed64983748f4c3f36372d7"] },
+    saray: { rc: 24, score: "9,8", img: ["805279262?k=8d3064c71a583601ee9e85d249e0c2e36eb1d79d19d7065a42a934418ad2c7ba", "857122562?k=b9bef7f9fde434f8293125f7877b4952cfd4fdca01a3a599b20e6a0aa622a62d", "668863593?k=779cbe49c407744b3556d62d8a75432825f5360a2957f64a195ed07d7d8a742d"] },
+    oasis: { rc: 123, score: "8,5", img: ["503929601?k=84fca6f12f12e3c52ca2074ef731f7aef709b4f07ea8b4be04df8fc1befb9961", "657970013?k=efbcebf78735a94ab7d482f08f5fe1d1262fa93a3a214f89828e870d51d295db", "282756753?k=47806a072650f0961ea3571af1649f65027a958ce47fcc3a18698c742cd72709"] },
+    casita: { rc: 24, score: "8,6", img: ["908386556?k=836da1c1ea61a8bfa6456aa41c82b53158d3dd6aba2f3bbe5f8543925c4075c0", "898325495?k=48ab5b5f5a15b0c914c17bf757bd94600bf9c01ddd7f686810798125f91bd6a5", "908386558?k=a329db8ef6516ede9bd15376027f060ea799b8dcbc61d175dbd766b2a66ccbb6"] },
+    monaco: { yt: "Visto en un video de viajeros de 2024; el precio es de ese año." },
+    cangrejo: { rc: 229, score: "8,8", img: ["683071465?k=3e5c7cda0ed3de41af4d054f50df92829c43ad22effb48c8f60265ed1b7d89fa", "926313109?k=aea8b85bbd3cc8ee56c9d7c2acf432a04b30e22c55a1da05d908ea4c987834cf", "683530463?k=224f1974b267b3599c55343c3335ce4c404fd3d678a137e5e79e300216d4bf05"] },
+    nugeku: { rc: 150, score: "9,0", img: ["666574347?k=cd234c3918c3b02af5160499c32ccb1eb49ba050d5b64ef5ee62c9d31adc9834", "832182149?k=b182096d2ee9afaff4a86c4d47498a04bf6864f8ab9e620da12100dad37d657f", "832182212?k=13486326cdf36a35457856143cde1cdd3beb9683aaab708a74434786c0b79a09"] },
+    sanfelipe: { rc: 110, score: "9,4", img: ["503386779?k=753a105e90db5ac0181738519df1c44ea55dbaae2ab573b053b124d498c9474e", "903826387?k=408d3dfa68a3f0868ddfc20a14ccf895b28ac8240a9c7bb28675787348c8c6a7", "480565747?k=99bf64b17241985310b5ead58fef1ebc5cb87276e6547730638b05b5f4cf5bec"] },
+    altisimo: { rc: 213, score: "8,3", img: ["471797896?k=25868fe8626f6891598e2419fdedcd9c637ec29ee3328da72d2df369476ac574", "471797904?k=fff246d2ab59fd1ce03f2164ececbed4bd40ec0b9acd342fdd55c391c2e233c7", "471798015?k=bace27881728793a6fb6a0ec77e9bee4c89b36b28ae4f40d89aa6e1ca5aaf2f6"] },
+    dakema: { rc: 452, score: "8,4", img: ["403329068?k=3fefdd17cc12a9db9b65effdc27a305743d3f531e736551e8d40c4b1ec2c3e51", "854589047?k=d06513c48736b8e4e5fe29e26928ba9fb49ae2a2a471fcd4c4de94e832113d33", "403329073?k=5094faa1fd540ccb0068bc826e8da4ea52e243776e3c68eb4ca813191f6bcce1"] },
+    casablanca: { rc: 129, img: ["575312584?k=17493829088a7c59a9028847df11be4dd767a2accf10aae8dd3989d51ba27053", "761104321?k=aae774964c2cc6267da2eeb3b381ec0141f4aa7573c2e94764e4b2b01eb4c32f", "574934702?k=ddd546b332aa054e86c2063214dd05c5001988bacb8a667186588c1a8b064eec"] },
+    btc: { rc: 742, img: ["614033676?k=0547cfc1324646e0a61c597534b3321546aa83382a3ecfcde1ef1a9e31abceac", "614038347?k=3595efa55a64cd81d11569a6d7ff35ebcc4f7d73b9e50e9dfcc86120bee325fa", "608386191?k=f29e2e749e378fc0068da5121379a0dda0833feb9789aa541d8634a7e2ce2c0a"] },
+    cabanita: { rc: 110, img: ["355320284?k=4734a2aeb3b7f510adb8e5f8a649458ba7bc11e793004456d4f9a1cd9ae787b1", "881460007?k=602b0b11936096089adeb668dc0ed40b86c1bfc8f0de121dd8142c8e3e58c35b", "881459990?k=7b952aae611a6461f15b1ca2d8f6dc84e529fd13f91d386571e8df8989e5f872"] },
+    tibiki: { rc: 12, img: ["725978123?k=8c864518c29e3eba92e795520d03cb7aa37c6ac90cbbc0e1bffe74c9f0bd96cc", "725978717?k=b756cbe5e3c7696efbf8cca259ce3042f64854e7c7725cb1d76bb40bfde0247a", "725978724?k=fe4860eaf9eae8890aad72076602352b468f69dd32a48895fbde8efe515e2a9a"] },
+    dunarinka: { rc: 196, img: ["637633977?k=a68222f7ee9f7c8a85234538ac80a7e5b02600b399c045e1a4cfd3a35c316fea", "367188747?k=1984afaaebad408fe88343bc31b4a1b5d711b2faf0f8ee032c2c86d6ab21981b", "809510652?k=5e0d07baa9151703507506080bc3ca6bad624eb68789df34dac6b819fd35a247"] },
+    tribu: { rc: 13, img: ["926213225?k=54f2fbbcbba7d3e381dab9022f4a426b1a69c2b8bae914e5474663b9d87d0229", "913637140?k=7ef4f1d795d9cc2dc6f9fc2c58bc6f73c825df4ba2b9cb991e3dd6c717232220", "917638208?k=b7bd5fc43c444ad1fc83a00b6c4b8415310342a3db09ad54027edbdea9f5cd5a"] },
+    refugio: { rc: 798, img: ["416008233?k=e47339650e2b54dc2ca324c79ed6bacceb6a60b69c87604a8d84a100751ce79b", "580591879?k=634ce47a8415e9f7728c583dc780f99889b184e4b0d2d4a11f891bfdc3fed9a9", "568639841?k=41e7ee66e7eac83214193c7f16feee67e77b97a43aa4f335f4312b2103f8dda6"] },
+    altomontana: { rc: 138, img: ["241180697?k=d1f06406afeaa3ea34a9b1810aa7d45e10b87b85cc38fdace4d8c272d805322c", "541736638?k=f683632486aec51e10c93106f454483e90decb58ba5e48dd7ef785aae03b36cb", "244196041?k=6b1d533a8d2b8e92a83ac4a5b346de626927c1e7f34a31a166602ebbabdbc564"] }
+  };
+  DESTS_GOLFO.concat(DESTS_SIERRA).forEach(d => d.hotels.forEach(h => { if (HOTEL_PICS[h.id]) Object.assign(h, HOTEL_PICS[h.id]); }));
+  /* Otros que recomiendan los viajeros en YouTube, sin precio verificado para las fechas */
+  const HOTEL_YT = {
+    minca: [
+      { id: "mariposas", name: "Hostal Las Mariposas", where: "Cabañas sobre el río, a pie del pueblo", score: "8,7", rc: 338, priceTxt: "100.000 a 140.000 la noche según los videos; el chalet sobre el río sale 166.600 en Booking", yt: "Cabañas con baño privado junto al río. Los videos no coinciden en el precio: confirmar.", url: "https://www.booking.com/hotel/co/hostal-las-mariposas-minca.es.html", img: ["810440644?k=5d2d21107bcd843c5d64fbfc9ed49fa534a81e72980074eef9e35b2bd1c0003c", "807736389?k=70fd93ece7adc9b01e3eeafbe86fcbf1ae42baf332c7e3c2a25eb4cc54cd615e", "621397475?k=ffde7b97e1521481bed9f67076f2accb79b107be23e0a4aa8ac6894ea49bec71"] },
+      { id: "rioelemento", name: "Río Elemento", where: "A 5 o 7 minutos a pie de la plaza", score: "8,5", rc: 54, priceTxt: "Precio por confirmar", yt: "Habitación con baño privado, piscina de agua de río y yoga. También tiene dormitorios: pedir la privada.", url: "https://www.booking.com/hotel/co/rio-elemento-minca.es.html", img: ["908411850?k=b1f5329f9bc615649dcb4de536cec62c10b0e4c8e6ab1f1cd076dcc756b83c4f", "904690002?k=ef4e7bff15dabe2f6cf9d75301ddc6a785ef3706c5aec297051eaceb60376e01", "904690038?k=cd1d3b69c6b76896ac71239ae375763c39305d2c6945d94e36cd0e5c5b196f05"] },
+      { id: "coffee", name: "Coffee House Minca", where: "En el pueblo", score: "8,3", rc: 267, priceTxt: "200.000 a 220.000 la noche con desayuno (octubre de 2025)", over: true, yt: "Piscina y balcón. Si solo quieren pasar el día, tiene pasadía de 50.000 p/p.", url: "https://www.booking.com/hotel/co/coffee-house-minca.es.html", img: ["895150555?k=592ee037b112be0e86a5d8904e3fd5d610cdcf206b3221662c6315c3bd9b3f2a", "887636387?k=29d10cedbfe5ac233984ef89af37d1e4c91eb583c4acc0f73094370e39187f0a", "887636441?k=9a90e0d3db1f2008a3fac3ce9411e9879c5867037fe148d8437e9b297c7bf480"] }
+    ]
+  };
   const ROUTES = {
     golfo: { name: "Golfo e islas", sub: "Tolú, Rincón del Mar, Tintipán y Cartagena", icon: "ph-island", key: "caribe-v5",
       dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
@@ -1364,7 +1426,7 @@
     const fs = captureFocus();
     fixHotels();
     const C = costs(); LAST = C;
-    renderTop(C); renderRoute(); $$("[data-only]").forEach(el => { el.hidden = el.dataset.only !== RUTA; }); if (renderGuide.r !== RUTA) { renderGuide.r = RUTA; renderGuide(); } renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
+    renderTop(C); renderHotels(); renderRoute(); $$("[data-only]").forEach(el => { el.hidden = el.dataset.only !== RUTA; }); if (renderGuide.r !== RUTA) { renderGuide.r = RUTA; renderGuide(); } renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
     refreshSheets();
     restoreFocus(fs);
     if (save) persist();
@@ -1431,7 +1493,7 @@
           <div class="stepper" role="group" aria-label="Noches en ${d.name}"><button type="button" data-step="${d.id}" data-d="-1" aria-label="Quitar una noche en ${d.name}" ${n <= d.min ? "disabled" : ""}>&minus;</button><output>${noches(n)}</output><button type="button" data-step="${d.id}" data-d="1" aria-label="Agregar una noche en ${d.name}">+</button></div></div>
         ${n ? `<div class="hotel-sel"><div class="hs-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span><span class="tags">${tag(key)}${r > CAP ? `<span class="tag bad">Pasa el tope</span>` : ""}${/solo efectivo/i.test(h.info) ? `<span class="tag cash">Solo efectivo</span>` : ""}</span></div>
           <div class="hs-price"><b class="num">${fmt(r)}</b><span>la noche</span><span class="num">${noches(n)}: ${fmt(r * n)}</span></div>
-          <div class="hs-act"><button type="button" class="mini" data-hsheet="${d.id}"><i class="ph ph-swap" aria-hidden="true"></i>Cambiar</button><a class="mini" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a></div></div>`
+          <div class="hs-act"><button type="button" class="mini" data-hsheet="${d.id}"><i class="ph ph-swap" aria-hidden="true"></i>Cambiar</button><button type="button" class="mini" data-hview="${d.id}"><i class="ph ph-images" aria-hidden="true"></i>Fotos</button><a class="mini" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a></div></div>`
         : `<p class="small muted" style="margin-top:8px">Sin noches aquí. Toca + para incluir ${d.name}.</p>`}
       </div>`;
     }).join("");
@@ -1733,6 +1795,56 @@
         <div class="actions"><button type="button" class="mini" data-goto-day="${k}"><i class="ph ph-list-bullets" aria-hidden="true"></i>Ver en Día a día</button></div>
       </div>`;
   }
+  /* ---------- Hoteles con fotos ---------- */
+  let HTAB = null;
+  const picURL = (h, i = 0, size = "max500") => h.img && h.img[i] ? `https://cf.bstatic.com/xdata/images/hotel/${size}/${h.img[i].replace("?k=", ".jpg?k=")}&o=` : null;
+  const scoreLabel = sc => { const v = parseFloat(String(sc).replace(",", ".")); return isNaN(v) ? "Sin nota" : v >= 9 ? "Fantástico" : v >= 8.6 ? "Fabuloso" : v >= 8 ? "Muy bien" : v >= 7 ? "Bien" : "Aceptable"; };
+  const CITY = { golfo: "Tolú Coveñas Sucre", rincon: "Rincón del Mar Sucre", ctg: "Cartagena", minca: "Minca Santa Marta" };
+  function stayOf(id) {
+    let d0 = D(P().out[S.out].date);
+    for (const d of DESTS) { const n = S.n[d.id]; if (d.id === id) return [iso(d0), iso(addDays(d0, Math.max(1, n)))]; d0 = addDays(d0, n); }
+    return [iso(d0), iso(addDays(d0, 1))];
+  }
+  const bookingURL = (h, ci, co) => `${h.url}${h.url.includes("?") ? "&" : "?"}checkin=${ci}&checkout=${co}&group_adults=2&no_rooms=1&selected_currency=COP`;
+  const googleHotelsURL = (h, dId) => `https://www.google.com/travel/search?q=${encodeURIComponent(h.name + " " + (CITY[dId] || ""))}`;
+  function hotelCard(h, d, extra) {
+    const [ci, co] = stayOf(d.id), n = S.n[d.id], bk = bookingURL(h, ci, co), on = !extra && S.h[d.id] === h.id;
+    const r = extra ? null : rateOf(h), avail = extra || !!h.rate[S.pu], img = picURL(h);
+    const tags = [];
+    if (extra) tags.push(`<span class="yt">Lo recomiendan viajeros</span>`);
+    if (/desayuno incluido/i.test(h.info || "")) tags.push(`<span class="ok">Desayuno incluido</span>`);
+    if (/cancelación gratis/i.test(h.info || "")) tags.push(`<span class="ok">Cancelación gratis</span>`);
+    if (/piscina/i.test((h.info || "") + (h.yt || ""))) tags.push(`<span>Piscina</span>`);
+    if (/\baire\b/i.test(h.info || "")) tags.push(`<span>Aire</span>`);
+    if (/solo efectivo/i.test(h.info || "")) tags.push(`<span class="bad">Solo efectivo</span>`);
+    if (/sin reembolso/i.test(h.info || "")) tags.push(`<span class="bad">Sin reembolso</span>`);
+    if (/hostal/i.test(h.info || "") || /hostal/i.test(h.name)) tags.push(`<span>Se anuncia como hostal</span>`);
+    if ((r && r > CAP) || h.over) tags.push(`<span class="bad">Pasa el tope de ${fmt(CAP)}</span>`);
+    if (!avail) tags.push(`<span class="bad">Sin cupo en este puente</span>`);
+    const price = extra ? `<small>${esc(h.priceTxt)}</small>` : avail ? `<b class="num">${fmt(r)}</b><small>la noche${n ? ` · ${noches(n)}: ${fmt(r * n)}` : ""}</small>` : `<small>No hay precio para este puente</small>`;
+    return `<article class="hc ${on ? "on" : ""} ${avail ? "" : "dim"}">
+      <a class="hc-img" href="${bk}" target="_blank" rel="noopener" aria-label="Ver ${esc(h.name)} en Booking">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async">` : `<span class="hc-noimg"><i class="ph ph-bed" aria-hidden="true"></i></span>`}${on ? `<span class="hc-flag">En tu plan</span>` : ""}${h.img && h.img.length > 1 ? `<span class="hc-n"><i class="ph ph-images" aria-hidden="true"></i>${h.img.length}</span>` : ""}</a>
+      <div class="hc-body">
+        <a class="hc-name" href="${bk}" target="_blank" rel="noopener">${esc(h.name)}</a>
+        <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b>${h.rc ? ` · ${h.rc.toLocaleString("es-CO")} comentarios` : ""}</span></div>
+        <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
+        ${tags.length ? `<div class="hc-tags">${tags.join("")}</div>` : ""}
+        ${h.info ? `<p class="hc-info">${esc(h.info)}</p>` : ""}${h.yt ? `<p class="hc-info"><i class="ph-fill ph-youtube-logo" style="color:#c4302b" aria-hidden="true"></i> ${esc(h.yt)}</p>` : ""}
+        <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${!extra && avail && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
+      </div>
+    </article>`;
+  }
+  function renderHotels() {
+    const tabs = $("[data-htabs]"), box = $("[data-hlist]"); if (!tabs || !box) return;
+    if (!DESTS.some(d => d.id === HTAB)) HTAB = (DESTS.find(d => S.n[d.id]) || DESTS[0]).id;
+    tabs.innerHTML = DESTS.map(d => `<button type="button" role="tab" class="g-tab c-${d.id}" aria-selected="${d.id === HTAB}" data-htab="${d.id}"><i class="ph ${d.icon}" aria-hidden="true"></i>${d.name}</button>`).join("");
+    const d = DESTS.find(x => x.id === HTAB), n = S.n[d.id], [ci, co] = stayOf(d.id);
+    const list = d.hotels.slice().sort((a, b) => (S.h[d.id] === b.id) - (S.h[d.id] === a.id) || (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || (rateOf(a) || 0) - (rateOf(b) || 0));
+    const yt = HOTEL_YT[d.id] || [];
+    box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · baño privado y máximo ${fmt(CAP)} la noche</p>`
+      + list.map(h => hotelCard(h, d, false)).join("")
+      + (yt.length ? `<h3 class="hl-sub"><i class="ph-fill ph-youtube-logo" aria-hidden="true"></i>Otros que recomiendan los viajeros</h3><p class="hl-head">Salen en sus videos, pero su precio para estas fechas no está verificado. Confirmar en Booking.</p>` + yt.map(h => hotelCard(h, d, true)).join("") : "");
+  }
   function hotelSheetHTML(id) {
     const d = DESTS.find(x => x.id === id), n = S.n[id], avail = d.hotels.filter(h => h.rate[S.pu]), none = d.hotels.filter(h => !h.rate[S.pu]);
     return `<header class="sh-head c-${id}"><span class="dest-ic"><i class="ph ${d.icon}" aria-hidden="true"></i></span><div><h2>Hotel en ${d.name}</h2><p>${P().label} · ${noches(n)}</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
@@ -1888,6 +2000,8 @@
     }
     if (ds.set) { S[ds.set] = ds.v; if (ds.set === "pu") { const p = P(); if (!p.out[S.out]) S.out = Object.keys(p.out)[0]; if (!p.back[S.back]) S.back = Object.keys(p.back)[0]; } if (ds.set !== "food") balance(); render(); return; }
     if (ds.hotel) { S.h[ds.hotel] = ds.v; closeSheet(sheet); render(); toast("Hotel cambiado."); return; }
+    if (ds.hview) { HTAB = ds.hview; renderHotels(); showView("hoteles"); return; }
+    if (ds.htab) { HTAB = ds.htab; renderHotels(); return; }
     if (ds.hsheet) { const id = ds.hsheet; openSheet(sheet, () => hotelSheetHTML(id)); return; }
     if (ds.edit) { const key = ds.edit; openSheet(sheet2, () => priceSheetHTML(key)); sheet2._static = true; const inp = sheet2.querySelector("[data-price-input]"); if (inp) { inp.focus(); inp.select(); } return; }
     if (ds.priceSave) {
@@ -2253,7 +2367,7 @@
     if (curView) scrollMem[curView] = window.scrollY;
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
+      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos" || v === "hoteles") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
