@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.15">
+<meta name="app-version" content="2026-10-22.16">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1037,7 +1037,7 @@
   const MOVE_T_GOLFO = { "air-golfo": "1 h 40", "air-rincon": "3 h", "air-ctg": "5 h", "golfo-rincon": "1 h 30", "golfo-ctg": "3 h", "rincon-ctg": "2 h 30" };
   const MOVE_MODE_GOLFO = { "air-golfo": "Colectivo", "air-rincon": "Colectivo, bus y mototaxi", "air-ctg": "Colectivo y bus", "golfo-rincon": "Bus y mototaxi", "golfo-ctg": "Bus", "rincon-ctg": "Mototaxi y bus" };
   const FOOD = [
-    { id: "aj", name: "Ajustado", sub: "$60.000 p/p al día", v: 60000 },
+    { id: "aj", name: "Corrientazo y local", sub: "$60.000 p/p al día", v: 60000 },
     { id: "no", name: "Normal", sub: "$80.000 p/p al día", v: 80000 },
     { id: "ge", name: "Generoso", sub: "$110.000 p/p al día", v: 110000 }
   ];
@@ -1252,7 +1252,7 @@
   applyRoute("golfo");
 
   /* ---------- Estado ---------- */
-  const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "dom", back: "mar", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "no",
+  const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "dom", back: "mar", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "aj",
     acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: RUTA === "golfo" ? { cienaga: "2026-11-02", pasadia: "2026-11-03" } : {}, over: {}, custom: [] });
   const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
                   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
@@ -2634,6 +2634,7 @@
   }
 
   /* ---------- Inicio ---------- */
+  if (!store.get("caribe-food-aj", false)) { S.food = "aj"; store.set("caribe-food-aj", true); }
   if (!store.get("caribe-plan-mar10", false)) {
     S.out = "dom"; S.back = "mar"; S.n.golfo = 4; S.n.rincon = 2; S.n.ctg = 3;
     Object.assign(S.acts, { cienaga: true, pasadia: true }); Object.assign(S.pin, { cienaga: "2026-11-02", pasadia: "2026-11-03" });
