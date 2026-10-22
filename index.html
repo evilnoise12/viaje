@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.18">
+<meta name="app-version" content="2026-10-22.19">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1665,7 +1665,7 @@
     $("[data-total]").textContent = fmt(C.total);
     /* Julio paga hoteles y comida; el resto (vuelos, traslados, planes, imprevistos) se divide por mitades */
     const mine = C.cats.hospedaje + C.cats.comida, half = (C.total - mine) / 2;
-    $("[data-split]").innerHTML = `<div><span>Tú</span><b class="num">${fmt(mine + half)}</b><small>Hoteles y comida ${fmt(mine)} + mitad del resto</small></div><div><span>Tu pareja</span><b class="num">${fmt(half)}</b><small>Mitad de vuelos, traslados, planes e imprevistos</small></div>`;
+    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles y comida ${fmt(mine)} + mitad del resto</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Mitad de vuelos, traslados, planes e imprevistos</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
     $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}${r.cat !== "hospedaje" && r.cat !== "comida" && r.v > 0 ? `<small class="pp"> · ${fmt(r.v / 2)} por persona</small>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
@@ -2442,7 +2442,7 @@
     const fl = side => Object.fromEntries(Object.entries(p[side]).map(([k, v]) => [k, { fecha: v.date, aerolinea: v.air, hora: v.time, precio_pp: fPrice(side, k), aviso: v.warn || "" }]));
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
-      quien_paga: "Julio paga hoteles y comida; vuelos, traslados, planes e imprevistos se dividen por mitades con su pareja.",
+      quien_paga: "Julio paga hoteles y comida; vuelos, traslados, planes e imprevistos se dividen por mitades con Alejandra.",
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
         planes_activos: Object.keys(it.placed), pasadia_fecha: it.placed.pasadia ? it.placed.pasadia.iso : null, total_pareja: Math.round(C.total), meta: S.goal,
         desglose: C.rows.map(r => [r.t, Math.round(r.v)]) },
