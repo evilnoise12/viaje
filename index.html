@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.5">
+<meta name="app-version" content="2026-10-22.7">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -19,6 +19,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
@@ -36,6 +38,33 @@
   .c-ctg { --dc: var(--ctg); --dcs: var(--ctg-soft); }
   .c-minca { --dc: var(--minca); --dcs: var(--minca-soft); }
   .route-sw { margin-bottom: 14px; }
+  .map-card { margin: 0 0 16px; }
+  .map-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 2px 8px; }
+  .map-h b { font-size: 15px; display: flex; align-items: center; gap: 6px; } .map-h b i { color: var(--accent); font-size: 18px; }
+  .map-h a { font-size: 13px; }
+  .map { height: 260px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: #e8eef0; position: relative; z-index: 0; isolation: isolate; }
+  .map.dmap { height: 240px; margin: 2px 0 6px; }
+  .map.locked::after { content: "Toca el mapa para moverlo"; position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 1000; pointer-events: none; font-size: 12px; font-weight: 600; background: rgba(19,32,29,.75); color: #fff; padding: 4px 10px; border-radius: 999px; }
+  .map-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--muted); margin: 0 2px 14px; }
+  .map-legend i { vertical-align: -2px; }
+  .leaflet-container { font-family: inherit; }
+  .mk { position: relative; }
+  .mk > span { position: absolute; left: 0; top: 0; transform: translate(-50%, -115%); white-space: nowrap; font-weight: 700; font-size: 12px; line-height: 1; padding: 5px 7px; border-radius: 999px; background: #fff; color: #13201d; border: 1px solid rgba(0,0,0,.18); box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+  .mk > span.on { background: var(--accent); color: #fff; border-color: var(--accent); z-index: 2; }
+  .mk > span.off { opacity: .55; }
+  .mk > span.yt { background: #fde8e7; color: #a32520; border-color: #f3c1be; }
+  .mk > span.bad { background: #eee; color: #888; }
+  .mk > span.pl { padding: 4px; font-size: 15px; color: #0b6b62; background: #fff; }
+  .mk > span.stop { width: 26px; height: 26px; padding: 0; display: grid; place-items: center; transform: translate(-50%, -50%); color: #fff; border: 2px solid #fff; background: var(--accent); font-size: 13px; }
+  .mk > span.stop.c-golfo { background: var(--golfo); } .mk > span.stop.c-rincon { background: var(--rincon); } .mk > span.stop.c-ctg { background: var(--ctg); } .mk > span.stop.c-minca { background: var(--minca); }
+  .mk > span.air { transform: translate(-50%, -50%); padding: 5px; font-size: 15px; background: #13201d; color: #fff; border-color: #13201d; }
+  .mk > span.isl { transform: translate(-50%, -50%); padding: 4px; font-size: 14px; background: #0b8a8a; color: #fff; border-color: #0b8a8a; }
+  .mpop { width: 210px; }
+  .mpop img { width: 100%; height: 96px; object-fit: cover; border-radius: 8px; display: block; margin-bottom: 6px; }
+  .mpop b { display: block; font-size: 14px; margin-bottom: 2px; } .mpop small { display: block; color: #55645f; font-size: 12px; line-height: 1.35; }
+  .mpop .row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .mpop .row a, .mpop .row button { font-size: 12px; padding: 5px 9px; min-height: 30px; }
+  .leaflet-popup-content { margin: 10px 12px; }
   .h3row { margin: 4px 0 14px; }
   .h3-head { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 8px; font-size: 14px; }
   .h3-head b { display: flex; align-items: center; gap: 6px; } .h3-head b i { color: var(--dc, var(--accent)); font-size: 17px; }
@@ -1127,6 +1156,43 @@
       { id: "coffee", name: "Coffee House Minca", where: "En el pueblo", score: "8,3", rc: 267, priceTxt: "200.000 a 220.000 la noche con desayuno (octubre de 2025)", over: true, yt: "Piscina y balcón. Si solo quieren pasar el día, tiene pasadía de 50.000 p/p.", url: "https://www.booking.com/hotel/co/coffee-house-minca.es.html", img: ["895150555?k=592ee037b112be0e86a5d8904e3fd5d610cdcf206b3221662c6315c3bd9b3f2a", "887636387?k=29d10cedbfe5ac233984ef89af37d1e4c91eb583c4acc0f73094370e39187f0a", "887636441?k=9a90e0d3db1f2008a3fac3ce9411e9879c5867037fe148d8437e9b297c7bf480"] }
     ]
   };
+  /* Coordenadas: hoteles (Booking y Google Maps) y lugares clave (Google Maps), consultadas el 22 oct 2026 */
+  const HOTEL_LL = { floral: [9.53036, -75.58078], saray: [9.39238, -75.68199], oasis: [9.51973, -75.57882], opera: [9.53107, -75.58259], hostaldelmar: [9.52978, -75.58194], danubio: [9.5314, -75.58276], monkey: [9.39595, -75.77435], casita: [9.40178, -75.66789],
+    cangrejo: [9.76016, -75.63696], mucura: [9.75984, -75.63653], milimar: [9.76944, -75.64263], maracas: [9.76704, -75.64162], nugeku: [9.76044, -75.63733],
+    sanfelipe: [10.42405, -75.54016], altisimo: [10.42294, -75.54546], dakema: [10.43759, -75.52615], marie: [10.42531, -75.54718], stil: [10.42524, -75.54529], viajero: [10.42468, -75.54958],
+    casablanca: [11.14252, -74.11601], btc: [11.14329, -74.11769], cabanita: [11.14531, -74.11724], tibiki: [11.14289, -74.11911], dunarinka: [11.14453, -74.12267], tribu: [11.13994, -74.12143], refugio: [11.14502, -74.11707], altomontana: [11.14259, -74.10684], mariposas: [11.14488, -74.11608], rioelemento: [11.14537, -74.1149], coffee: [11.14093, -74.11649],
+    antillas: [9.52673, -75.58374], playadivina: [9.42284, -75.63978], madriguena: [9.76763, -75.64206], campomar: [9.53002, -75.58284], gloria: [9.77305, -75.64516], mango: [9.77133, -75.63731], puntacoral: [9.77157, -75.64512], satva: [9.77203, -75.64527], kevins: [9.52887, -75.58219], laguna: [9.55867, -75.57479], marazul: [9.40222, -75.68021] };
+  DESTS_GOLFO.concat(DESTS_SIERRA).forEach(d => d.hotels.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
+  Object.values(HOTEL_YT).forEach(l => l.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
+  const PLACES = [
+    { id: "mtr", r: "golfo", k: "air", i: "ph-airplane-landing", n: "Aeropuerto de Montería", t: "Llegada. Colectivo en la entrada 5 o bus en la Troncal.", ll: [8.8252, -75.82401] },
+    { id: "muelle", r: "golfo", d: "golfo", i: "ph-anchor", n: "Muelle turístico de Tolú", t: "De aquí salen las lanchas a Tintipán y Múcura.", ll: [9.52185, -75.58658] },
+    { id: "malecon", r: "golfo", d: "golfo", i: "ph-bicycle", n: "Malecón de Tolú", t: "Atardecer, bicitaxis y comida callejera.", ll: [9.52359, -75.58577] },
+    { id: "cienaga", r: "golfo", d: "golfo", i: "ph-boat", n: "Ciénaga La Caimanera", t: "Canoa entre manglares, mejor temprano.", ll: [9.43567, -75.62859] },
+    { id: "coquerita", r: "golfo", d: "golfo", i: "ph-umbrella-simple", n: "Playa de Coveñas (La Coquerita)", t: "La playa grande y de mar tranquilo; zona animada.", ll: [9.4039, -75.67935] },
+    { id: "frances", r: "golfo", d: "golfo", i: "ph-person-simple-swim", n: "Playa El Francés", t: "Agua clara para caretear, al norte de Tolú.", ll: [9.56607, -75.57374] },
+    { id: "museo", r: "golfo", d: "golfo", i: "ph-anchor-simple", n: "Museo de Infantería de Marina", t: "Gratis y con guía. Buen plan si llueve.", ll: [9.40716, -75.68816] },
+    { id: "cispata", r: "golfo", d: "golfo", i: "ph-mountains", n: "Bahía de Cispatá (San Antero)", t: "Caimanes, túnel de manglar y Playa Blanca.", ll: [9.39873, -75.7775] },
+    { id: "tintipan", r: "golfo", k: "isla", i: "ph-island", n: "Isla Tintipán", t: "Pasadía: tranquilidad y manglares.", ll: [9.79389, -75.84306] },
+    { id: "mucuraisla", r: "golfo", k: "isla", i: "ph-island", n: "Isla Múcura", t: "Pasadía: playa con más ambiente.", ll: [9.78335, -75.86967] },
+    { id: "islote", r: "golfo", k: "isla", i: "ph-house-line", n: "Santa Cruz del Islote", t: "La isla más densamente poblada del mundo.", ll: [9.78583, -75.85917] },
+    { id: "rinconpueblo", r: "golfo", d: "rincon", i: "ph-map-pin", n: "Rincón del Mar (pueblo)", t: "Centro del pueblo y playa principal.", ll: [9.76812, -75.64203] },
+    { id: "tranquila", r: "golfo", d: "rincon", i: "ph-sun", n: "Playa Tranquila", t: "Playa solitaria de día. No ir de noche: sube la marea.", ll: [9.76235, -75.63907] },
+    { id: "lapunta", r: "golfo", d: "rincon", i: "ph-moon-stars", n: "Sector La Punta", t: "Zona tranquila después del puente peatonal.", ll: [9.7720, -75.6450] },
+    { id: "getsemani", r: "*", d: "ctg", i: "ph-paint-brush", n: "Plaza de la Trinidad (Getsemaní)", t: "Murales y ambiente de noche.", ll: [10.42061, -75.54536] },
+    { id: "torre", r: "*", d: "ctg", i: "ph-castle-turret", n: "Torre del Reloj", t: "Entrada a la Ciudad Amurallada.", ll: [10.42298, -75.54922] },
+    { id: "bovedas", r: "*", d: "ctg", i: "ph-sun-horizon", n: "Las Bóvedas y la muralla", t: "Atardecer sobre la muralla.", ll: [10.43015, -75.54646] },
+    { id: "museooro", r: "*", d: "ctg", i: "ph-bank", n: "Museo del Oro Zenú", t: "Gratis, al lado de la Plaza de Bolívar.", ll: [10.42311, -75.55087] },
+    { id: "terminalctg", r: "*", d: "ctg", i: "ph-bus", n: "Terminal de Transportes de Cartagena", t: "Llegan los buses; taxi al hotel.", ll: [10.40094, -75.45846] },
+    { id: "ctgair", r: "*", k: "air2", i: "ph-airplane-takeoff", n: "Aeropuerto de Cartagena", t: "Regreso a Bogotá.", ll: [10.44632, -75.51645] },
+    { id: "smr", r: "sierra", k: "air", i: "ph-airplane-landing", n: "Aeropuerto de Santa Marta", t: "Llegada. Buseta por la Troncal al mercado.", ll: [11.11785, -74.23179] },
+    { id: "mercado", r: "sierra", d: "minca", i: "ph-van", n: "Colectivo a Minca (Mercado Público)", t: "Carrera 9 con Calle 12, detrás del mercado.", ll: [11.24564, -74.20551] },
+    { id: "pozoazul", r: "sierra", d: "minca", i: "ph-drop", n: "Pozo Azul", t: "Pozos del río; ir a las 8 a. m.", ll: [11.13395, -74.10277] },
+    { id: "marinka", r: "sierra", d: "minca", i: "ph-waves", n: "Cascadas de Marinka", t: "Cascadas con hamacas y restaurante.", ll: [11.11701, -74.11859] },
+    { id: "victoria", r: "sierra", d: "minca", i: "ph-coffee", n: "Finca La Victoria", t: "Tour de café y aves.", ll: [11.12317, -74.09546] },
+    { id: "lospinos", r: "sierra", d: "minca", i: "ph-binoculars", n: "Mirador Los Pinos", t: "Vista a la Sierra; trocha.", ll: [11.1064, -74.10929] },
+    { id: "terminalsm", r: "sierra", d: "minca", i: "ph-bus", n: "Terminal de Santa Marta", t: "Buses a Cartagena.", ll: [11.22148, -74.18089] }
+  ];
   const ROUTES = {
     golfo: { name: "Golfo e islas", sub: "Tolú, Rincón del Mar, Tintipán y Cartagena", icon: "ph-island", key: "caribe-v5",
       dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
@@ -1801,12 +1867,13 @@
     return `<label class="mover"><i class="ph ph-arrows-left-right" aria-hidden="true"></i><span class="sr">Mover ${esc(a.t)} a otro día</span><select data-pin="${id}">${al.map(x => `<option value="${x.iso}" ${x.iso === d.iso ? "selected" : ""}>${x.iso === d.iso ? "Este día: " : "Mover al "}${dlabel(x.date)}${x.fest ? ", festivo" : ""}${x.move ? ", traslado" : ""}</option>`).join("")}${S.pin[id] ? `<option value="">Volver a automático</option>` : ""}</select></label>`;
   }
   function renderDays(C) {
+    killMaps();
     if (sumNights() !== totalNights()) { $("[data-itin]").innerHTML = emptyItin(); return; }
     const it = C.it, blocks = []; let cur = null;
     it.days.forEach(d => { if (!cur || cur.loc !== d.stay) { cur = { loc: d.stay, days: [] }; blocks.push(cur); } cur.days.push(d); });
-    $("[data-itin]").innerHTML = blocks.map(b => {
+    $("[data-itin]").innerHTML = `<div class="map-card"><div class="map-h"><b><i class="ph-fill ph-map-trifold" aria-hidden="true"></i>Ruta del viaje</b><a href="${routeLink()}" target="_blank" rel="noopener">Abrir en Google Maps</a></div><div class="map" id="map-route" role="region" aria-label="Mapa de la ruta del viaje"></div><p class="map-legend"><span><i class="ph-fill ph-airplane"></i> Aeropuertos</span><span>1, 2, 3: paradas en orden</span><span>Línea punteada: lancha a las islas</span></p></div>` + blocks.map(b => {
       const dest = DESTS.find(x => x.id === b.loc), h = hotelOf(dest);
-      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] ? hotelsRow(dest) : ""}${b.days.map(d => `
+      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] ? hotelsRow(dest) + `<div class="map dmap" data-dmap="${b.loc}" role="region" aria-label="Mapa de ${esc(dest.name)}"></div><p class="map-legend"><span><b>$121k</b> precio por noche</span><span>Verde: tu hotel</span><span>★ recomendados en videos</span><span>Íconos: planes y lugares</span></p>` : ""}${b.days.map(d => `
         <article class="day" id="day-${d.iso}"><div class="date"><b class="num">${d.date.getDate()}</b><span>${WD[d.date.getDay()]}</span>${d.fest ? `<span class="fe">festivo</span>` : ""}</div><div class="day-body">
           ${d.move ? `<div>${moveChip(d.move)}</div>` : ""}
           ${d.items.map(x => itemHTML(x) + (x.k === "act" ? moveSelect(x.act, d, it) : "")).join("")}
@@ -1815,6 +1882,7 @@
           <textarea class="note" data-note="${d.iso}" rows="1" placeholder="Notas del día" aria-label="Notas del ${dlong(d.date)}">${esc(S.notes[d.iso] || "")}</textarea>
         </div></article>`).join("")}</section>`;
     }).join("");
+    if (typeof curView !== "undefined" && curView === "dias") setTimeout(initMaps, 0);
   }
   function daySheetHTML(k) {
     const C = LAST, it = C.it, d = it.days.find(x => x.iso === k); if (!d) return `<div class="sh-pad"><p>Ese día ya no hace parte del viaje.</p></div>`;
@@ -1867,7 +1935,7 @@
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
         ${tags.length ? `<div class="hc-tags">${tags.join("")}</div>` : ""}
         ${h.info ? `<p class="hc-info">${esc(h.info)}</p>` : ""}${h.yt ? `<p class="hc-info"><i class="ph-fill ph-youtube-logo" style="color:#c4302b" aria-hidden="true"></i> ${esc(h.yt)}</p>` : ""}
-        <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>WhatsApp</a>` : ""}${!extra && avail && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
+        <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>WhatsApp</a>` : ""}${h.ll ? `<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Cómo llegar</a>` : ""}${!extra && avail && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
       </div>
     </article>`;
   }
@@ -1899,6 +1967,63 @@
   function hotelsRow(d) {
     const all = d.hotels.length + ((HOTEL_YT[d.id] || []).length);
     return `<div class="h3row"><div class="h3-head"><b><i class="ph-fill ph-bed" aria-hidden="true"></i>Top 3 hoteles</b><button type="button" class="linkbtn" data-hview="${d.id}">Ver los ${all}</button></div><div class="h3-list">${top3(d).map(h => hotelMini(h, d)).join("")}</div></div>`;
+  }
+  /* ---------- Mapas (Leaflet + OpenStreetMap) ---------- */
+  const MAPS = [];
+  const dirURL = ll => `https://www.google.com/maps/dir/?api=1&destination=${ll[0]},${ll[1]}`;
+  function killMaps() { MAPS.splice(0).forEach(m => { try { m.remove(); } catch (e) {} }); }
+  function baseMap(el) {
+    // En el celular el mapa no se arrastra con un dedo (para no trancar el scroll de la página) hasta que lo tocas.
+    const touch = L.Browser.mobile || L.Browser.touch;
+    const m = L.map(el, { scrollWheelZoom: false, dragging: !touch, tap: false });
+    if (touch) { el.classList.add("locked"); m.once("click", () => { m.dragging.enable(); el.classList.remove("locked"); }); }
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(m);
+    MAPS.push(m); return m;
+  }
+  const pin = (html, cls) => L.divIcon({ className: "mk", html: `<span class="${cls}">${html}</span>`, iconSize: [0, 0] });
+  const kShort = v => "$" + Math.round(v / 1000) + "k";
+  function hotelPopup(h, d, extra) {
+    const [ci, co] = stayOf(d.id), bk = bookingURL(h, ci, co), img = picURL(h, 0, "max300"), on = !extra && S.h[d.id] === h.id, r = extra ? null : rateOf(h), av = extra || !!h.rate[S.pu];
+    return `<div class="mpop">${img ? `<img src="${img}" alt="">` : ""}<b>${esc(h.name)}${on ? " · en tu plan" : ""}</b><small>${h.score && h.score !== "–" ? `Booking ${esc(h.score)}` : "Sin nota en Booking"}${h.g ? ` · Google ${esc(h.g)}` : ""}</small><small>${extra ? esc(h.priceTxt || "") : av ? `${fmt(r)} la noche` : "Sin cupo en este puente"}</small>${h.bad ? `<small style="color:#b4561f">Malas reseñas en Google</small>` : ""}
+      <div class="row"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${!extra && av && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
+  }
+  const placePopup = p => `<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t || "")}</small><div class="row"><a class="mini" href="${dirURL(p.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
+  function routeMap(el) {
+    const C = LAST, it = C.it, m = baseMap(el), pts = [], order = [...new Set(buildRoute())];
+    const air0 = PLACES.find(p => p.r === RUTA && p.k === "air"), air1 = PLACES.find(p => (p.r === RUTA || p.r === "*") && p.k === "air2");
+    const stopLL = id => { const d = DESTS.find(x => x.id === id), h = hotelOf(d); return h.ll || (PLACES.find(p => p.d === id) || {}).ll; };
+    if (air0) { L.marker(air0.ll, { icon: pin(`<i class="ph-fill ${air0.i}"></i>`, "air") }).addTo(m).bindPopup(placePopup(air0)); pts.push(air0.ll); }
+    let prev = "air";
+    order.forEach((id, i) => { const ll = stopLL(id); if (!ll) return; const d = DESTS.find(x => x.id === id), h = hotelOf(d), mv = prev + "-" + id;
+      L.marker(ll, { icon: pin(i + 1, "stop c-" + id) }).addTo(m).bindPopup(`<div class="mpop"><b>${i + 1}. ${esc(d.name)}</b><small>${noches(S.n[id])} · ${esc(h.name)}</small>${MOVE_MODE[mv] ? `<small>Llegar: ${MOVE_MODE[mv]}, ${MOVE_T[mv]}</small>` : ""}<div class="row"><a class="mini" href="${dirURL(ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`);
+      pts.push(ll); prev = id; });
+    if (air1) { L.marker(air1.ll, { icon: pin(`<i class="ph-fill ${air1.i}"></i>`, "air") }).addTo(m).bindPopup(placePopup(air1)); pts.push(air1.ll); }
+    L.polyline(pts, { color: "#0d7468", weight: 3, opacity: .85 }).addTo(m);
+    const pl = it.placed && it.placed.pasadia;
+    if (pl) { const from = pl.loc === "rincon" ? PLACES.find(p => p.id === "rinconpueblo") : PLACES.find(p => p.id === "muelle"), isl = PLACES.filter(p => p.r === RUTA && p.k === "isla");
+      if (from && isl.length) { L.polyline([from.ll, isl[0].ll], { color: "#0b8a8a", weight: 3, dashArray: "6 7" }).addTo(m);
+        isl.forEach(p => { L.marker(p.ll, { icon: pin(`<i class="ph-fill ${p.i}"></i>`, "isl") }).addTo(m).bindPopup(`<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t)}</small><small>Pasadía el ${dlabel(pl.iso)} desde ${pl.loc === "rincon" ? "Rincón del Mar" : "Tolú"}.</small></div>`); pts.push(p.ll); }); } }
+    if (pts.length) m.fitBounds(pts, { padding: [26, 26] });
+  }
+  function destMap(el, id) {
+    const d = DESTS.find(x => x.id === id), m = baseMap(el), pts = [];
+    PLACES.filter(p => (p.r === RUTA || p.r === "*") && p.d === id).forEach(p => { L.marker(p.ll, { icon: pin(`<i class="ph-fill ${p.i}"></i>`, "pl") }).addTo(m).bindPopup(placePopup(p)); pts.push(p.ll); });
+    (HOTEL_YT[id] || []).filter(h => h.ll).forEach(h => { L.marker(h.ll, { icon: pin(h.bad ? "✕" : "★", h.bad ? "bad" : "yt") }).addTo(m).bindPopup(hotelPopup(h, d, true)); pts.push(h.ll); });
+    d.hotels.filter(h => h.ll).forEach(h => { const on = S.h[id] === h.id, av = !!h.rate[S.pu];
+      L.marker(h.ll, { icon: pin(av ? kShort(rateOf(h)) : "sin cupo", on ? "on" : av ? "" : "off"), zIndexOffset: on ? 1000 : 0 }).addTo(m).bindPopup(hotelPopup(h, d, false)); pts.push(h.ll); });
+    if (pts.length) m.fitBounds(pts, { padding: [24, 24], maxZoom: 16 });
+  }
+  function initMaps() {
+    killMaps();
+    const v = document.querySelector('[data-view="dias"]'); if (!v || v.hidden) return;
+    if (!(window.L && L.map)) { if (!initMaps.wait) { initMaps.wait = true; window.addEventListener("load", () => { initMaps.wait = false; initMaps(); }); } return; }
+    const r = document.getElementById("map-route"); if (r) try { routeMap(r); } catch (e) {}
+    $$("[data-dmap]").forEach(el => { try { destMap(el, el.dataset.dmap); } catch (e) {} });
+  }
+  function routeLink() {
+    const order = [...new Set(buildRoute())], air0 = PLACES.find(p => p.r === RUTA && p.k === "air"), air1 = PLACES.find(p => p.k === "air2");
+    const wp = order.map(id => { const h = hotelOf(DESTS.find(x => x.id === id)); return h.ll ? h.ll.join(",") : null; }).filter(Boolean);
+    return air0 && air1 ? `https://www.google.com/maps/dir/?api=1&origin=${air0.ll.join(",")}&destination=${air1.ll.join(",")}&waypoints=${encodeURIComponent(wp.join("|"))}&travelmode=driving` : "#";
   }
   function renderHotels() {
     const tabs = $("[data-htabs]"), box = $("[data-hlist]"); if (!tabs || !box) return;
@@ -2436,6 +2561,7 @@
     if (v === curView) { window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" }); return; }
     if (curView) scrollMem[curView] = window.scrollY;
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
+    if (v === "dias") setTimeout(initMaps, 30); else killMaps();
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
       const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos" || v === "hoteles") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
