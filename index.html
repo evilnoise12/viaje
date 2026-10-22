@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.1">
+<meta name="app-version" content="2026-10-22.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -51,6 +51,7 @@
   .hc-score { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
   .hc-score .sc { background: #1d3f8a; color: #fff; font-weight: 700; font-size: 13px; border-radius: 6px 6px 6px 0; padding: 3px 6px; }
   .hc-score b { color: var(--text); font-weight: 600; }
+  .hc-score .gsc { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; background: #4285f4; }
   .hc-where { font-size: 12.5px; color: var(--muted); display: flex; gap: 4px; align-items: flex-start; } .hc-where i { margin-top: 2px; }
   .hc-tags { display: flex; flex-wrap: wrap; gap: 4px; }
   .hc-tags span { font-size: 11.5px; border-radius: 6px; padding: 2px 6px; background: var(--surface-2); color: var(--text); }
@@ -936,10 +937,10 @@
 <script>
   /* ---------- Datos ---------- */
   const PUENTES = {
-    p2: { label: "Puente del 2", sub: "31 oct al 8 nov", festivo: "2026-11-02",
+    p2: { label: "Puente del 2", sub: "sáb 31 oct o dom 1 nov al 8 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
-      out: { vie: { date: "2026-10-30", air: "JetSMART", time: "10:40 → 12:10", price: 301570 },
-             sab: { date: "2026-10-31", air: "JetSMART", time: "11:25 → 12:55", price: 244330, note: "Sin equipaje de mano grande" } },
+      out: { sab: { date: "2026-10-31", air: "JetSMART", time: "11:25 → 12:55", price: 269550, ver: "22 oct", note: "Sin maleta de mano incluida. Un día más de playa" },
+             dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 156740, ver: "22 oct", note: "Sin maleta de mano incluida. El más barato" } },
       back: { vie: { date: "2026-11-06", air: "LATAM", time: "11:35 → 13:10", price: 185350 },
               sab: { date: "2026-11-07", air: "JetSMART", time: "11:04 → 12:40", price: 253540 },
               dom: { date: "2026-11-08", air: "LATAM", time: "6:15 → 7:50", price: 211530, warn: "Madrugada" },
@@ -958,28 +959,31 @@
     { id: "golfo", name: "Tolú o Coveñas", icon: "ph-umbrella-simple", min: 0,
       blurb: "Playa, Ciénaga La Caimanera y malecón. Base para la pasadía a las islas.",
       hotels: [
-        { id: "floral", name: "Hospedaje El Floral", where: "Tolú, a 200 m de la playa", score: "9,1", rate: { p2: 93220, p16: 95964 }, info: "Aire y cocina. Tarifa sin reembolso.", url: "https://www.booking.com/hotel/co/hospedaje-el-floral-santiago-de-tolu.es.html" },
+        { id: "floral", name: "Hospedaje El Floral", where: "Tolú, a 200 m de la playa", score: "9,1", g: "sin reseñas", rate: { p2: 86370, p16: 95964 }, ver: "22 oct", info: "Muy básico. Aire y cocina. No tiene reseñas en Google para confirmar la nota de Booking.", url: "https://www.booking.com/hotel/co/hospedaje-el-floral-santiago-de-tolu.es.html" },
         { id: "monaco", name: "Habitaciones Mónaco", where: "Coveñas, primera ensenada", score: "sin nota", rate: { p2: 100000, p16: 100000 }, info: "Aire y baño privado. Precio de 2024 visto en un video; confirmar en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Habitaciones+M%C3%B3naco+Cove%C3%B1as" },
-        { id: "saray", name: "Hospedaje Saray Sofía", where: "Coveñas, 1,3 km de la playa", score: "9,8", rate: { p2: 83300, p16: 83300 }, info: "Aire, cuarto pequeño. Cancelación gratis.", url: "https://www.booking.com/hotel/co/saray-del-mar.es.html" },
-        { id: "oasis", name: "Oasis de Tolú", where: "Tolú, 800 m de la playa", score: "8,4", rate: { p2: 83300, p16: 83300 }, info: "Aire. Solo efectivo o transferencia.", url: "https://www.booking.com/hotel/co/oasis-de-tolu.es.html" },
-        { id: "opera", name: "Hotel Pizzería Ópera", where: "Tolú", score: "8,8", rc: 468, rate: { p2: 121500, p16: null }, ver: "22 oct", info: "Hotel con habitación doble y baño privado. Quedan pocas a este precio.", url: "https://www.booking.com/hotel/co/pizzeria-opera-tolu.es.html", img: ["106106939?k=69d7f8531a2ef96f24c056c8eb68824df7eaffa8ba9ba64015641cfafc04616d"] },
-        { id: "hostaldelmar", name: "Hostal del Mar Tolú", where: "Tolú", score: "8,9", rc: 235, rate: { p2: 145000, p16: null }, ver: "22 oct", info: "Habitación triple con baño privado (1 cama doble y 1 sencilla). Se anuncia como hostal. Cancelación gratis.", url: "https://www.booking.com/hotel/co/hostal-luz-mar-santiago-de-tolu-sucre.es.html", img: ["532710732?k=c3b742c716510d9c3f2d7a8c00f32e84971ce01d677dcbf8710720389434064a"] },
-        { id: "danubio", name: "Hostal El Danubio", where: "Tolú", score: "8,0", rc: 352, rate: { p2: 100000, p16: null }, ver: "22 oct", info: "Doble con cama grande y baño privado. Se anuncia como hostal.", url: "https://www.booking.com/hotel/co/hosta-el-danubio-tolu.es.html", img: ["458506417?k=a0b157371e04ca4b322ed5ac7aa02e6cecf60ebce77cdeb2a9542b44d704f278"] },
-        { id: "monkey", name: "Monkey Afro Hostel", where: "A unos 10 km de Coveñas, vía San Antero", score: "9,4", rc: 97, rate: { p2: 134100, p16: null }, ver: "22 oct", info: "Doble con cama grande. Queda lejos de Tolú y de Coveñas: hay que moverse en mototaxi o bus.", url: "https://www.booking.com/hotel/co/hostal-casa-del-mono-cuco.es.html", img: ["785875380?k=a5cfeaee0dd3abd7eef78a2595837edb2b8d61c3b68f5b5ce3f24c00f35e5a6c"] },
+        { id: "saray", name: "Hospedaje Saray Sofía", where: "Coveñas, 1,3 km de la playa", score: "9,8", g: "5,0 (5)", rate: { p2: 83300, p16: 83300 }, ver: "22 oct", info: "Aire, cuarto pequeño. Cancelación gratis. Pocas reseñas, todas buenas.", url: "https://www.booking.com/hotel/co/saray-del-mar.es.html" },
+        { id: "oasis", name: "Oasis de Tolú", where: "Tolú, 800 m de la playa", score: "8,5", g: "4,2 (77)", rate: { p2: 89650, p16: 83300 }, ver: "22 oct", info: "Habitación triple (1 doble y 1 sencilla). En Google sale más bajo que en Booking. Solo efectivo o transferencia.", url: "https://www.booking.com/hotel/co/oasis-de-tolu.es.html" },
+        { id: "opera", name: "Hotel Pizzería Ópera", where: "Tolú, a pasos de la playa y del malecón", score: "8,8", rc: 468, g: "4,6 (344)", rate: { p2: 121500, p16: null }, ver: "22 oct", info: "Hotel sencillo y limpio con aire y pizzería, cerca de la policía. Reseñas recientes buenas; algunas de 2023 y 2024 se quejan del trato de la dueña. Quedan pocas a este precio.", url: "https://www.booking.com/hotel/co/pizzeria-opera-tolu.es.html", img: ["106106939?k=69d7f8531a2ef96f24c056c8eb68824df7eaffa8ba9ba64015641cfafc04616d"] },
+        { id: "hostaldelmar", name: "Hostal del Mar Tolú", where: "Tolú", score: "8,9", rc: 235, g: "4,9 (11)", rate: { p2: 145000, p16: null }, ver: "22 oct", info: "Habitación triple con baño privado (1 cama doble y 1 sencilla). Se anuncia como hostal. Cancelación gratis.", url: "https://www.booking.com/hotel/co/hostal-luz-mar-santiago-de-tolu-sucre.es.html", img: ["532710732?k=c3b742c716510d9c3f2d7a8c00f32e84971ce01d677dcbf8710720389434064a"] },
+        { id: "danubio", name: "Hostal El Danubio", where: "Tolú", score: "8,0", rc: 352, g: "4,5 (31)", rate: { p2: 100000, p16: null }, ver: "22 oct", info: "Doble con cama grande y baño privado. Se anuncia como hostal.", url: "https://www.booking.com/hotel/co/hosta-el-danubio-tolu.es.html", img: ["458506417?k=a0b157371e04ca4b322ed5ac7aa02e6cecf60ebce77cdeb2a9542b44d704f278"] },
+        { id: "monkey", name: "Monkey Afro Hostel", where: "A unos 10 km de Coveñas, vía San Antero", score: "9,4", rc: 97, g: "4,7 (233)", rate: { p2: 134100, p16: null }, ver: "22 oct", info: "Doble con cama grande. Queda lejos de Tolú y de Coveñas: hay que moverse en mototaxi o bus.", url: "https://www.booking.com/hotel/co/hostal-casa-del-mono-cuco.es.html", img: ["785875380?k=a5cfeaee0dd3abd7eef78a2595837edb2b8d61c3b68f5b5ce3f24c00f35e5a6c"] },
         { id: "casita", name: "La Casita Rooms", where: "Coveñas, 550 m de la playa", score: "8,7", rate: { p2: null, p16: 130000 }, info: "Aire. Solo efectivo.", url: "https://www.booking.com/hotel/co/la-casita-rooms.es.html" }
       ] },
     { id: "rincon", name: "Rincón del Mar", icon: "ph-sun", min: 0,
       blurb: "Pueblo pesquero con agua clara, a 30 minutos en lancha de Tintipán. Bioluminiscencia de noche.",
       hotels: [
-        { id: "cangrejo", name: "Cabaña El Cangrejo Azul", where: "Rincón del Mar, frente al mar", score: "8,8", rate: { p2: 101750, p16: 101750 }, info: "Aire, balcón. Cancelación gratis.", url: "https://www.booking.com/hotel/co/cabana-el-cangrejo-azul-blue-crab-house.es.html" },
-        { id: "nugeku", name: "Hostel Nugeku", where: "Rincón del Mar", score: "9,0", rate: { p2: 131580, p16: null }, info: "Doble con baño privado, sin aire indicado. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostel-nugeku.es.html" }
+        { id: "cangrejo", name: "Cabaña El Cangrejo Azul", where: "Rincón del Mar, frente al mar", score: "8,8", g: "4,7 (8)", rate: { p2: 96390, p16: 101750 }, ver: "22 oct", info: "Para el puente del 2 solo queda una habitación de 4 literas. Aire, balcón. Cancelación gratis.", url: "https://www.booking.com/hotel/co/cabana-el-cangrejo-azul-blue-crab-house.es.html" },
+        { id: "mucura", name: "Cabañas La Múcura", where: "Rincón del Mar", score: "8,8", rc: 114, g: "4,5 (49)", rate: { p2: 147800, p16: null }, ver: "22 oct", info: "Doble con desayuno incluido. Cancelación gratis. En Google dicen que es un lugar precioso y que se duerme oyendo el mar.", url: "https://www.booking.com/hotel/co/cabanas-la-mucura.es.html", img: ["504826771?k=8edb5f1947505b3e12cc70bb00e0f77ab1643b267e825851afbaa2d14555397e"] },
+        { id: "milimar", name: "Hostal Milimar", where: "Rincón del Mar, a 1 minuto de la playa", score: "8,5", rc: 212, g: "4,5 (68)", rate: { p2: 146160, p16: null }, ver: "22 oct", info: "Doble con baño privado, aire y desayuno incluido. Cancelación gratis. Se anuncia como hostal. Básico pero limpio; los viajeros de YouTube lo recomiendan.", url: "https://www.booking.com/hotel/co/cabana-milimar.es.html", img: ["870599528?k=66199dc703f189ea03f045da412a3a2d58c997f3508434bd4293a44155a15f81"] },
+        { id: "maracas", name: "Maracas Hospedaje", where: "Rincón del Mar", score: "8,3", rc: 15, g: "4,0 (1)", rate: { p2: 82100, p16: null }, ver: "22 oct", info: "Doble con ventilador, sin aire. Muy pocas reseñas: no se puede confirmar.", url: "https://www.booking.com/hotel/co/maracas-hospedaje.es.html", img: ["834452975?k=c7a0171fa6c907b02623dfa81e2cb52d08cb67d9d5f9bba7960a70aaf2912678"] },
+        { id: "nugeku", name: "Hostel Nugeku", where: "Rincón del Mar, cerca de la playa", score: "9,0", g: "4,8 (33)", rate: { p2: 122550, p16: null }, ver: "22 oct", info: "Habitación familiar (1 doble y 1 sencilla) con baño privado; queda 1. Minimalista y muy bien calificado en Google.", url: "https://www.booking.com/hotel/co/hostel-nugeku.es.html" }
       ] },
     { id: "ctg", name: "Cartagena", icon: "ph-castle-turret", min: 1,
       blurb: "Caminar Getsemaní y la Ciudad Amurallada y comer bien. Sin lanchas.",
       hotels: [
-        { id: "sanfelipe", name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,3", rate: { p2: 99960, p16: 99960 }, info: "Solo adultos, aire. Cancelación gratis.", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html" },
-        { id: "altisimo", name: "Hostal El Altísimo", where: "Getsemaní", score: "8,4", rate: { p2: 144000, p16: 144000 }, info: "Cuarto privado con baño y aire. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostal-el-altisimo.es.html" },
-        { id: "dakema", name: "Posada Dakema", where: "Canapote, lejos del centro", score: "8,5", rate: { p2: 80000, p16: 72000 }, info: "Aire, balcón. Hay que moverse en taxi.", url: "https://www.booking.com/hotel/co/posada-dakema-cartagena.es.html" }
+        { id: "sanfelipe", name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,4", rate: { p2: null, p16: 99960 }, info: "Solo adultos, aire. Sin cupo para el puente del 2 (revisado el 22 oct).", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html" },
+        { id: "altisimo", name: "Hostal El Altísimo", where: "Getsemaní", score: "8,3", rate: { p2: 129600, p16: 144000 }, ver: "22 oct", info: "Cuarto privado con baño y aire. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostal-el-altisimo.es.html" },
+        { id: "dakema", name: "Posada Dakema", where: "Canapote, lejos del centro", score: "8,4", rate: { p2: 71820, p16: 72000 }, ver: "22 oct", info: "Habitación familiar (1 doble y 1 litera), aire. Hay que moverse en taxi.", url: "https://www.booking.com/hotel/co/posada-dakema-cartagena.es.html" }
       ] }
   ];
   const MOVES_GOLFO = {
@@ -1089,16 +1093,17 @@
   /* Otros que recomiendan los viajeros en YouTube, sin precio verificado para las fechas */
   const HOTEL_YT = {
     golfo: [
-      { id: "playadivina", name: "Hotel Playa Divina", where: "Coveñas, segunda ensenada, frente al mar", score: "7,1", rc: 688, priceTxt: "130.000 con desayuno en un video de 2024; en Booking sale cerca de 330.000 la noche en el puente", over: true, yt: "Frente al mar y con desayuno.", url: "https://www.booking.com/hotel/co/playa-divina-covenas2.es.html", img: ["914499276?k=6abf2f3d965afb403e3b335fac4de4f0d5d1d652810bc52d7e30a841ba703626", "397007992?k=46d83054397ea063621cb0c8edeb2160ad63e8f775c8381fbf9bab62c8ba9058", "397007544?k=6fbb007fd74b95623b6c03cff1878d4699ff31c9e6da5fa52215111a3176b7a5"] },
+      { id: "playadivina", name: "Hotel Playa Divina", where: "Coveñas, segunda ensenada, frente al mar", score: "7,1", rc: 688, g: "4,3 (1.044)", priceTxt: "130.000 con desayuno en un video de 2024; en Booking sale cerca de 330.000 la noche en el puente", over: true, yt: "Frente al mar y con desayuno.", url: "https://www.booking.com/hotel/co/playa-divina-covenas2.es.html", img: ["914499276?k=6abf2f3d965afb403e3b335fac4de4f0d5d1d652810bc52d7e30a841ba703626", "397007992?k=46d83054397ea063621cb0c8edeb2160ad63e8f775c8381fbf9bab62c8ba9058", "397007544?k=6fbb007fd74b95623b6c03cff1878d4699ff31c9e6da5fa52215111a3176b7a5"] },
       { id: "marazul", name: "Aparta-hotel Mar Azul", where: "Coveñas, La Coquerita, cerca de la playa", score: "–", priceTxt: "80.000 a 100.000 en temporada baja; 160.000 a 200.000 en temporada alta (2025)", yt: "Baño privado y aire confirmados en el video. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Aparta+Hotel+Mar+Azul+Coveñas" },
-      { id: "ninosanfelipe", name: "Hotel Niño San Felipe", where: "Coveñas, La Coquerita", score: "–", priceTxt: "80.000, 100.000 o 120.000 según la temporada (2025)", yt: "Falta confirmar que el baño sea privado. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Niño+San+Felipe+Coveñas" },
-      { id: "artista", name: "Hotel El Artista", where: "Coveñas, La Coquerita", score: "–", priceTxt: "100.000 en temporada baja; 130.000 a 140.000 en alta", yt: "Falta confirmar que el baño sea privado. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+El+Artista+Coveñas" },
-      { id: "mediterraneo", name: "Hotel Mediterráneo", where: "Coveñas, frente a la plazoleta y la playa", score: "–", priceTxt: "120.000 a 150.000", yt: "Frente a la playa. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Mediterraneo+Coveñas" }
+      { id: "ninosanfelipe", name: "Hotel Niño San Felipe", where: "Coveñas, La Coquerita", score: "–", priceTxt: "80.000, 100.000 o 120.000 según la temporada (2025)", bad: true, g: "4,3 (59)", yt: "Descartado: en Google, una reseña reciente dice que la encargada estaba borracha y puso música a las 11 p. m., y otra que la fachada es bonita pero el cuarto no.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Niño+San+Felipe+Coveñas" },
+      { id: "artista", name: "Hotel El Artista", where: "Coveñas, La Coquerita", score: "–", priceTxt: "100.000 en temporada baja; 130.000 a 140.000 en alta", g: "5,0 (6)", yt: "Google: tranquilo, limpio, a 1 cuadra de La Coquerita. Falta confirmar que el baño sea privado. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+El+Artista+Coveñas" },
+      { id: "kevins", name: "Hotel Kevin's", where: "Tolú centro, a 3 o 5 minutos de la playa", score: "–", g: "4,2 (1.204)", priceTxt: "Cerca de 180.000 la noche en Google; no aparece en Booking para tus fechas", over: true, yt: "Lo nombran en videos: baño privado, aire y piscina.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Kevins+Tolu" },
+      { id: "loa", name: "LOA Hotel", where: "Vía Tolú–Coveñas, frente a la playa", score: "–", g: "4,4 (841)", priceTxt: "No aparece en Booking para tus fechas", bad: true, yt: "Una pareja de YouTube le dio 5/5, pero en Google dicen que queda al lado de una cementera, que los cuartos son pequeños y que el agua no es bonita.", url: "https://www.booking.com/searchresults.es.html?ss=LOA+Hotel+Tolu" },
+      { id: "mediterraneo", name: "Hotel Mediterráneo", where: "Coveñas, frente a la plazoleta y la playa", score: "–", priceTxt: "120.000 a 150.000", bad: true, g: "3,2 (40)", yt: "Descartado: en Google, reseñas recientes hablan de techo en mal estado, ventiladores dañados y camas viejas.", url: "https://www.booking.com/searchresults.es.html?ss=Hotel+Mediterraneo+Coveñas" }
     ],
     rincon: [
-      { id: "puntacoral", name: "Punta Coral", where: "Rincón del Mar, después del puente peatonal", score: "–", priceTxt: "Precio por confirmar", yt: "Baño privado y aire confirmados en el video. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Punta+Coral+Rincón+del+Mar" },
+      { id: "puntacoral", name: "Punta Coral", where: "Rincón del Mar, después del puente peatonal", score: "–", priceTxt: "Precio por confirmar", g: "4,5 (108)", yt: "Google: zona tranquila después del puente; un huésped repitió. Baño privado y aire confirmados en el video. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Punta+Coral+Rincón+del+Mar" },
       { id: "satva", name: "Casa Satva Eco Beach House", where: "Rincón del Mar, frente al mar", score: "–", priceTxt: "Precio por confirmar", yt: "Baño privado, sin aire. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Casa+Satva+Rincón+del+Mar" },
-      { id: "milimar", name: "Hostal Milimar", where: "Rincón del Mar", score: "–", priceTxt: "175.000 la noche con desayuno (2025)", over: true, yt: "Aire y baño privado. Se pasa unos 25.000 del tope. No está en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Milimar+Rincón+del+Mar" }
     ],
     ctg: [
       { id: "marie", name: "Hotel Marie Real", where: "Centro, frente al Éxito de La Matuna", score: "7,9", rc: 1657, priceTxt: "Sin precio en los videos; en Booking no había cupo para tus fechas", yt: "Baño privado y aire confirmados en un video de 2026.", url: "https://www.booking.com/hotel/co/apartamento-centro-amurallado.es.html", img: ["900661135?k=df46c175b053b321c90e3cd2a600a180d885f595ea7bc8082f8c066d4804c4cb", "578895037?k=511186a31aff50edb457adbaad41707b68d7a85ebc2a0bae84f2c13d36ecbeaa", "665850304?k=d39eff6726d4211873e7fda5e734a97f523dc38479b48332fe90a045331d6f02"] },
@@ -1117,7 +1122,7 @@
       dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
       out: { p2: PUENTES.p2.out, p16: PUENTES.p16.out }, airport: "Montería", lateAt: 18 * 60,
       lateTxt: "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.",
-      n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "floral", rincon: "cangrejo", ctg: "sanfelipe" }, groups: ["golfo", "islas", "rincon", "ctg"],
+      n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "opera", rincon: "mucura", ctg: "altisimo" }, groups: ["golfo", "islas", "rincon", "ctg"],
       local: n => ((n.golfo || 0) + (n.rincon || 0) > 0 ? 40000 : 0) + (n.ctg ? 60000 : 0), cashLocal: (id, n) => id === "ctg" ? 60000 : (id === "golfo" || !n.golfo ? 40000 : 0),
       rest: "Playa, hamaca y nada más.", wxRef: [["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]] },
     sierra: { name: "Minca", sub: "Montaña en la Sierra Nevada y Cartagena", icon: "ph-mountains", key: "caribe-sierra-v1",
@@ -1129,7 +1134,7 @@
                sab: { date: "2026-11-14", air: "LATAM", time: "13:35 → 15:10", price: 334530, ver: "19 oct" } } },
       airport: "Santa Marta", lateAt: 16 * 60 + 30,
       lateTxt: "Llegas tarde: el último colectivo a Minca sale hacia las 6 p. m. del mercado de Santa Marta. Toca dormir en Santa Marta (no está en el presupuesto) o pagar taxi privado hasta Minca, que cobra $79.000 a $130.000.",
-      n: { minca: 5, ctg: 3 }, h: { minca: "casablanca", ctg: "sanfelipe" }, groups: ["minca", "ctg"],
+      n: { minca: 5, ctg: 3 }, h: { minca: "casablanca", ctg: "altisimo" }, groups: ["minca", "ctg"],
       local: n => (n.minca ? 60000 : 0) + (n.ctg ? 60000 : 0), cashLocal: id => 60000,
       rest: "Hamaca, río y nada más.", wxRef: [["minca", "Minca"], ["ctg", "Cartagena"]] }
   };
@@ -1833,7 +1838,8 @@
     const [ci, co] = stayOf(d.id), n = S.n[d.id], bk = bookingURL(h, ci, co), on = !extra && S.h[d.id] === h.id;
     const r = extra ? null : rateOf(h), avail = extra || !!h.rate[S.pu], img = picURL(h);
     const tags = [];
-    if (extra) tags.push(`<span class="yt">Lo recomiendan viajeros</span>`);
+    if (h.bad) tags.push(`<span class="bad">Malas reseñas en Google</span>`);
+    else if (extra) tags.push(`<span class="yt">Lo recomiendan viajeros</span>`);
     if (/desayuno incluido/i.test(h.info || "")) tags.push(`<span class="ok">Desayuno incluido</span>`);
     if (/cancelación gratis/i.test(h.info || "")) tags.push(`<span class="ok">Cancelación gratis</span>`);
     if (/piscina/i.test((h.info || "") + (h.yt || ""))) tags.push(`<span>Piscina</span>`);
@@ -1848,7 +1854,7 @@
       <a class="hc-img" href="${bk}" target="_blank" rel="noopener" aria-label="Ver ${esc(h.name)} en Booking">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async">` : `<span class="hc-noimg"><i class="ph ph-bed" aria-hidden="true"></i></span>`}${on ? `<span class="hc-flag">En tu plan</span>` : ""}${h.img && h.img.length > 1 ? `<span class="hc-n"><i class="ph ph-images" aria-hidden="true"></i>${h.img.length}</span>` : ""}</a>
       <div class="hc-body">
         <a class="hc-name" href="${bk}" target="_blank" rel="noopener">${esc(h.name)}</a>
-        <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b>${h.rc ? ` · ${h.rc.toLocaleString("es-CO")} comentarios` : ""}</span></div>
+        <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b>${h.rc ? ` · ${h.rc.toLocaleString("es-CO")} comentarios` : ""}</span></div>${h.g ? `<div class="hc-score"><span class="gsc">G</span><span>Google: <b>${esc(h.g)}</b></span></div>` : ""}
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
         ${tags.length ? `<div class="hc-tags">${tags.join("")}</div>` : ""}
         ${h.info ? `<p class="hc-info">${esc(h.info)}</p>` : ""}${h.yt ? `<p class="hc-info"><i class="ph-fill ph-youtube-logo" style="color:#c4302b" aria-hidden="true"></i> ${esc(h.yt)}</p>` : ""}
@@ -2220,7 +2226,8 @@
       opciones: {
         puentes: Object.fromEntries(Object.entries(PUENTES).map(([k, v]) => [k, v.label + " " + v.sub])),
         vuelos_puente_actual: { salida: fl("out"), regreso: fl("back") },
-        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), info: h.info }))])),
+        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), google: h.g || null, info: h.info }))])),
+        hoteles_recomendados_por_viajeros: Object.fromEntries(DESTS.map(d => [d.id, (HOTEL_YT[d.id] || []).map(h => ({ nombre: h.name, donde: h.where, booking: h.score, google: h.g || null, precio: h.priceTxt, nota: h.yt, descartado: !!h.bad }))])),
         planes: allActs().map(a => ({ id: a.id, nombre: a.t, destino: a.dest, nivel: a.lvl, costo_pareja: a.cost })),
         comida: FOOD.map(f => ({ nivel: f.id, nombre: f.name, por_persona_dia: f.v })),
         fechas_posibles_pasadia: it.placed.pasadia || actById("pasadia") ? allowedDays(actById("pasadia"), it.days, it.N).map(d => ({ fecha: d.iso, lugar: d.loc, fin_de_semana_o_festivo: d.wkend || d.fest })) : []
@@ -2319,6 +2326,7 @@
   /* ---------- Guía ---------- */
   const GUIDE = [
     { id: "general", r: "golfo", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
+      { i: "ph-calendar-check", t: "Fechas elegidas", li: ["Puente del 2 de noviembre, saliendo el sábado 31 de octubre o el domingo 1 de noviembre.", "Domingo: JetSMART 11:05 a 12:35 por $156.740 por persona, unos $480.000 menos en total para los dos (vuelo más barato y una noche menos).", "Sábado: JetSMART 11:25 a 12:55 por $269.550 por persona, un día más de playa.", "Llegando el domingo, la pasadía cae entre semana, que es más barata. El domingo y el lunes festivo son los días más llenos.", "Domingo y festivo los bancos cierran, pero los cajeros funcionan."] },
       { i: "ph-cloud-sun", t: "Cuándo ir", li: ["Agosto a noviembre es temporada de lluvias: aguaceros sobre todo en la tarde. Las mañanas sirven para las lanchas.", "Los puentes festivos llenan todo y suben lanchas y pasadías.", "La pasadía conviene entre semana."] },
       { i: "ph-bus", t: "Cómo moverse", li: ["Vuelo a Montería: el aeropuerto barato más cercano. A Tolú y Corozal solo vuela Satena, y es caro.", "Colectivo en la entrada 5 del aeropuerto, puerta a puerta (30.000 a 40.000 p/p, 1 h 40).", "Más barato: bus en la Troncal a 1 km del aeropuerto (25.000 a 28.000, el último hacia las 6 pm).", "Ojo: el taxi cobra 160.000 a 195.000 y en el aeropuerto suben el precio al llegar."] },
       { i: "ph-money", t: "Plata", li: ["Llevar efectivo: varios hospedajes no reciben tarjeta y en Rincón y las islas casi no hay datáfono ni cajero.", "Negociar los tours: cobran según la cara de turista.", "Reservar con tarjeta de crédito y pedir por escrito las condiciones de cancelación."] },
@@ -2328,7 +2336,8 @@
     { id: "golfo", r: "golfo", name: "Tolú y Coveñas", icon: "ph-umbrella-simple", cls: "c-golfo", intro: "Base de playa del Golfo de Morrosquillo. Coveñas tiene mejor playa; Tolú, el malecón y el muelle.", sec: [
       { i: "ph-compass", t: "Qué hacer", li: ["<b>Imperdible:</b> canoa por la Ciénaga La Caimanera, 2 horas entre manglares sin motor y con ostras al final (20.000 a 40.000 p/p).", "Malecón renovado de Tolú al atardecer (bicitaxi 5.000).", "Playa El Francés para caretear, a 20 minutos en mototaxi.", "Museo de Infantería de Marina, gratis y con guía.", "Boca de la Ciénaga: playa tranquila con kayak y snorkel."] },
       { i: "ph-fork-knife", t: "Comer", li: ["El Parito Feliz (Coveñas): arroz de mariscos con vista al atardecer.", "Plato típico (pescado frito, arroz con coco, patacón): 20.000 a 30.000.", "Arepa de huevo en el malecón: 3.000 a 5.000, con suero costeño."] },
-      { i: "ph-warning", t: "Ojo", warn: true, li: ["Revisar que el hospedaje no quede pegado a una discoteca o picó.", "Tolú casi no tiene playa propia.", "Si duermen en Rincón, la pasadía sale más barata desde allá."] },
+      { i: "ph-bed", t: "Dónde dormir", li: ["Recomendado: dormir en Tolú e ir a la playa de Coveñas o a El Francés de día (colectivo de unos 6.000, 20 minutos).", "Hotel Pizzería Ópera: 8,8 en Booking y 4,6 en Google con 344 reseñas, a $121.500 la noche.", "En Coveñas, la zona barata (La Coquerita, primera ensenada) es la más ruidosa: discotecas, rumba y, en puente, buses de gente que llega a pasar el día.", "Varios hoteles de Coveñas recomendados en videos salen mal en Google (Mediterráneo, Niño San Felipe). Si duermen en Coveñas, mejor la segunda ensenada.", "Antes de reservar, cruzar la nota de Booking con las reseñas de Google Maps: a veces Booking sale inflado."] },
+      { i: "ph-warning", t: "Ojo", warn: true, li: ["Revisar que el hospedaje no quede pegado a una discoteca o picó.", "En los puentes a veces se va el agua en Tolú: preguntar si el hotel tiene tanque.", "Tolú casi no tiene playa propia.", "Si duermen en Rincón, la pasadía sale más barata desde allá."] },
       { i: "ph-phone", t: "Contactos", li: ["Viajando con Trixie: <a href=\"https://wa.me/573014087371\" target=\"_blank\" rel=\"noopener\">301 408 7371</a>. Pasadía con recogida en el hotel.", "Club Náutico Tolumaria: <a href=\"https://wa.me/573023665427\" target=\"_blank\" rel=\"noopener\">302 366 5427</a>.", "Navegar Club Tolú: <a href=\"https://www.instagram.com/navegarclubtolu\" target=\"_blank\" rel=\"noopener\">@navegarclubtolu</a>."] }
     ] },
     { id: "anteros", r: "golfo", name: "San Antero", icon: "ph-mountains", cls: "c-golfo", intro: "A unos 30 minutos de Coveñas. Con medio día alcanza.", sec: [
@@ -2346,7 +2355,8 @@
       { i: "ph-bus", t: "Cómo llegar", li: ["Desde Tolú o Coveñas: bus a San Onofre y moto o tuk-tuk a Rincón (15.000 a 17.500 p/p, 20 min). Cerca de 1 h 30 en total.", "Hacia Cartagena: moto a San Onofre (15.000) y bus Brasilia (35.000 p/p, 2 horas)."] },
       { i: "ph-compass", t: "Qué hacer", li: ["Bioluminiscencia con Isla de los Pájaros al atardecer; se ve mejor en noches sin luna.", "Manglar con guías locales de Mundo Verde; el 10% va a la comunidad.", "Playa Tranquila de día.", "Pasadía a las islas saliendo de la playa del hotel."] },
       { i: "ph-fork-knife", t: "Comer", li: ["Corrientazo en el pueblo: 15.000 a 16.000.", "Mar Blanco: pescado con sopa 25.000, ceviche 35.000, camarones 40.000.", "El Tropical: desde 10.000."] },
-      { i: "ph-warning", t: "Ojo", warn: true, li: ["Calles de arena y tubos sueltos: buen calzado.", "No ir de noche a Playa Tranquila: la marea sube.", "En la mañana hay basura que trae el mar.", "Casi no hay cajeros: llevar efectivo y comprar lo que falte en San Onofre."] },
+      { i: "ph-bed", t: "Dónde dormir", li: ["Cabañas La Múcura: 8,8 en Booking y 4,5 en Google, $147.800 con desayuno.", "Hostal Milimar: 8,5 en Booking y 4,5 en Google, $146.160 con desayuno y aire, a 1 minuto de la playa.", "Cabaña Punta Coral: 4,5 en Google (108), en la zona tranquila después del puente. No está en Booking: pedir precio.", "El Cangrejo Azul ya solo tiene una habitación de literas para el puente del 2."] },
+      { i: "ph-warning", t: "Ojo", warn: true, li: ["Calles de arena y tubos sueltos: buen calzado.", "En 2025 hubo quejas de basura en la playa y de agua con mal olor.", "No ir de noche a Playa Tranquila: la marea sube.", "En la mañana hay basura que trae el mar.", "Casi no hay cajeros: llevar efectivo y comprar lo que falte en San Onofre."] },
       { i: "ph-phone", t: "Contactos", li: ["JJ Tour del Mar (Jader Jiménez): <a href=\"https://wa.me/573115971494\" target=\"_blank\" rel=\"noopener\">311 597 1494</a>. Islas y bioluminiscencia."] }
     ] },
     { id: "general-s", r: "sierra", name: "General", icon: "ph-compass", cls: "", intro: "Lo básico para la ruta de Minca y Cartagena, según 24 videos de viajeros y la investigación de precios del 19 de octubre.", sec: [
