@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.10">
+<meta name="app-version" content="2026-10-22.11">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -79,6 +79,10 @@
   .h3c .hc-btns { margin-top: 6px; }
   @media (min-width: 700px) { .h3-list { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); overflow: visible; } }
   .hl-head { font-size: 13px; color: var(--muted); margin: 4px 2px 10px; }
+  .hl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 2px 8px; font-size: 13px; color: var(--muted); }
+  .hl-sort { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 6px 11px; min-height: 36px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .hl-sort[aria-pressed="true"] { background: #1d4f8a; border-color: #1d4f8a; color: #fff; }
+  .hl-work { display: flex; align-items: center; gap: 8px; margin: 0 2px 10px; font-size: 14px; cursor: pointer; } .hl-work input { width: 18px; height: 18px; accent-color: #1d4f8a; }
   .hl-sub { font-size: 15px; font-weight: 700; margin: 18px 2px 8px; display: flex; align-items: center; gap: 6px; } .hl-sub i { color: #c4302b; font-size: 18px; }
   .hc { display: grid; grid-template-columns: 118px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; margin-bottom: 10px; }
   .hc.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
@@ -1170,7 +1174,14 @@
   const WIFI = { hostaldelmar: ["9,4"], monkey: ["9,4"], oasis: ["8,8"], opera: ["8,5"], danubio: ["8,0"], playadivina: ["7,2"], antillas: ["7,8"],
     nugeku: ["8,3"], mucura: ["8,1"], cangrejo: ["8,0", 0, true], milimar: ["7,4"], dakema: ["9,1"], altisimo: ["7,0"],
     altomontana: ["9,6", 264], refugio: ["9,1", 190], cabanita: ["9,5", 15], dunarinka: ["9,1"], mariposas: ["9,1"], btc: ["8,4"], coffee: ["6,5"], campomar: [null, 0, true] };
-  DESTS_GOLFO.concat(DESTS_SIERRA).concat(...Object.values(HOTEL_YT)).forEach(h => { (h.hotels || [h]).forEach(x => { const w = WIFI[x.id]; if (w) { x.wifi = w[0]; x.mbps = w[1] || 0; x.power = !!w[2]; } }); });
+  /* Lo que dicen las reseñas de Google Maps sobre wifi y luz (22 oct 2026): 1 bueno, -1 malo */
+  const GWIFI = { opera: [1, "En Google dicen que el wifi es rápido y que sirve para trabajo remoto. Una pareja tuvo un cuarto sin internet y la cambiaron: pedir cuarto con buena señal."],
+    campomar: [1, "En Google dicen que el wifi es bueno. Tiene planta eléctrica: un día se fue la luz en todo el pueblo y el hotel siguió con energía."],
+    mucura: [1, "En Google dicen que el internet funciona perfecto."],
+    puntacoral: [1, "En Google dicen que el wifi del lobby es bueno. Un huésped cuenta que se fue la luz de noche."],
+    nugeku: [0, "En Google: un día falló el wifi y lo arreglaron en una hora."],
+    mango: [-1, "En Google dicen que el internet a veces falla y que en el cuarto no llega el wifi."] };
+  DESTS_GOLFO.concat(DESTS_SIERRA).concat(...Object.values(HOTEL_YT)).forEach(h => { (h.hotels || [h]).forEach(x => { const w = WIFI[x.id], g = GWIFI[x.id]; if (w) { x.wifi = w[0]; x.mbps = w[1] || 0; x.power = !!w[2]; } if (g) { x.gw = g[0]; x.wnote = g[1]; } }); });
   const PLACES = [
     { id: "mtr", r: "golfo", k: "air", i: "ph-airplane-landing", n: "Aeropuerto de Montería", t: "Llegada. Colectivo en la entrada 5 o bus en la Troncal.", ll: [8.8252, -75.82401] },
     { id: "muelle", r: "golfo", d: "golfo", i: "ph-anchor", n: "Muelle turístico de Tolú", t: "De aquí salen las lanchas a Tintipán y Múcura.", ll: [9.52185, -75.58658] },
@@ -1907,7 +1918,7 @@
       </div>`;
   }
   /* ---------- Hoteles con fotos ---------- */
-  let HTAB = null;
+  let HTAB = null, HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false);
   const picURL = (h, i = 0, size = "max500") => h.img && h.img[i] ? `https://cf.bstatic.com/xdata/images/hotel/${size}/${h.img[i].replace("?k=", ".jpg?k=")}&o=` : null;
   const scoreLabel = sc => { const v = parseFloat(String(sc).replace(",", ".")); return isNaN(v) ? "Sin nota en Booking" : v >= 9 ? "Fantástico" : v >= 8.6 ? "Fabuloso" : v >= 8 ? "Muy bien" : v >= 7 ? "Bien" : "Aceptable"; };
   const CITY = { golfo: "Tolú Coveñas Sucre", rincon: "Rincón del Mar Sucre", ctg: "Cartagena", minca: "Minca Santa Marta" };
@@ -1943,17 +1954,25 @@
         <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b>${h.rc ? ` · ${h.rc.toLocaleString("es-CO")} comentarios` : ""}</span></div>${h.g ? `<div class="hc-score"><span class="gsc">G</span><span>Google: <b>${esc(h.g)}</b></span></div>` : ""}
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
         ${tags.length ? `<div class="hc-tags">${tags.join("")}</div>` : ""}
-        ${h.info ? `<p class="hc-info">${esc(h.info)}</p>` : ""}${h.yt ? `<p class="hc-info"><i class="ph-fill ph-youtube-logo" style="color:#c4302b" aria-hidden="true"></i> ${esc(h.yt)}</p>` : ""}
+        ${h.info ? `<p class="hc-info">${esc(h.info)}</p>` : ""}${h.wnote ? `<p class="hc-info"><i class="ph ph-laptop" aria-hidden="true"></i> ${esc(h.wnote)}</p>` : ""}${h.yt ? `<p class="hc-info"><i class="ph-fill ph-youtube-logo" style="color:#c4302b" aria-hidden="true"></i> ${esc(h.yt)}</p>` : ""}
         <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>WhatsApp</a>` : ""}${h.ll ? `<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Cómo llegar</a>` : ""}${!extra && avail && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
       </div>
     </article>`;
   }
   const wifiNum = h => h.wifi ? parseFloat(h.wifi.replace(",", ".")) : null;
-  const remoteOK = h => (wifiNum(h) || 0) >= 9 || (h.mbps || 0) >= 50;
+  /* Nota de teletrabajo (0 a 10): nota del wifi en Booking, más velocidad medida, planta eléctrica y lo que dicen en Google */
+  function workScore(h) {
+    const w = wifiNum(h); if (w == null && h.gw == null && !h.power) return null;
+    const s = (w == null ? 7 : w) + ((h.mbps || 0) >= 50 ? 0.4 : 0) + (h.power ? 0.3 : 0) + (h.gw > 0 ? 0.4 : h.gw < 0 ? -0.8 : 0);
+    return Math.min(10, Math.round(s * 10) / 10);
+  }
+  const wsTxt = v => v.toFixed(1).replace(".", ",");
+  const remoteOK = h => (workScore(h) || 0) >= 9;
   function wifiTag(h) {
-    const w = wifiNum(h); if (w == null && !h.power) return "";
-    if (remoteOK(h)) return `<span class="ok rw"><i class="ph-fill ph-laptop" aria-hidden="true"></i>Ideal para trabajar · wifi ${h.wifi || "-"}${h.mbps ? ` · ${h.mbps} Mbps` : ""}</span>`;
-    return (w != null ? `<span class="${w < 7.5 ? "bad" : ""}"><i class="ph ph-wifi-high" aria-hidden="true"></i>Wifi ${h.wifi}${w < 7.5 ? ", flojo" : ""}</span>` : "") + (h.power ? `<span><i class="ph ph-lightning" aria-hidden="true"></i>Planta eléctrica</span>` : "");
+    const v = workScore(h); if (v == null) return "";
+    const why = `Wifi en Booking: ${h.wifi || "sin nota"}${h.mbps ? `, ${h.mbps} Mbps` : ""}${h.power ? ", planta eléctrica" : ""}${h.gw ? (h.gw > 0 ? ", buenas reseñas de wifi en Google" : ", quejas de wifi en Google") : ""}`;
+    if (remoteOK(h)) return `<span class="ok rw" title="${why}"><i class="ph-fill ph-laptop" aria-hidden="true"></i>Ideal para trabajar · ${wsTxt(v)}</span>`;
+    return `<span class="${v < 7.5 ? "bad" : ""}" title="${why}"><i class="ph ph-laptop" aria-hidden="true"></i>Teletrabajo ${wsTxt(v)}${v < 7.5 ? ", flojo" : ""}</span>` + (h.power ? `<span><i class="ph ph-lightning" aria-hidden="true"></i>Planta eléctrica</span>` : "");
   }
   function hotelRank(h) {
     const b = parseFloat(String(h.score).replace(",", ".")), gm = String(h.g || "").match(/(\d,\d)\s*\(([\d.]+)\)/);
@@ -2000,7 +2019,7 @@
   const kShort = v => "$" + Math.round(v / 1000) + "k";
   function hotelPopup(h, d, extra) {
     const [ci, co] = stayOf(d.id), bk = bookingURL(h, ci, co), img = picURL(h, 0, "max300"), on = !extra && S.h[d.id] === h.id, r = extra ? null : rateOf(h), av = extra || !!h.rate[S.pu];
-    return `<div class="mpop">${img ? `<img src="${img}" alt="">` : ""}<b>${esc(h.name)}${on ? " · en tu plan" : ""}</b><small>${h.score && h.score !== "–" ? `Booking ${esc(h.score)}` : "Sin nota en Booking"}${h.g ? ` · Google ${esc(h.g)}` : ""}</small><small>${extra ? esc(h.priceTxt || "") : av ? `${fmt(r)} la noche` : "Sin cupo en este puente"}</small>${h.bad ? `<small style="color:#b4561f">Malas reseñas en Google</small>` : ""}${remoteOK(h) ? `<small style="color:#1f6b3d">💻 Ideal para trabajar · wifi ${h.wifi || "-"}${h.mbps ? `, ${h.mbps} Mbps` : ""}</small>` : h.wifi ? `<small>Wifi ${h.wifi}</small>` : ""}
+    return `<div class="mpop">${img ? `<img src="${img}" alt="">` : ""}<b>${esc(h.name)}${on ? " · en tu plan" : ""}</b><small>${h.score && h.score !== "–" ? `Booking ${esc(h.score)}` : "Sin nota en Booking"}${h.g ? ` · Google ${esc(h.g)}` : ""}</small><small>${extra ? esc(h.priceTxt || "") : av ? `${fmt(r)} la noche` : "Sin cupo en este puente"}</small>${h.bad ? `<small style="color:#b4561f">Malas reseñas en Google</small>` : ""}${workScore(h) != null ? `<small style="${remoteOK(h) ? "color:#1f6b3d" : ""}">💻 ${remoteOK(h) ? "Ideal para trabajar" : "Teletrabajo"} ${wsTxt(workScore(h))}</small>` : ""}
       <div class="row"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${!extra && av && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
   }
   const placePopup = p => `<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t || "")}</small><div class="row"><a class="mini" href="${dirURL(p.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
@@ -2046,10 +2065,18 @@
     if (!DESTS.some(d => d.id === HTAB)) HTAB = (DESTS.find(d => S.n[d.id]) || DESTS[0]).id;
     tabs.innerHTML = DESTS.map(d => `<button type="button" role="tab" class="g-tab c-${d.id}" aria-selected="${d.id === HTAB}" data-htab="${d.id}"><i class="ph ${d.icon}" aria-hidden="true"></i>${d.name}</button>`).join("");
     const d = DESTS.find(x => x.id === HTAB), n = S.n[d.id], [ci, co] = stayOf(d.id);
-    const list = d.hotels.slice().sort((a, b) => (S.h[d.id] === b.id) - (S.h[d.id] === a.id) || (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || (rateOf(a) || 0) - (rateOf(b) || 0));
-    const yt = HOTEL_YT[d.id] || [];
+    const ws = h => workScore(h) == null ? -1 : workScore(h), keep = h => !HWORK || ws(h) >= 8;
+    const cmp = HSORT === "trabajo" ? (a, b) => ws(b) - ws(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
+      : HSORT === "nota" ? (a, b) => hotelRank(b) - hotelRank(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
+      : (a, b) => (S.h[d.id] === b.id) - (S.h[d.id] === a.id) || (rateOf(a) || 0) - (rateOf(b) || 0);
+    const list = d.hotels.filter(keep).sort((a, b) => (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || cmp(a, b));
+    const yt = (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
+    const sb = (v, l, i) => `<button type="button" class="hl-sort" aria-pressed="${HSORT === v}" data-hsort="${v}"><i class="ph ${i}" aria-hidden="true"></i>${l}</button>`;
     box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · baño privado y máximo ${fmt(CAP)} la noche</p>`
-      + list.map(h => hotelCard(h, d, false)).join("")
+      + `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
+      + `<label class="hl-work"><input type="checkbox" data-hwork ${HWORK ? "checked" : ""}><span>Solo buenos para trabajar (teletrabajo 8 o más)</span></label>`
+      + (HSORT === "trabajo" || HWORK ? `<p class="hl-head">La nota de teletrabajo sale de lo que los huéspedes de Booking le ponen al wifi, la velocidad medida, si hay planta eléctrica y lo que dicen en Google Maps. Sin datos de wifi quedan al final.</p>` : "")
+      + (list.length ? list.map(h => hotelCard(h, d, false)).join("") : `<p class="hl-head">Ningún hotel con cupo tiene buena nota de teletrabajo aquí.</p>`)
       + (yt.length ? `<h3 class="hl-sub"><i class="ph-fill ph-youtube-logo" aria-hidden="true"></i>Otros que recomiendan los viajeros</h3><p class="hl-head">Salen en sus videos, pero su precio para estas fechas no está verificado. Confirmar en Booking.</p>` + yt.map(h => hotelCard(h, d, true)).join("") : "");
   }
   function hotelSheetHTML(id) {
@@ -2209,6 +2236,7 @@
     if (ds.hotel) { S.h[ds.hotel] = ds.v; closeSheet(sheet); render(); toast("Hotel cambiado."); return; }
     if (ds.hview) { HTAB = ds.hview; renderHotels(); showView("hoteles"); return; }
     if (ds.htab) { HTAB = ds.htab; renderHotels(); return; }
+    if (ds.hsort) { HSORT = ds.hsort; store.set("caribe-hsort", HSORT); renderHotels(); return; }
     if (ds.hsheet) { const id = ds.hsheet; openSheet(sheet, () => hotelSheetHTML(id)); return; }
     if (ds.edit) { const key = ds.edit; openSheet(sheet2, () => priceSheetHTML(key)); sheet2._static = true; const inp = sheet2.querySelector("[data-price-input]"); if (inp) { inp.focus(); inp.select(); } return; }
     if (ds.priceSave) {
@@ -2268,6 +2296,7 @@
     const t = e.target;
     if (t.dataset.act) { S.acts[t.dataset.act] = t.checked; render(); return; }
     if (t.dataset.key) { const done = store.get("caribe-checks4", {}); done[t.dataset.key] = t.checked; store.set("caribe-checks4", done); renderChecks(LAST); return; }
+    if (t.hasAttribute("data-hwork")) { HWORK = t.checked; store.set("caribe-hwork", HWORK); renderHotels(); return; }
     if (t.hasAttribute("data-bag-toggle")) { S.bag = t.checked; render(); return; }
     if (t.dataset.pin) { const id = t.dataset.pin; if (t.value) S.pin[id] = t.value; else delete S.pin[id]; render(); toast(t.value ? "Plan movido." : "El plan volvió a su día automático."); return; }
     if (t.dataset.scenName !== undefined) { const list = scenList(), i = +t.dataset.scenName; if (list[i]) { list[i].name = undash(t.value).trim().slice(0, 40) || `Escenario ${i + 1}`; store.set("caribe-scen", list); } return; }
@@ -2405,8 +2434,8 @@
       opciones: {
         puentes: Object.fromEntries(Object.entries(PUENTES).map(([k, v]) => [k, v.label + " " + v.sub])),
         vuelos_puente_actual: { salida: fl("out"), regreso: fl("back") },
-        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), google: h.g || null, wifi_huespedes: h.wifi || null, wifi_mbps: h.mbps || null, planta_electrica: !!h.power, ideal_trabajo_remoto: remoteOK(h), info: h.info }))])),
-        hoteles_recomendados_por_viajeros: Object.fromEntries(DESTS.map(d => [d.id, (HOTEL_YT[d.id] || []).map(h => ({ nombre: h.name, donde: h.where, booking: h.score, google: h.g || null, precio: h.priceTxt, nota: h.yt, whatsapp: h.tel || null, descartado: !!h.bad }))])),
+        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), google: h.g || null, wifi_huespedes: h.wifi || null, wifi_mbps: h.mbps || null, planta_electrica: !!h.power, nota_teletrabajo: workScore(h), wifi_en_google: h.wnote || null, ideal_trabajo_remoto: remoteOK(h), info: h.info }))])),
+        hoteles_recomendados_por_viajeros: Object.fromEntries(DESTS.map(d => [d.id, (HOTEL_YT[d.id] || []).map(h => ({ nombre: h.name, donde: h.where, booking: h.score, google: h.g || null, precio: h.priceTxt, nota: h.yt, whatsapp: h.tel || null, descartado: !!h.bad, nota_teletrabajo: workScore(h), wifi_en_google: h.wnote || null }))])),
         planes: allActs().map(a => ({ id: a.id, nombre: a.t, destino: a.dest, nivel: a.lvl, costo_pareja: a.cost })),
         comida: FOOD.map(f => ({ nivel: f.id, nombre: f.name, por_persona_dia: f.v })),
         fechas_posibles_pasadia: it.placed.pasadia || actById("pasadia") ? allowedDays(actById("pasadia"), it.days, it.N).map(d => ({ fecha: d.iso, lugar: d.loc, fin_de_semana_o_festivo: d.wkend || d.fest })) : []
