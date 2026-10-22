@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.9">
+<meta name="app-version" content="2026-10-22.10">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -98,7 +98,9 @@
   .hc-where { font-size: 12.5px; color: var(--muted); display: flex; gap: 4px; align-items: flex-start; } .hc-where i { margin-top: 2px; }
   .hc-tags { display: flex; flex-wrap: wrap; gap: 4px; }
   .hc-tags span { font-size: 11.5px; border-radius: 6px; padding: 2px 6px; background: var(--surface-2); color: var(--text); }
-  .hc-tags .ok { background: #e3f4ea; color: #1f6b3d; } .hc-tags .bad { background: var(--warn-soft); color: var(--warn); } .hc-tags .yt { background: #fde8e7; color: #a32520; }
+  .hc-tags .ok { background: #e3f4ea; color: #1f6b3d; }
+  .hc-tags i { vertical-align: -1px; margin-right: 2px; }
+  .hc-tags .rw { background: #dfeefc; color: #1d4f8a; font-weight: 600; } .hc-tags .bad { background: var(--warn-soft); color: var(--warn); } .hc-tags .yt { background: #fde8e7; color: #a32520; }
   .hc-info { font-size: 12.5px; color: var(--muted); margin: 0; line-height: 1.35; }
   .hc-foot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 4px; }
   .hc-price b { display: block; font-size: 18px; } .hc-price small { display: block; font-size: 12px; color: var(--muted); }
@@ -1164,6 +1166,11 @@
     antillas: [9.52673, -75.58374], playadivina: [9.42284, -75.63978], madriguena: [9.76763, -75.64206], campomar: [9.53002, -75.58284], gloria: [9.77305, -75.64516], mango: [9.77133, -75.63731], puntacoral: [9.77157, -75.64512], satva: [9.77203, -75.64527], kevins: [9.52887, -75.58219], laguna: [9.55867, -75.57479], marazul: [9.40222, -75.68021] };
   DESTS_GOLFO.concat(DESTS_SIERRA).forEach(d => d.hotels.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
   Object.values(HOTEL_YT).forEach(l => l.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
+  /* Trabajo remoto: nota que los huéspedes de Booking le dan al wifi y velocidad medida (22 oct 2026). Planta eléctrica: según Booking o videos */
+  const WIFI = { hostaldelmar: ["9,4"], monkey: ["9,4"], oasis: ["8,8"], opera: ["8,5"], danubio: ["8,0"], playadivina: ["7,2"], antillas: ["7,8"],
+    nugeku: ["8,3"], mucura: ["8,1"], cangrejo: ["8,0", 0, true], milimar: ["7,4"], dakema: ["9,1"], altisimo: ["7,0"],
+    altomontana: ["9,6", 264], refugio: ["9,1", 190], cabanita: ["9,5", 15], dunarinka: ["9,1"], mariposas: ["9,1"], btc: ["8,4"], coffee: ["6,5"], campomar: [null, 0, true] };
+  DESTS_GOLFO.concat(DESTS_SIERRA).concat(...Object.values(HOTEL_YT)).forEach(h => { (h.hotels || [h]).forEach(x => { const w = WIFI[x.id]; if (w) { x.wifi = w[0]; x.mbps = w[1] || 0; x.power = !!w[2]; } }); });
   const PLACES = [
     { id: "mtr", r: "golfo", k: "air", i: "ph-airplane-landing", n: "Aeropuerto de Montería", t: "Llegada. Colectivo en la entrada 5 o bus en la Troncal.", ll: [8.8252, -75.82401] },
     { id: "muelle", r: "golfo", d: "golfo", i: "ph-anchor", n: "Muelle turístico de Tolú", t: "De aquí salen las lanchas a Tintipán y Múcura.", ll: [9.52185, -75.58658] },
@@ -1916,6 +1923,7 @@
     const r = extra ? null : rateOf(h), avail = extra || !!h.rate[S.pu], img = picURL(h);
     const tags = [];
     if (h.rec) tags.push(`<span class="ok">Recomendado</span>`);
+    if (wifiTag(h)) tags.push(wifiTag(h));
     if (h.bad) tags.push(`<span class="bad">Malas reseñas en Google</span>`);
     else if (extra) tags.push(`<span class="yt">Lo recomiendan viajeros</span>`);
     if (/desayuno incluido/i.test(h.info || "")) tags.push(`<span class="ok">Desayuno incluido</span>`);
@@ -1940,6 +1948,13 @@
       </div>
     </article>`;
   }
+  const wifiNum = h => h.wifi ? parseFloat(h.wifi.replace(",", ".")) : null;
+  const remoteOK = h => (wifiNum(h) || 0) >= 9 || (h.mbps || 0) >= 50;
+  function wifiTag(h) {
+    const w = wifiNum(h); if (w == null && !h.power) return "";
+    if (remoteOK(h)) return `<span class="ok rw"><i class="ph-fill ph-laptop" aria-hidden="true"></i>Ideal para trabajar · wifi ${h.wifi || "-"}${h.mbps ? ` · ${h.mbps} Mbps` : ""}</span>`;
+    return (w != null ? `<span class="${w < 7.5 ? "bad" : ""}"><i class="ph ph-wifi-high" aria-hidden="true"></i>Wifi ${h.wifi}${w < 7.5 ? ", flojo" : ""}</span>` : "") + (h.power ? `<span><i class="ph ph-lightning" aria-hidden="true"></i>Planta eléctrica</span>` : "");
+  }
   function hotelRank(h) {
     const b = parseFloat(String(h.score).replace(",", ".")), gm = String(h.g || "").match(/(\d,\d)\s*\(([\d.]+)\)/);
     const g = gm ? parseFloat(gm[1].replace(",", ".")) * 2 : null, gc = gm ? +gm[2].replace(/\./g, "") : 0;
@@ -1962,6 +1977,7 @@
         <a class="hc-name" href="${bk}" target="_blank" rel="noopener">${esc(h.name)}</a>
         <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b></span>${h.g ? `<span class="gsc">G</span><span>${esc(h.g)}</span>` : ""}</div>
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
+        ${wifiTag(h) ? `<div class="hc-tags">${wifiTag(h)}</div>` : ""}
         <div class="h3c-p"><b class="num">${fmt(r)}</b><small>la noche${n ? ` · ${noches(n)}: ${fmt(r * n)}` : ""}</small></div>
         <div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${on ? "" : `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>`}</div>
       </div>
@@ -1984,7 +2000,7 @@
   const kShort = v => "$" + Math.round(v / 1000) + "k";
   function hotelPopup(h, d, extra) {
     const [ci, co] = stayOf(d.id), bk = bookingURL(h, ci, co), img = picURL(h, 0, "max300"), on = !extra && S.h[d.id] === h.id, r = extra ? null : rateOf(h), av = extra || !!h.rate[S.pu];
-    return `<div class="mpop">${img ? `<img src="${img}" alt="">` : ""}<b>${esc(h.name)}${on ? " · en tu plan" : ""}</b><small>${h.score && h.score !== "–" ? `Booking ${esc(h.score)}` : "Sin nota en Booking"}${h.g ? ` · Google ${esc(h.g)}` : ""}</small><small>${extra ? esc(h.priceTxt || "") : av ? `${fmt(r)} la noche` : "Sin cupo en este puente"}</small>${h.bad ? `<small style="color:#b4561f">Malas reseñas en Google</small>` : ""}
+    return `<div class="mpop">${img ? `<img src="${img}" alt="">` : ""}<b>${esc(h.name)}${on ? " · en tu plan" : ""}</b><small>${h.score && h.score !== "–" ? `Booking ${esc(h.score)}` : "Sin nota en Booking"}${h.g ? ` · Google ${esc(h.g)}` : ""}</small><small>${extra ? esc(h.priceTxt || "") : av ? `${fmt(r)} la noche` : "Sin cupo en este puente"}</small>${h.bad ? `<small style="color:#b4561f">Malas reseñas en Google</small>` : ""}${remoteOK(h) ? `<small style="color:#1f6b3d">💻 Ideal para trabajar · wifi ${h.wifi || "-"}${h.mbps ? `, ${h.mbps} Mbps` : ""}</small>` : h.wifi ? `<small>Wifi ${h.wifi}</small>` : ""}
       <div class="row"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${!extra && av && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
   }
   const placePopup = p => `<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t || "")}</small><div class="row"><a class="mini" href="${dirURL(p.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
@@ -2389,7 +2405,7 @@
       opciones: {
         puentes: Object.fromEntries(Object.entries(PUENTES).map(([k, v]) => [k, v.label + " " + v.sub])),
         vuelos_puente_actual: { salida: fl("out"), regreso: fl("back") },
-        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), google: h.g || null, info: h.info }))])),
+        hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), google: h.g || null, wifi_huespedes: h.wifi || null, wifi_mbps: h.mbps || null, planta_electrica: !!h.power, ideal_trabajo_remoto: remoteOK(h), info: h.info }))])),
         hoteles_recomendados_por_viajeros: Object.fromEntries(DESTS.map(d => [d.id, (HOTEL_YT[d.id] || []).map(h => ({ nombre: h.name, donde: h.where, booking: h.score, google: h.g || null, precio: h.priceTxt, nota: h.yt, whatsapp: h.tel || null, descartado: !!h.bad }))])),
         planes: allActs().map(a => ({ id: a.id, nombre: a.t, destino: a.dest, nivel: a.lvl, costo_pareja: a.cost })),
         comida: FOOD.map(f => ({ nivel: f.id, nombre: f.name, por_persona_dia: f.v })),
@@ -2500,6 +2516,7 @@
       { i: "ph-compass", t: "Qué hacer", li: ["<b>Imperdible:</b> canoa por la Ciénaga La Caimanera, 2 horas entre manglares sin motor y con ostras al final (20.000 a 40.000 p/p).", "Malecón renovado de Tolú al atardecer (bicitaxi 5.000).", "Playa El Francés para caretear, a 20 minutos en mototaxi.", "Museo de Infantería de Marina, gratis y con guía.", "Boca de la Ciénaga: playa tranquila con kayak y snorkel."] },
       { i: "ph-fork-knife", t: "Comer", li: ["El Parito Feliz (Coveñas): arroz de mariscos con vista al atardecer.", "Plato típico (pescado frito, arroz con coco, patacón): 20.000 a 30.000.", "Arepa de huevo en el malecón: 3.000 a 5.000, con suero costeño."] },
       { i: "ph-bed", t: "Dónde dormir", li: ["Recomendado: dormir en Tolú e ir a la playa de Coveñas o a El Francés de día (colectivo de unos 6.000, 20 minutos).", "Hotel Pizzería Ópera: 8,8 en Booking y 4,6 en Google con 344 reseñas, a $121.500 la noche.", "En Coveñas, la zona barata (La Coquerita, primera ensenada) es la más ruidosa: discotecas, rumba y, en puente, buses de gente que llega a pasar el día.", "Varios hoteles de Coveñas recomendados en videos salen mal en Google (Mediterráneo, Niño San Felipe). Si duermen en Coveñas, mejor la segunda ensenada.", "Antes de reservar, cruzar la nota de Booking con las reseñas de Google Maps: a veces Booking sale inflado.", "Otros bien calificados en Google, en Tolú: Casa Hotel Las Antillas (4,5; sin cupo en Booking) y Hotel Campomar (4,4; con planta eléctrica, se reserva por WhatsApp).", "Ruido: hay quejas de música hasta tarde tanto en el malecón de Tolú como en La Coquerita de Coveñas. Pedir habitación interior."] },
+      { i: "ph-laptop", t: "Trabajar remoto", li: ["Mejor wifi según los huéspedes de Booking: Hostal del Mar Tolú (9,4) y Monkey Afro (9,4, pero lejos). Oasis 8,8; Hotel Pizzería Ópera 8,5; El Danubio 8,0.", "Un viajero de 2025 dice que en Coveñas el internet es bueno, pero se cae con los cortes de luz. Hotel Campomar tiene planta eléctrica.", "Llevar datos móviles de respaldo para compartir desde el celular si se va la luz.", "Trabajar en la mañana: en la tarde suele llover y hay más cortes."] },
       { i: "ph-warning", t: "Ojo", warn: true, li: ["Revisar que el hospedaje no quede pegado a una discoteca o picó.", "En los puentes a veces se va el agua en Tolú: preguntar si el hotel tiene tanque.", "Tolú casi no tiene playa propia: la erosión se la comió y pusieron espolones de roca. La playa grande queda saliendo hacia Coveñas.", "El malecón estaba en obras en septiembre de 2026.", "Si duermen en Rincón, la pasadía sale más barata desde allá."] },
       { i: "ph-phone", t: "Contactos", li: ["Viajando con Trixie: <a href=\"https://wa.me/573014087371\" target=\"_blank\" rel=\"noopener\">301 408 7371</a>. Pasadía con recogida en el hotel.", "Club Náutico Tolumaria: <a href=\"https://wa.me/573023665427\" target=\"_blank\" rel=\"noopener\">302 366 5427</a>.", "Navegar Club Tolú: <a href=\"https://www.instagram.com/navegarclubtolu\" target=\"_blank\" rel=\"noopener\">@navegarclubtolu</a>."] }
     ] },
@@ -2519,6 +2536,7 @@
       { i: "ph-compass", t: "Qué hacer", li: ["Bioluminiscencia con Isla de los Pájaros al atardecer; se ve mejor en noches sin luna.", "Manglar con guías locales de Mundo Verde; el 10% va a la comunidad.", "Playa Tranquila de día.", "Pasadía a las islas saliendo de la playa del hotel."] },
       { i: "ph-fork-knife", t: "Comer", li: ["Corrientazo en el pueblo: 15.000 a 16.000.", "Langosta para dos con sopa, arroz y patacón: unos 80.000 (2025).", "Mar Blanco: pescado con sopa 25.000, ceviche 35.000, camarones 40.000.", "El Tropical: desde 10.000."] },
       { i: "ph-bed", t: "Dónde dormir", li: ["Cabañas La Múcura: 8,8 en Booking y 4,5 en Google, $147.800 con desayuno.", "Hostal Milimar: 8,5 en Booking y 4,5 en Google, $146.160 con desayuno y aire, a 1 minuto de la playa.", "Cabaña Punta Coral: 4,5 en Google (108), en la zona tranquila después del puente. No está en Booking: pedir precio.", "El Cangrejo Azul ya solo tiene una habitación de literas para el puente del 2.", "Fuera de Booking, muy bien calificados en Google: Cabaña La Gloria (5,0 con 71 reseñas, sector La Punta, WhatsApp 310 359 1092) y Mango Feliz (4,8, cabañas en el bosque, 316 361 7458).", "Muchos hospedajes de Rincón no están en Booking: lo práctico es escribir por WhatsApp y negociar.", "Para un puente, mejor el sector después del puente peatonal o La Punta: es más tranquilo.", "No sirven: Coral Blue (habitaciones múltiples, 120.000 por persona) ni el Hotel Araracuara, que se incendió."] },
+      { i: "ph-laptop", t: "Trabajar remoto", li: ["El wifi es más flojo que en Tolú. Según los huéspedes de Booking: Nugeku 8,3, Cabañas La Múcura 8,1, Cangrejo Azul 8,0 (tiene planta eléctrica) y Milimar 7,4.", "Si van a trabajar, mejor hacerlo en Tolú y dejar Rincón para descansar, o llevar datos móviles de respaldo.", "Un viajero dice que hasta en las islas hay buena señal de celular."] },
       { i: "ph-warning", t: "Ojo", warn: true, li: ["Calles de arena y tubos sueltos: buen calzado.", "En 2025 hubo quejas de basura en la playa y de agua con mal olor.", "En temporada alta hay ruido y muchas motos en el pueblo.", "No ir de noche a Playa Tranquila: la marea sube.", "En la mañana hay basura que trae el mar.", "Casi no hay cajeros: llevar efectivo y comprar lo que falte en San Onofre."] },
       { i: "ph-phone", t: "Contactos", li: ["JJ Tour del Mar (Jader Jiménez): <a href=\"https://wa.me/573115971494\" target=\"_blank\" rel=\"noopener\">311 597 1494</a>. Islas y bioluminiscencia."] }
     ] },
