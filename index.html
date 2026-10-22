@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.14">
+<meta name="app-version" content="2026-10-22.15">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -80,6 +80,7 @@
   @media (min-width: 700px) { .h3-list { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); overflow: visible; } }
   .hl-head { font-size: 13px; color: var(--muted); margin: 4px 2px 10px; }
   .hl-desc { margin: 16px 2px 8px; font-size: 13px; color: var(--muted); } .hl-desc summary { cursor: pointer; font-weight: 600; min-height: 36px; display: flex; align-items: center; } .hl-desc ul { margin: 6px 0 0; padding-left: 18px; } .hl-desc li { margin: 4px 0; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; } .split > div { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 2px; } .split span { font-size: 13px; color: var(--muted); } .split b { font-size: 18px; } .split small { font-size: 12px; color: var(--muted); line-height: 1.3; }
   .hl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 2px 8px; font-size: 13px; color: var(--muted); }
   .hl-sort { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 6px 11px; min-height: 36px; font-size: 13px; cursor: pointer; white-space: nowrap; }
   .hl-sort[aria-pressed="true"] { background: #1d4f8a; border-color: #1d4f8a; color: #fff; }
@@ -795,7 +796,8 @@
       <div class="grid2">
         <div class="card">
           <p class="bigtot num" data-total>$0</p>
-          <p class="sub">Por persona <b class="num" data-pp>$0</b> · por día <b class="num" data-pd>$0</b></p>
+          <p class="sub">Por día <b class="num" data-pd>$0</b></p>
+          <div class="split" data-split></div>
           <p class="sub"><span data-f-days>9</span> días · <span data-f-work>4</span> días laborales · noche promedio <b class="num" data-f-night>$0</b></p>
           <label class="field"><span>Meta de presupuesto para los dos</span><input class="goal-in" type="text" inputmode="decimal" autocomplete="off" data-goal aria-describedby="goal-help"></label>
           <p class="small muted" id="goal-help" style="margin-top:4px">Escribe por ejemplo 4.500.000 o 4,5 millones.</p>
@@ -979,16 +981,15 @@
 <script>
   /* ---------- Datos ---------- */
   const PUENTES = {
-    p2: { label: "Puente del 2", sub: "sale el dom 1 nov", festivo: "2026-11-02",
+    p2: { label: "Puente del 2", sub: "dom 1 al mar 10 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
       out: { sab: { date: "2026-10-31", air: "JetSMART", time: "11:25 → 12:55", price: 269550, ver: "22 oct", note: "Sin maleta de mano incluida. Un día más de playa" },
-             dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 156740, ver: "22 oct", note: "Sin maleta de mano incluida. Recomendado: más barato y en Tolú cambias la noche del sábado por la del martes, que es más barata" } },
-      back: { vie: { date: "2026-11-06", air: "LATAM", time: "11:35 → 13:10", price: 185350 },
-              sab: { date: "2026-11-07", air: "JetSMART", time: "11:04 → 12:40", price: 253540 },
-              dom: { date: "2026-11-08", air: "LATAM", time: "6:15 → 7:50", price: 211530, warn: "Madrugada" },
-              lun: { date: "2026-11-09", air: "JetSMART", time: "8:29", price: 301610 } } }
+             dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194230, ver: "22 oct", note: "Sin maleta de mano incluida. Recomendado: más barato y en Tolú cambias la noche del sábado por la del martes, que es más barata" } },
+      back: { mar: { date: "2026-11-10", air: "LATAM", time: "13:35 → 15:10", price: 194990, ver: "22 oct", note: "Cuadra con 9 noches" },
+              mie: { date: "2026-11-11", air: "Wingo", time: "13:01 → 14:30", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida" },
+              jue: { date: "2026-11-12", air: "Wingo", time: "20:11 → 21:40", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida. De noche" } } }
   };
-  const DAYNAME = { vie: "Viernes", sab: "Sábado", dom: "Domingo", lun: "Lunes" };
+  const DAYNAME = { vie: "Viernes", sab: "Sábado", dom: "Domingo", lun: "Lunes", mar: "Martes", mie: "Miércoles", jue: "Jueves" };
   const DESTS_GOLFO = [
     { id: "golfo", name: "Tolú o Coveñas", icon: "ph-umbrella-simple", min: 0,
       blurb: "Playa, Ciénaga La Caimanera y malecón. Base para la pasadía a las islas.",
@@ -1227,7 +1228,7 @@
       dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
       out: { p2: PUENTES.p2.out }, airport: "Montería", lateAt: 18 * 60,
       lateTxt: "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.",
-      n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "opera", rincon: "cangrejo", ctg: "altisimo" }, groups: ["golfo", "islas", "rincon", "ctg"],
+      n: { golfo: 4, rincon: 2, ctg: 3 }, h: { golfo: "opera", rincon: "cangrejo", ctg: "altisimo" }, groups: ["golfo", "islas", "rincon", "ctg"],
       local: n => ((n.golfo || 0) + (n.rincon || 0) > 0 ? 40000 : 0) + (n.ctg ? 60000 : 0), cashLocal: (id, n) => id === "ctg" ? 60000 : (id === "golfo" || !n.golfo ? 40000 : 0),
       rest: "Playa, hamaca y nada más.", wxRef: [["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]] },
     sierra: { name: "Minca", sub: "Montaña en la Sierra Nevada y Cartagena", icon: "ph-mountains", key: "caribe-sierra-v1",
@@ -1251,7 +1252,7 @@
   applyRoute("golfo");
 
   /* ---------- Estado ---------- */
-  const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "dom", back: "dom", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "no",
+  const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "dom", back: "mar", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "no",
     acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: RUTA === "golfo" ? { cienaga: "2026-11-02", pasadia: "2026-11-03" } : {}, over: {}, custom: [] });
   const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
                   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
@@ -1264,7 +1265,7 @@
     if (PUENTES[o.pu]) s.pu = o.pu;
     const p = PUENTES[s.pu];
     s.out = p.out[o.out] ? o.out : (p.out.dom ? "dom" : Object.keys(p.out)[0]);
-    s.back = p.back[o.back] ? o.back : (p.back.dom ? "dom" : Object.keys(p.back)[0]);
+    s.back = p.back[o.back] ? o.back : (p.back.mar ? "mar" : Object.keys(p.back)[0]);
     DESTS.forEach(d => {
       const v = isObj(o.n) ? Number(o.n[d.id]) : NaN; if (Number.isFinite(v) && v >= d.min && v <= 20) s.n[d.id] = Math.round(v);
       if (isObj(o.h) && d.hotels.some(h => h.id === o.h[d.id])) s.h[d.id] = o.h[d.id];
@@ -1662,7 +1663,9 @@
     const TN = totalNights();
     $("[data-warn-costos]").innerHTML = warnHTML(warnings(C).filter(w => w.bad));
     $("[data-total]").textContent = fmt(C.total);
-    $("[data-pp]").textContent = fmt(C.total / 2);
+    /* Julio paga hoteles y comida; el resto (vuelos, traslados, planes, imprevistos) se divide por mitades */
+    const mine = C.cats.hospedaje + C.cats.comida, half = (C.total - mine) / 2;
+    $("[data-split]").innerHTML = `<div><span>Tú</span><b class="num">${fmt(mine + half)}</b><small>Hoteles y comida ${fmt(mine)} + mitad del resto</small></div><div><span>Tu pareja</span><b class="num">${fmt(half)}</b><small>Mitad de vuelos, traslados, planes e imprevistos</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
     $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
@@ -2439,6 +2442,7 @@
     const fl = side => Object.fromEntries(Object.entries(p[side]).map(([k, v]) => [k, { fecha: v.date, aerolinea: v.air, hora: v.time, precio_pp: fPrice(side, k), aviso: v.warn || "" }]));
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
+      quien_paga: "Julio paga hoteles y comida; vuelos, traslados, planes e imprevistos se dividen por mitades con su pareja.",
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
         planes_activos: Object.keys(it.placed), pasadia_fecha: it.placed.pasadia ? it.placed.pasadia.iso : null, total_pareja: Math.round(C.total), meta: S.goal,
         desglose: C.rows.map(r => [r.t, Math.round(r.v)]) },
@@ -2547,7 +2551,7 @@
   /* ---------- Guía ---------- */
   const GUIDE = [
     { id: "general", r: "golfo", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sec: [
-      { i: "ph-calendar-check", t: "Fechas elegidas", li: ["Puente del 2 de noviembre, saliendo el domingo 1 de noviembre. El regreso aún no está decidido.", "Ida: JetSMART 11:05 a 12:35 por $156.740 por persona, $112.810 menos que el sábado.", "Hoteles: en Tolú el sábado, el domingo y el lunes festivo cuestan igual; el martes 3 baja (Ópera pasa de $135.000 a $91.000). Saliendo el domingo cambias la noche del sábado por la del martes. En Rincón da igual.", "Con Ópera y El Cangrejo Azul, el promedio queda en unos $114.000 la noche, por debajo del tope de $120.000.", "Llegando el domingo, la pasadía cae entre semana, que es más barata. El domingo y el lunes festivo son los días más llenos.", "Domingo y festivo los bancos cierran, pero los cajeros funcionan."] },
+      { i: "ph-calendar-check", t: "Fechas elegidas", li: ["Domingo 1 al martes 10 de noviembre: Tolú 4 noches, Rincón 2 y Cartagena 3.", "Ida: JetSMART 11:05 a 12:35 por $194.230 por persona. Regreso: LATAM martes 10 a la 1:35 pm por $194.990; el miércoles 11 y el jueves 12 cuestan parecido.", "Hoteles: en Tolú el sábado, el domingo y el lunes festivo cuestan igual; el martes 3 baja (Ópera pasa de $135.000 a $91.000). Saliendo el domingo cambias la noche del sábado por la del martes. En Rincón da igual.", "Con Ópera y El Cangrejo Azul, el promedio queda en unos $114.000 la noche, por debajo del tope de $120.000.", "Llegando el domingo, la pasadía cae entre semana, que es más barata. El domingo y el lunes festivo son los días más llenos.", "Domingo y festivo los bancos cierran, pero los cajeros funcionan."] },
       { i: "ph-cloud-sun", t: "Cuándo ir", li: ["Agosto a noviembre es temporada de lluvias: aguaceros sobre todo en la tarde. Las mañanas sirven para las lanchas.", "Los puentes festivos llenan todo y suben lanchas y pasadías.", "La pasadía conviene entre semana."] },
       { i: "ph-bus", t: "Cómo moverse", li: ["Vuelo a Montería: el aeropuerto barato más cercano. A Tolú y Corozal solo vuela Satena, y es caro.", "Colectivo en la entrada 5 del aeropuerto, puerta a puerta (30.000 a 40.000 p/p, 1 h 40).", "Más barato: bus en la Troncal a 1 km del aeropuerto (25.000 a 28.000, el último hacia las 6 pm).", "Ojo: el taxi cobra 160.000 a 195.000 y en el aeropuerto suben el precio al llegar."] },
       { i: "ph-money", t: "Plata", li: ["Llevar efectivo: varios hospedajes no reciben tarjeta y en Rincón y las islas casi no hay datáfono ni cajero.", "Negociar los tours: cobran según la cara de turista.", "Reservar con tarjeta de crédito y pedir por escrito las condiciones de cancelación."] },
@@ -2630,6 +2634,11 @@
   }
 
   /* ---------- Inicio ---------- */
+  if (!store.get("caribe-plan-mar10", false)) {
+    S.out = "dom"; S.back = "mar"; S.n.golfo = 4; S.n.rincon = 2; S.n.ctg = 3;
+    Object.assign(S.acts, { cienaga: true, pasadia: true }); Object.assign(S.pin, { cienaga: "2026-11-02", pasadia: "2026-11-03" });
+    store.set("caribe-plan-mar10", true); store.set("caribe-plan-dom1", true);
+  }
   if (!store.get("caribe-plan-dom1", false)) {
     S.out = "dom"; S.n.golfo = 3; S.n.rincon = 2; S.n.ctg = Math.max(1, totalNights() - 5);
     Object.assign(S.acts, { cienaga: true, pasadia: true }); Object.assign(S.pin, { cienaga: "2026-11-02", pasadia: "2026-11-03" });
