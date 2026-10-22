@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.4">
+<meta name="app-version" content="2026-10-22.5">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,6 +36,20 @@
   .c-ctg { --dc: var(--ctg); --dcs: var(--ctg-soft); }
   .c-minca { --dc: var(--minca); --dcs: var(--minca-soft); }
   .route-sw { margin-bottom: 14px; }
+  .h3row { margin: 4px 0 14px; }
+  .h3-head { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 8px; font-size: 14px; }
+  .h3-head b { display: flex; align-items: center; gap: 6px; } .h3-head b i { color: var(--dc, var(--accent)); font-size: 17px; }
+  .h3-list { display: grid; grid-auto-flow: column; grid-auto-columns: 80%; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; scrollbar-width: none; }
+  .h3-list::-webkit-scrollbar { display: none; }
+  .h3c { scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+  .h3c.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .h3c .hc-img { border-radius: 0; aspect-ratio: 16 / 10; }
+  .h3c-b { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .h3c-b .hc-name { font-size: 15px; }
+  .h3c-p { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-top: auto; padding-top: 4px; }
+  .h3c-p b { font-size: 16px; } .h3c-p small { color: var(--muted); font-size: 12px; }
+  .h3c .hc-btns { margin-top: 6px; }
+  @media (min-width: 700px) { .h3-list { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); overflow: visible; } }
   .hl-head { font-size: 13px; color: var(--muted); margin: 4px 2px 10px; }
   .hl-sub { font-size: 15px; font-weight: 700; margin: 18px 2px 8px; display: flex; align-items: center; gap: 6px; } .hl-sub i { color: #c4302b; font-size: 18px; }
   .hc { display: grid; grid-template-columns: 118px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; margin-bottom: 10px; }
@@ -663,7 +677,6 @@
     <button class="nav-btn" data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
     <button class="nav-btn" data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
-    <button class="nav-btn" data-view-btn="hoteles"><i class="ph ph-buildings" aria-hidden="true"></i>Hoteles</button>
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
     <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
@@ -899,7 +912,6 @@
     <section class="view" data-view="mas" hidden>
       <div class="view-head"><div><h1>Más</h1></div></div>
       <div class="more-list">
-        <button class="nav-btn" data-view-btn="hoteles"><i class="ph ph-buildings" aria-hidden="true"></i>Hoteles con fotos</button>
         <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
         <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
@@ -1794,7 +1806,7 @@
     it.days.forEach(d => { if (!cur || cur.loc !== d.stay) { cur = { loc: d.stay, days: [] }; blocks.push(cur); } cur.days.push(d); });
     $("[data-itin]").innerHTML = blocks.map(b => {
       const dest = DESTS.find(x => x.id === b.loc), h = hotelOf(dest);
-      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${b.days.map(d => `
+      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] ? hotelsRow(dest) : ""}${b.days.map(d => `
         <article class="day" id="day-${d.iso}"><div class="date"><b class="num">${d.date.getDate()}</b><span>${WD[d.date.getDay()]}</span>${d.fest ? `<span class="fe">festivo</span>` : ""}</div><div class="day-body">
           ${d.move ? `<div>${moveChip(d.move)}</div>` : ""}
           ${d.items.map(x => itemHTML(x) + (x.k === "act" ? moveSelect(x.act, d, it) : "")).join("")}
@@ -1858,6 +1870,35 @@
         <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>WhatsApp</a>` : ""}${!extra && avail && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
       </div>
     </article>`;
+  }
+  function hotelRank(h) {
+    const b = parseFloat(String(h.score).replace(",", ".")), gm = String(h.g || "").match(/(\d,\d)\s*\(([\d.]+)\)/);
+    const g = gm ? parseFloat(gm[1].replace(",", ".")) * 2 : null, gc = gm ? +gm[2].replace(/\./g, "") : 0;
+    let sc = isNaN(b) ? (g || 7) : g ? (b + g) / 2 : b - 0.5;
+    if (gc && gc < 10) sc -= 0.3;
+    if (/literas|sin aire|muy pocas reseñas|muy básico/i.test(h.info || "")) sc -= 1;
+    return sc;
+  }
+  function top3(d) {
+    const cur = hotelOf(d), av = d.hotels.filter(h => h.id !== cur.id && h.rate[S.pu] && rateOf(h) <= CAP);
+    return [cur].concat(av.sort((a, b) => hotelRank(b) - hotelRank(a) || rateOf(a) - rateOf(b))).slice(0, 3);
+  }
+  function hotelMini(h, d) {
+    const [ci, co] = stayOf(d.id), bk = bookingURL(h, ci, co), on = S.h[d.id] === h.id, r = rateOf(h), n = S.n[d.id], img = picURL(h);
+    return `<article class="h3c ${on ? "on" : ""}">
+      <a class="hc-img" href="${bk}" target="_blank" rel="noopener" aria-label="Ver ${esc(h.name)} en Booking">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async">` : `<span class="hc-noimg"><i class="ph ph-bed" aria-hidden="true"></i></span>`}${on ? `<span class="hc-flag">En tu plan</span>` : ""}</a>
+      <div class="h3c-b">
+        <a class="hc-name" href="${bk}" target="_blank" rel="noopener">${esc(h.name)}</a>
+        <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b></span>${h.g ? `<span class="gsc">G</span><span>${esc(h.g)}</span>` : ""}</div>
+        <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
+        <div class="h3c-p"><b class="num">${fmt(r)}</b><small>la noche${n ? ` · ${noches(n)}: ${fmt(r * n)}` : ""}</small></div>
+        <div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${on ? "" : `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>`}</div>
+      </div>
+    </article>`;
+  }
+  function hotelsRow(d) {
+    const all = d.hotels.length + ((HOTEL_YT[d.id] || []).length);
+    return `<div class="h3row"><div class="h3-head"><b><i class="ph-fill ph-bed" aria-hidden="true"></i>Top 3 hoteles</b><button type="button" class="linkbtn" data-hview="${d.id}">Ver los ${all}</button></div><div class="h3-list">${top3(d).map(h => hotelMini(h, d)).join("")}</div></div>`;
   }
   function renderHotels() {
     const tabs = $("[data-htabs]"), box = $("[data-hlist]"); if (!tabs || !box) return;
