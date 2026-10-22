@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.13">
+<meta name="app-version" content="2026-10-22.14">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -730,12 +730,7 @@
     </header>
 
     <section class="view" data-view="armar">
-      <div class="view-head"><div><h1>Armar el viaje</h1><p>Todo se guarda solo. Toca una sección para abrirla.</p></div><span class="countdown" data-countdown hidden></span></div>
-      <div class="intro" data-intro hidden>
-        <i class="ph-fill ph-hand-waving" aria-hidden="true"></i>
-        <p><b>Así funciona:</b> abre cada sección, ajusta noches, hoteles y planes, y el total de arriba se recalcula solo. Todo queda guardado en este celular y con el botón de compartir le mandas el plan a tu pareja.</p>
-        <button type="button" class="icon-btn" data-intro-off aria-label="Cerrar la explicación"><i class="ph ph-x" aria-hidden="true"></i></button>
-      </div>
+      <div class="view-head"><div><h1>Armar el viaje</h1></div><span class="countdown" data-countdown hidden></span></div>
       <div class="route-sw" data-route-sw></div>
       <div class="wx-strip" data-wx-strip></div>
       <div data-sg-banner></div>
@@ -785,12 +780,12 @@
     </section>
 
     <section class="view" data-view="calendario" hidden>
-      <div class="view-head"><div><h1>Calendario</h1><p>Toca un día para ver el detalle.</p></div></div>
+      <div class="view-head"><div><h1>Calendario</h1></div></div>
       <div data-cal></div>
     </section>
 
     <section class="view" data-view="dias" hidden>
-      <div class="view-head"><div><h1>Día a día</h1><p>Se arma solo. Puedes mover planes y escribir notas.</p></div></div>
+      <div class="view-head"><div><h1>Día a día</h1></div></div>
       <div data-itin></div>
     </section>
 
@@ -818,7 +813,6 @@
       </div>
       <div class="card sugg" id="sugerencias" style="margin-top:12px">
         <div class="sg-head"><h2><i class="ph-fill ph-magic-wand" aria-hidden="true"></i>Sugerencias para ahorrar</h2><button type="button" class="mini primary" data-sg-all hidden><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar las que no pierden calidad</button></div>
-        <p class="small muted" style="margin-top:4px">La app prueba otros hoteles, vuelos, días y planes a partir de lo que ya elegiste y recalcula el total exacto de cada cambio.</p>
         <div data-sugg></div>
         <button type="button" class="ai-open" data-view-btn="asistente"><i class="ph-fill ph-sparkle" aria-hidden="true"></i><div><b>Pregúntale al asistente</b><span>Chatea con la IA sobre tu plan, el clima y la guía.</span></div><i class="ph ph-caret-right car" aria-hidden="true"></i></button>
       </div>
@@ -830,12 +824,12 @@
     </section>
 
     <section class="view" data-view="comparar" hidden>
-      <div class="view-head"><div><h1>Comparar</h1><p>Guarda hasta 3 versiones y míralas lado a lado.</p></div></div>
+      <div class="view-head"><div><h1>Comparar</h1></div></div>
       <div data-scen></div>
     </section>
 
     <section class="view" data-view="pendientes" hidden>
-      <div class="view-head"><div><h1>Pendientes</h1><p>Cambian si cambias hotel o fechas. Los enlaces abren Booking con las fechas.</p></div></div>
+      <div class="view-head"><div><h1>Pendientes</h1></div></div>
       <p class="progress" data-progress></p>
       <div class="checks" data-checks></div>
     </section>
@@ -930,13 +924,13 @@
     </section>
 
     <section class="view" data-view="hoteles" hidden>
-      <div class="view-head"><div><h1>Hoteles</h1><p>Fotos y precios de Booking para tu ruta. Toca uno para abrirlo con tus fechas.</p></div></div>
+      <div class="view-head"><div><h1>Hoteles</h1></div></div>
       <div class="g-tabs" role="tablist" data-htabs></div>
       <div data-hlist></div>
     </section>
 
     <section class="view" data-view="asistente" hidden>
-      <div class="view-head"><div><h1>Asistente</h1><p>Chatea con la IA: ve tu plan, los precios, el clima de cada día y la guía.</p></div><button type="button" class="mini" data-ai-new hidden><i class="ph ph-plus" aria-hidden="true"></i>Nueva conversación</button></div>
+      <div class="view-head"><div><h1>Asistente</h1></div><button type="button" class="mini" data-ai-new hidden><i class="ph ph-plus" aria-hidden="true"></i>Nueva conversación</button></div>
       <div class="chat" data-ai-chat></div>
       <div class="composer" data-ai>
         <div class="ai-ex" data-ai-ex></div>
@@ -1258,7 +1252,7 @@
 
   /* ---------- Estado ---------- */
   const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "dom", back: "dom", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "no",
-    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: {}, over: {}, custom: [] });
+    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: RUTA === "golfo" ? { cienaga: "2026-11-02", pasadia: "2026-11-03" } : {}, over: {}, custom: [] });
   const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
                   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
   const enc = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -1291,7 +1285,8 @@
   }
   function hashState() { const m = location.hash.match(/p=([\w-]+)/); if (!m) return null; try { return dec(m[1]); } catch (e) { return null; } }
   const HS = hashState();
-  applyRoute(HS ? (ROUTES[HS.ruta] ? HS.ruta : "golfo") : store.get("caribe-ruta", "golfo"));
+  /* Minca queda guardada en los datos, pero oculta: la app solo muestra la ruta golfo (22 oct 2026) */
+  applyRoute("golfo");
   let saved = store.get(R.key, null); if (!saved && RUTA === "golfo") saved = store.get("caribe-v4", null);
   const firstTime = !saved && !HS;
   let S, pendingShared = null;
@@ -1572,7 +1567,7 @@
     return withRoute(k, () => { const keep = S; try { S = norm(store.get(R.key, null)); fixHotels(); if (sumNights() !== totalNights()) balance(); return costs().total; } catch (e) { return null; } finally { S = keep; } });
   }
   function renderRoute() {
-    const el = $("[data-route-sw]"); if (!el) return;
+    const el = $("[data-route-sw]"); if (!el) return; el.style.display = "none"; return;
     el.innerHTML = `<div class="rs-row" role="group" aria-label="Ruta del viaje">${Object.entries(ROUTES).map(([k, r]) => { const t = routeTotal(k);
       return `<button type="button" class="rs" aria-pressed="${k === RUTA}" data-route="${k}"><i class="ph ${r.icon}" aria-hidden="true"></i><b>${r.name}</b><small>${r.sub}</small>${t ? `<span class="rs-t num">${fmt(t)}</span>` : ""}</button>`; }).join("")}</div><p class="rs-note">Cada ruta es un plan aparte y guarda sus propias noches, hoteles y planes.</p>`;
   }
@@ -1604,7 +1599,6 @@
     const p = P(), out = p.out[S.out], back = p.back[S.back], TN = totalNights(), SN = sumNights(), diff = TN - SN, W = warnings(C);
     const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12), left = Math.round((D(out.date) - today) / 864e5), cd = $("[data-countdown]");
     cd.hidden = left < 0; cd.innerHTML = `<i class="ph ph-hourglass-medium" aria-hidden="true"></i>` + (left > 1 ? `Faltan ${left} días` : left === 1 ? "Falta 1 día" : "Es hoy");
-    $("[data-intro]").hidden = !(firstTime && !store.get("caribe-intro-off", false));
     const nb = W.filter(w => w.bad).length;
     $("[data-warn-armar]").innerHTML = W.length ? `<details class="warnbox ${nb ? "bad" : ""}"><summary><i class="ph ${nb ? "ph-warning" : "ph-info"}" aria-hidden="true"></i><b>${W.length} ${W.length === 1 ? "aviso" : "avisos"}${nb ? ` · ${nb} ${nb === 1 ? "importante" : "importantes"}` : ""}</b><i class="ph ph-caret-down car" aria-hidden="true"></i></summary>${warnHTML(W)}</details>` : "";
     // Fechas
@@ -2277,7 +2271,6 @@
     if (ds.day) { const k = ds.day; openSheet(sheet, () => daySheetHTML(k)); return; }
     if (ds.wxPlace) { const k = ds.wxPlace; openSheet(sheet, () => placeSheetHTML(k)); return; }
     if (ds.gotoDay) { const k = ds.gotoDay; closeSheet(sheet); showView("dias"); const el = document.getElementById("day-" + k); if (el) el.scrollIntoView({ block: "start" }); return; }
-    if (t.hasAttribute("data-intro-off")) { store.set("caribe-intro-off", true); $("[data-intro]").hidden = true; return; }
     if (t.hasAttribute("data-share-native")) {
       const txt = shareText(LAST), url = shareURL();
       if (navigator.share) navigator.share({ title: "Vacas", text: txt, url }).catch(() => {});
@@ -2637,6 +2630,11 @@
   }
 
   /* ---------- Inicio ---------- */
+  if (!store.get("caribe-plan-dom1", false)) {
+    S.out = "dom"; S.n.golfo = 3; S.n.rincon = 2; S.n.ctg = Math.max(1, totalNights() - 5);
+    Object.assign(S.acts, { cienaga: true, pasadia: true }); Object.assign(S.pin, { cienaga: "2026-11-02", pasadia: "2026-11-03" });
+    store.set("caribe-plan-dom1", true);
+  }
   fixHotels(); if (sumNights() !== totalNights()) balance();
   (function () { const a = store.get("caribe-acc", firstTime ? "fechas" : ""); const dt = a && document.querySelector(`details[data-acc="${a}"]`); if (dt) dt.open = true; })();
   if (pendingShared) { render(false); askShared(); } else render();
