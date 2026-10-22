@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.17">
+<meta name="app-version" content="2026-10-22.18">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -81,6 +81,7 @@
   .hl-head { font-size: 13px; color: var(--muted); margin: 4px 2px 10px; }
   .hl-desc { margin: 16px 2px 8px; font-size: 13px; color: var(--muted); } .hl-desc summary { cursor: pointer; font-weight: 600; min-height: 36px; display: flex; align-items: center; } .hl-desc ul { margin: 6px 0 0; padding-left: 18px; } .hl-desc li { margin: 4px 0; }
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; } .split > div { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 2px; } .split span { font-size: 13px; color: var(--muted); } .split b { font-size: 18px; } .split small { font-size: 12px; color: var(--muted); line-height: 1.3; }
+  .lines .pp { color: var(--muted); font-size: 12px; }
   .hl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 2px 8px; font-size: 13px; color: var(--muted); }
   .hl-sort { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 6px 11px; min-height: 36px; font-size: 13px; cursor: pointer; white-space: nowrap; }
   .hl-sort[aria-pressed="true"] { background: #1d4f8a; border-color: #1d4f8a; color: #fff; }
@@ -1655,7 +1656,7 @@
     return `<div class="act ${f.ok ? "" : "dis"} ${noFit ? "nofit-row" : ""}">
       <label class="act-main"><input type="checkbox" data-act="${a.id}" ${on ? "checked" : ""} ${f.ok ? "" : "disabled"}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span>
         <span class="txt"><b>${esc(a.t)}</b><span class="lvl ${a.lvl}">${LVL[a.lvl]}</span><span class="desc">${esc(a.d)}</span>${extra}${status}</span></label>
-      <div class="act-side"><span class="cost num ${noFit ? "strike" : ""}">${cost ? fmt(cost) : "Gratis"}</span><small>${noFit ? "no se cobra" : "la pareja"} · ${a.pay === "tarjeta" ? "tarjeta" : "efectivo"}</small>${key && cost ? tag(key) : a.custom ? `<span class="tag ed">propio</span>` : ""}${tools}</div>
+      <div class="act-side"><span class="cost num ${noFit ? "strike" : ""}">${cost ? fmt(cost / 2) : "Gratis"}</span><small>${noFit ? "no se cobra" : "por persona"} · ${a.pay === "tarjeta" ? "tarjeta" : "efectivo"}</small>${key && cost ? tag(key) : a.custom ? `<span class="tag ed">propio</span>` : ""}${tools}</div>
     </div>`;
   }
   function renderCostos(C) {
@@ -1666,7 +1667,7 @@
     const mine = C.cats.hospedaje + C.cats.comida, half = (C.total - mine) / 2;
     $("[data-split]").innerHTML = `<div><span>Tú</span><b class="num">${fmt(mine + half)}</b><small>Hoteles y comida ${fmt(mine)} + mitad del resto</small></div><div><span>Tu pareja</span><b class="num">${fmt(half)}</b><small>Mitad de vuelos, traslados, planes e imprevistos</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
-    $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
+    $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}${r.cat !== "hospedaje" && r.cat !== "comida" && r.v > 0 ? `<small class="pp"> · ${fmt(r.v / 2)} por persona</small>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
     const gap = S.goal - C.total, gs = $("[data-goal-state]");
     gs.className = "goal-state " + (gap >= 0 ? "ok" : "over"); gs.textContent = gap >= 0 ? `Sobran ${fmt(gap)}` : `Se pasa por ${fmt(-gap)}`;
@@ -1678,7 +1679,7 @@
     const cash = cashPlan(C), tot = cash.reduce((s, c) => s + c.total, 0);
     $("[data-cash]").innerHTML = `<div class="cash-grid">${cash.map(c => `<div class="cash-d c-${c.d.id}"><h3><i class="ph ${c.d.icon}" aria-hidden="true"></i>${c.d.name}</h3><div class="lines">${c.lines.map(l => `<div>${esc(l[0])}</div><div class="num">${fmt(l[1])}</div>`).join("")}</div><p class="tt num">${fmt(c.total)}</p></div>`).join("")}</div><p class="sub" style="margin-top:10px">En total, lleven cerca de <b class="num">${fmt(tot)}</b> en efectivo repartidos entre los dos.</p>`;
   }
-  function moveChip(mv) { return `<span class="chip move"><i class="ph ph-bus" aria-hidden="true"></i>${MOVE_MODE[mv]} · ${MOVE_T[mv]} · ${fmt(MOVES[mv][1])} la pareja · estimado</span>`; }
+  function moveChip(mv) { return `<span class="chip move"><i class="ph ph-bus" aria-hidden="true"></i>${MOVE_MODE[mv]} · ${MOVE_T[mv]} · ${fmt(MOVES[mv][1] / 2)} por persona · estimado</span>`; }
   function itemHTML(it) {
     const slot = it.slot === "tarde" ? `<span class="slot">en la tarde</span>` : "";
     return `<div class="it ${it.k === "flight" ? "flight" : ""}"><i class="${it.k === "flight" ? "ph-fill" : "ph"} ${it.icon || "ph-star"}" aria-hidden="true"></i><div><h4>${esc(it.t)}${slot}</h4><p>${esc(it.d)}${it.extra ? " Con " + it.extra.map(x => x.toLowerCase()).join(" y ") + "." : ""}</p></div></div>`;
@@ -1923,7 +1924,7 @@
       <div class="sh-pad c-${loc}">
         ${!last ? `<div class="kv"><i class="ph ph-bed" aria-hidden="true"></i><span><b>${h.name}</b><small>Noche ${nIdx} de ${S.n[loc]} · ${fmt(rateOf(h))} la noche</small></span></div>` : ""}
         ${wxSheet(d)}
-        ${d.move ? `<div class="kv"><i class="ph ph-bus" aria-hidden="true"></i><span><b>Traslado: ${MOVE_MODE[d.move]}</b><small>${MOVE_T[d.move]} · ${fmt(MOVES[d.move][1])} la pareja · estimado</small></span></div>` : ""}
+        ${d.move ? `<div class="kv"><i class="ph ph-bus" aria-hidden="true"></i><span><b>Traslado: ${MOVE_MODE[d.move]}</b><small>${MOVE_T[d.move]} · ${fmt(MOVES[d.move][1] / 2)} por persona · estimado</small></span></div>` : ""}
         ${d.items.filter(x => x.k !== "move").map(x => `<div class="kv ${x.k === "flight" ? "flight" : ""}"><i class="${x.k === "flight" ? "ph-fill" : "ph"} ${x.icon || "ph-star"}" aria-hidden="true"></i><span><b>${esc(x.t)}${x.slot === "tarde" ? " (en la tarde)" : ""}</b><small>${esc(x.d)}${x.extra ? " Con " + x.extra.map(y => y.toLowerCase()).join(" y ") + "." : ""}</small></span></div>`).join("")}
         ${d.eve.map(e => `<div class="kv"><i class="ph ph-moon-stars" aria-hidden="true"></i><span><b>De noche: ${esc(e.t)}</b></span></div>`).join("")}
         <label class="field"><span>Notas del día</span><textarea data-note="${k}" rows="3" placeholder="Ej.: reservar almuerzo, llevar efectivo">${esc(S.notes[k] || "")}</textarea></label>
