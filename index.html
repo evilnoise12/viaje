@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.2">
+<meta name="app-version" content="2026-10-22.3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -944,15 +944,7 @@
       back: { vie: { date: "2026-11-06", air: "LATAM", time: "11:35 → 13:10", price: 185350 },
               sab: { date: "2026-11-07", air: "JetSMART", time: "11:04 → 12:40", price: 253540 },
               dom: { date: "2026-11-08", air: "LATAM", time: "6:15 → 7:50", price: 211530, warn: "Madrugada" },
-              lun: { date: "2026-11-09", air: "JetSMART", time: "8:29", price: 301610 } } },
-    p16: { label: "Puente del 16", sub: "14 al 22 nov", festivo: "2026-11-16",
-      weather: "Segunda mitad de noviembre: ya se acerca la época seca.",
-      out: { vie: { date: "2026-11-13", air: "Avianca", time: "20:15 → 21:35", price: 389030, warn: "Llega de noche, sin colectivos" },
-             sab: { date: "2026-11-14", air: "LATAM", time: "14:25 → 15:50", price: 290260 } },
-      back: { vie: { date: "2026-11-20", air: "LATAM", time: "13:35", price: 185350 },
-              sab: { date: "2026-11-21", air: "JetSMART", time: "11:04 → 12:40", price: 172970 },
-              dom: { date: "2026-11-22", air: "LATAM", time: "12:30 → 14:05", price: 232830 },
-              lun: { date: "2026-11-23", air: "Wingo", time: "3:01 → 4:30", price: 274600, warn: "Madrugada" } } }
+              lun: { date: "2026-11-09", air: "JetSMART", time: "8:29", price: 301610 } } }
   };
   const DAYNAME = { vie: "Viernes", sab: "Sábado", dom: "Domingo", lun: "Lunes" };
   const DESTS_GOLFO = [
@@ -1120,7 +1112,7 @@
   const ROUTES = {
     golfo: { name: "Golfo e islas", sub: "Tolú, Rincón del Mar, Tintipán y Cartagena", icon: "ph-island", key: "caribe-v5",
       dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
-      out: { p2: PUENTES.p2.out, p16: PUENTES.p16.out }, airport: "Montería", lateAt: 18 * 60,
+      out: { p2: PUENTES.p2.out }, airport: "Montería", lateAt: 18 * 60,
       lateTxt: "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.",
       n: { golfo: 3, rincon: 2, ctg: 3 }, h: { golfo: "opera", rincon: "mucura", ctg: "altisimo" }, groups: ["golfo", "islas", "rincon", "ctg"],
       local: n => ((n.golfo || 0) + (n.rincon || 0) > 0 ? 40000 : 0) + (n.ctg ? 60000 : 0), cashLocal: (id, n) => id === "ctg" ? 60000 : (id === "golfo" || !n.golfo ? 40000 : 0),
@@ -1129,9 +1121,7 @@
       dests: DESTS_SIERRA, moves: MOVES_SIERRA, moveT: MOVE_T_SIERRA, moveMode: MOVE_MODE_SIERRA, acts: ACTS_SIERRA,
       out: {
         p2: { vie: { date: "2026-10-30", air: "JetSMART", time: "11:05 → 12:42", price: 261940, ver: "19 oct" },
-              sab: { date: "2026-10-31", air: "Wingo", time: "11:20 → 12:55", price: 194643, ver: "19 oct", note: "Sin maleta de mano incluida" } },
-        p16: { vie: { date: "2026-11-13", air: "LATAM", time: "13:10 → 14:45", price: 496250, ver: "19 oct", warn: "Muy caro ese día" },
-               sab: { date: "2026-11-14", air: "LATAM", time: "13:35 → 15:10", price: 334530, ver: "19 oct" } } },
+              sab: { date: "2026-10-31", air: "Wingo", time: "11:20 → 12:55", price: 194643, ver: "19 oct", note: "Sin maleta de mano incluida" } } },
       airport: "Santa Marta", lateAt: 16 * 60 + 30,
       lateTxt: "Llegas tarde: el último colectivo a Minca sale hacia las 6 p. m. del mercado de Santa Marta. Toca dormir en Santa Marta (no está en el presupuesto) o pagar taxi privado hasta Minca, que cobra $79.000 a $130.000.",
       n: { minca: 5, ctg: 3 }, h: { minca: "casablanca", ctg: "altisimo" }, groups: ["minca", "ctg"],
@@ -1500,6 +1490,7 @@
     $("[data-warn-armar]").innerHTML = W.length ? `<details class="warnbox ${nb ? "bad" : ""}"><summary><i class="ph ${nb ? "ph-warning" : "ph-info"}" aria-hidden="true"></i><b>${W.length} ${W.length === 1 ? "aviso" : "avisos"}${nb ? ` · ${nb} ${nb === 1 ? "importante" : "importantes"}` : ""}</b><i class="ph ph-caret-down car" aria-hidden="true"></i></summary>${warnHTML(W)}</details>` : "";
     // Fechas
     $("[data-sum=fechas]").textContent = `${cap(dlabel(out.date))} a ${dlabel(back.date)} · ${fmt(C.flights)}`;
+    const onePu = Object.keys(PUENTES).length < 2; $("[data-puente]").hidden = onePu; $("#lb-pu").hidden = onePu;
     $("[data-puente]").innerHTML = Object.entries(PUENTES).map(([k, v]) => pickBtn(S.pu === k, `<b>${v.label}</b><span>${v.sub}</span>`, `data-set="pu" data-v="${k}"`)).join("");
     const fl = side => Object.entries(p[side]).map(([k, v]) => { const key = `f.${S.pu}.${side}.${k}`, pr = ov(key, v.price);
       return pickBtn(S[side] === k, `<b class="fl-h"><i class="ph-fill ${side === "out" ? "ph-airplane-takeoff" : "ph-airplane-landing"}" aria-hidden="true"></i>${DAYNAME[k]} ${+v.date.slice(8)} ${MO[+v.date.slice(5, 7) - 1]}</b><span>${v.air} ${v.time}</span><span class="num">${fmt(pr)}${isEdited(key) ? " · editado" : ""}</span>${v.warn ? `<span class="warn-t">${v.warn}</span>` : ""}${v.note ? `<span>${v.note}</span>` : ""}`, `data-set="${side}" data-v="${k}"`); }).join("");
