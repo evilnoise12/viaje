@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.11">
+<meta name="app-version" content="2026-10-23.14">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1565,13 +1565,14 @@
   function costs() {
     const p = P(), out = p.out[S.out], back = p.back[S.back], seq = buildRoute(), it = itinerary(), rows = [];
     const fl = (fPrice("out", S.out) + fPrice("back", S.back)) * 2;
-    rows.push({ t: "Vuelos, 2 personas", v: fl, cat: "vuelos" });
+    rows.push({ t: `Ida: ${out.air}, ${dlabel(out.date)}, ${out.time.split("→")[0].trim()}${out.bought ? " · comprado" : ""}`, v: fPrice("out", S.out) * 2, cat: "vuelos" });
+    rows.push({ t: `Regreso: ${back.air}, ${dlabel(back.date)}, ${back.time.split("→")[0].trim()}${back.bought ? " · comprado" : " · por comprar"}`, v: fPrice("back", S.back) * 2, cat: "vuelos" });
     const legs = [out, back].filter(f => LOWCOST.includes(f.air)).length, bagV = ov("bag", BAG), bag = S.bag ? legs * 2 * bagV : 0;
     if (bag) rows.push({ t: `Maleta de mano, ${legs} ${legs === 1 ? "trayecto" : "trayectos"} por 2`, v: bag, cat: "vuelos", est: !isEdited("bag") });
     let lodging = 0;
     DESTS.forEach(d => { const n = S.n[d.id]; if (!n) return; const h = hotelOf(d), r = rateOf(h) || 0; lodging += r * n; rows.push({ t: `${h.name}, ${noches(n)}`, v: r * n, cat: "hospedaje" }); });
-    let mv = 0, prev = "air"; seq.forEach(l => { if (l !== prev) { mv += MOVES[prev + "-" + l][1]; prev = l; } });
-    rows.push({ t: "Traslados en colectivo y bus", v: mv, cat: "traslados", est: true });
+    let mv = 0, prev = "air"; const SN = { air: R.airport, golfo: "Tolú", rincon: "Rincón", ctg: "Cartagena" };
+    seq.forEach(l => { if (l !== prev) { const k = prev + "-" + l, v = MOVES[k][1]; mv += v; rows.push({ t: `${SN[prev] || prev} → ${SN[l] || destName(l)} (${(MOVE_MODE[k] || "").toLowerCase()})`, v, cat: "traslados", est: true }); prev = l; } });
     const local = R.local(S.n);
     rows.push({ t: "Transporte local (bicitaxi, mototaxi, bus urbano)", v: local, cat: "otros", est: true });
     const days = totalNights() + 1, f = FOOD.find(x => x.id === S.food).v, lunch = Math.round(f * LUNCH);
@@ -1579,7 +1580,8 @@
     if (it.placed.pasadia && !pasRincon(it)) rows.push({ t: "Almuerzo incluido en la pasadía", v: -lunch * 2, cat: "comida" });
     const ids = Object.keys(it.placed), list = allActs();
     const plansV = ids.reduce((s, id) => { const a = list.find(x => x.id === id); return s + (a ? actCost(a, it) : 0); }, 0);
-    rows.push({ t: `Planes en el itinerario (${ids.length})`, v: plansV, cat: "planes" });
+    ids.map(id => list.find(x => x.id === id)).filter(Boolean).map(a => ({ a, v: actCost(a, it), d: it.placed[a.id] })).filter(x => x.v).sort((x, y) => x.d.iso.localeCompare(y.d.iso))
+      .forEach(x => rows.push({ t: `${x.a.t}, ${dlabel(x.d.iso)}`, v: x.v, cat: "planes" }));
     const sub = rows.reduce((s, r) => s + r.v, 0), cont = Math.round(sub * S.cont / 100);
     rows.push({ t: `Imprevistos, ${S.cont}%`, v: cont, cat: "otros" });
     const cats = { vuelos: 0, hospedaje: 0, traslados: 0, comida: 0, planes: 0, otros: 0 };
@@ -1761,7 +1763,7 @@
     $("[data-pd]").textContent = fmt(C.total / C.days);
     /* Desglose por persona: Julio paga hoteles, comida y transportes; cada uno su vuelo, sus planes y sus imprevistos */
     const J = [], A = [], shared = r => r.cat === "vuelos" || r.cat === "planes" || /^Imprevistos/.test(r.t);
-    const lbl = r => r.cat === "vuelos" ? r.t.replace("Vuelos, 2 personas", "Vuelo de ida y regreso").replace(/, \d+ trayectos? por 2$/, "") : r.cat === "planes" ? r.t.replace("Planes en el itinerario", "Planes") : r.t;
+    const lbl = r => r.cat === "vuelos" ? r.t.replace(/, \d+ trayectos? por 2$/, "") : r.cat === "planes" ? r.t.replace("Planes en el itinerario", "Planes") : r.t;
     const catOf = r => r.cat === "vuelos" ? "Vuelos" : r.cat === "hospedaje" ? "Hoteles" : r.cat === "traslados" || /^Transporte local/.test(r.t) ? "Transporte" : r.cat === "comida" ? "Comida" : r.cat === "planes" ? "Planes" : "Imprevistos";
     const CATS = ["Vuelos", "Hoteles", "Transporte", "Comida", "Planes", "Imprevistos"], CI = { Vuelos: "ph-airplane-tilt", Hoteles: "ph-bed", Transporte: "ph-bus", Comida: "ph-fork-knife", Planes: "ph-compass", Imprevistos: "ph-umbrella" };
     C.rows.forEach(r => { if (!r.v) return; const c = catOf(r); if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); A.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); } else J.push({ t: r.t, v: r.v, est: r.est, c }); });
