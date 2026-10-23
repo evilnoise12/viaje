@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.16">
+<meta name="app-version" content="2026-10-23.17">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -877,7 +877,7 @@
     </section>
 
     <section class="view" data-view="costos" hidden>
-      <div class="view-head"><div><h1>Costos</h1><p>Para los dos, con imprevistos incluidos.</p></div></div>
+      <div class="view-head"><div><h1>Costos</h1><p>Para los dos.</p></div></div>
       <div class="warns" data-warn-costos></div>
       <div class="grid2">
         <div class="card">
@@ -885,6 +885,7 @@
           <p class="sub">Por día <b class="num" data-pd>$0</b></p>
           <div class="split" data-split></div>
           <p class="sub"><span data-f-days>9</span> días · <span data-f-work>4</span> días laborales · noche promedio <b class="num" data-f-night>$0</b></p>
+          <div hidden>
           <label class="field"><span>Meta de presupuesto para los dos</span><input class="goal-in" type="text" inputmode="decimal" autocomplete="off" data-goal aria-describedby="goal-help"></label>
           <p class="small muted" id="goal-help" style="margin-top:4px">Escribe por ejemplo 4.500.000 o 4,5 millones.</p>
           <p class="goal-state" data-goal-state style="margin-top:6px"></p>
@@ -895,6 +896,7 @@
             <button type="button" class="mini" data-copy><i class="ph ph-link" aria-hidden="true"></i>Copiar enlace</button>
             <button type="button" class="mini" data-save><i class="ph ph-floppy-disk" aria-hidden="true"></i>Guardar escenario</button>
             <button type="button" class="mini" data-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Restablecer</button>
+          </div>
           </div>
         </div>
         <div class="desg" data-lines></div>
