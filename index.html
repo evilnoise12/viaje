@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.22">
+<meta name="app-version" content="2026-10-22.23">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -67,6 +67,7 @@
   .h3row { margin: 4px 0 14px; }
   .h3-head { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 8px; font-size: 14px; }
   .h3-head b { display: flex; align-items: center; gap: 6px; } .h3-head b i { color: var(--dc, var(--accent)); font-size: 17px; }
+  .h3-list.one { grid-auto-columns: 100%; }
   .h3-list { display: grid; grid-auto-flow: column; grid-auto-columns: 80%; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; scrollbar-width: none; }
   .h3-list::-webkit-scrollbar { display: none; }
   .h3c { scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
@@ -2023,6 +2024,7 @@
     </article>`;
   }
   function hotelsRow(d) {
+    if (lockedN(d)) { const h = hotelOf(d); return `<div class="h3row"><div class="h3-head"><b><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Hotel reservado</b></div><div class="h3-list one">${hotelMini(h, d)}</div></div>`; }
     const all = d.hotels.length + ((HOTEL_YT[d.id] || []).length);
     return `<div class="h3row"><div class="h3-head"><b><i class="ph-fill ph-bed" aria-hidden="true"></i>Top 3 hoteles</b><button type="button" class="linkbtn" data-hview="${d.id}">Ver los ${all}</button></div><div class="h3-list">${top3(d).map(h => hotelMini(h, d)).join("")}</div></div>`;
   }
@@ -2063,8 +2065,9 @@
   function destMap(el, id) {
     const d = DESTS.find(x => x.id === id), m = baseMap(el), pts = [];
     PLACES.filter(p => (p.r === RUTA || p.r === "*") && p.d === id).forEach(p => { L.marker(p.ll, { icon: pin(`<i class="ph-fill ${p.i}"></i>`, "pl") }).addTo(m).bindPopup(placePopup(p)); pts.push(p.ll); });
-    (HOTEL_YT[id] || []).filter(h => h.ll).forEach(h => { L.marker(h.ll, { icon: pin(h.bad ? "✕" : "★", h.bad ? "bad" : "yt") }).addTo(m).bindPopup(hotelPopup(h, d, true)); pts.push(h.ll); });
-    d.hotels.filter(h => h.ll).forEach(h => { const on = S.h[id] === h.id, av = !!h.rate[S.pu];
+    const LK = lockedN(d);
+    (LK ? [] : HOTEL_YT[id] || []).filter(h => h.ll).forEach(h => { L.marker(h.ll, { icon: pin(h.bad ? "✕" : "★", h.bad ? "bad" : "yt") }).addTo(m).bindPopup(hotelPopup(h, d, true)); pts.push(h.ll); });
+    d.hotels.filter(h => h.ll && (!LK || S.h[id] === h.id)).forEach(h => { const on = S.h[id] === h.id, av = !!h.rate[S.pu];
       L.marker(h.ll, { icon: pin(av ? kShort(rateOf(h)) : "sin cupo", on ? "on" : av ? "" : "off"), zIndexOffset: on ? 1000 : 0 }).addTo(m).bindPopup(hotelPopup(h, d, false)); pts.push(h.ll); });
     if (pts.length) m.fitBounds(pts, { padding: [24, 24], maxZoom: 16 });
   }
@@ -2089,16 +2092,17 @@
     const cmp = HSORT === "trabajo" ? (a, b) => ws(b) - ws(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : HSORT === "nota" ? (a, b) => hotelRank(b) - hotelRank(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : (a, b) => (S.h[d.id] === b.id) - (S.h[d.id] === a.id) || (rateOf(a) || 0) - (rateOf(b) || 0);
-    const list = d.hotels.filter(keep).sort((a, b) => (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || cmp(a, b));
-    const yt = (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
+    const LK = lockedN(d);
+    const list = LK ? [hotelOf(d)] : d.hotels.filter(keep).sort((a, b) => (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || cmp(a, b));
+    const yt = LK ? [] : (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
     const sb = (v, l, i) => `<button type="button" class="hl-sort" aria-pressed="${HSORT === v}" data-hsort="${v}"><i class="ph ${i}" aria-hidden="true"></i>${l}</button>`;
     box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · todos con aire, baño privado y céntricos, máximo ${fmt(CAP)} la noche · precios con impuestos</p>`
-      + `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
-      + `<label class="hl-work"><input type="checkbox" data-hwork ${HWORK ? "checked" : ""}><span>Solo buenos para trabajar (teletrabajo 8 o más)</span></label>`
-      + (HSORT === "trabajo" || HWORK ? `<p class="hl-head">La nota de teletrabajo sale de lo que los huéspedes de Booking le ponen al wifi, la velocidad medida, si hay planta eléctrica y lo que dicen en Google Maps. Sin datos de wifi quedan al final.</p>` : "")
+      + (LK ? "" : `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
+      + `<label class="hl-work"><input type="checkbox" data-hwork ${HWORK ? "checked" : ""}><span>Solo buenos para trabajar (teletrabajo 8 o más)</span></label>`)
+      + (!LK && (HSORT === "trabajo" || HWORK) ? `<p class="hl-head">La nota de teletrabajo sale de lo que los huéspedes de Booking le ponen al wifi, la velocidad medida, si hay planta eléctrica y lo que dicen en Google Maps. Sin datos de wifi quedan al final.</p>` : "")
       + (list.length ? list.map(h => hotelCard(h, d, false)).join("") : `<p class="hl-head">Ningún hotel con cupo tiene buena nota de teletrabajo aquí.</p>`)
       + (yt.length ? `<h3 class="hl-sub"><i class="ph-fill ph-youtube-logo" aria-hidden="true"></i>Otros que recomiendan los viajeros</h3><p class="hl-head">Salen en sus videos, pero su precio para estas fechas no está verificado. Confirmar en Booking.</p>` + yt.map(h => hotelCard(h, d, true)).join("") : "")
-      + ((DESCARTADOS[d.id] || []).length ? `<details class="hl-desc"><summary>Descartados por no tener aire o quedar lejos (${DESCARTADOS[d.id].length})</summary><ul>${DESCARTADOS[d.id].map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.why)}.</li>`).join("")}</ul></details>` : "");
+      + (!LK && (DESCARTADOS[d.id] || []).length ? `<details class="hl-desc"><summary>Descartados por no tener aire o quedar lejos (${DESCARTADOS[d.id].length})</summary><ul>${DESCARTADOS[d.id].map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.why)}.</li>`).join("")}</ul></details>` : "");
   }
   function hotelSheetHTML(id) {
     const d = DESTS.find(x => x.id === id), n = S.n[id], avail = d.hotels.filter(h => h.rate[S.pu]), none = d.hotels.filter(h => !h.rate[S.pu]);
@@ -2368,7 +2372,7 @@
     const add = (o, r) => { if (!r) return; const save = Math.round(B.total - r.total); if (save >= 10000) out.push(Object.assign(o, { save, st: r.st })); };
     const p = P(), unplaced0 = B.it.unplaced.length;
     // Hoteles
-    DESTS.forEach(d => { if (!S.n[d.id]) return; const cur = hotelOf(d), cr = rateOf(cur), cs = scoreNum(cur);
+    DESTS.forEach(d => { if (!S.n[d.id] || lockedN(d)) return; const cur = hotelOf(d), cr = rateOf(cur), cs = scoreNum(cur);
       d.hotels.forEach(h => { if (h.id === cur.id || !h.rate[S.pu]) return; const r = ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]); if (r >= cr) return;
         const ns = scoreNum(h), diff = cs - ns; let q = isNaN(ns) ? 1 : diff <= 0 ? 0 : diff <= .5 ? 1 : 2; const notes = [];
         if (isNaN(ns)) notes.push("sin reseñas verificadas"); else notes.push(`nota ${h.score} vs ${cur.score}`);
@@ -2398,7 +2402,7 @@
       }
     }
     // Reparto de noches
-    DESTS.forEach(a => DESTS.forEach(b => { if (a.id === b.id || S.n[a.id] <= a.min || !S.n[b.id]) return;
+    DESTS.forEach(a => DESTS.forEach(b => { if (a.id === b.id || S.n[a.id] <= a.min || !S.n[b.id] || lockedN(a) || lockedN(b)) return;
       const r = evalState(st => { st.n[a.id]--; st.n[b.id]++; });
       if (!r || r.C.it.unplaced.length > unplaced0) return;
       add({ k: "noches", icon: "ph-arrows-left-right", q: 0, t: `Una noche menos en ${DNAME_SHORT[a.id]} y una más en ${DNAME_SHORT[b.id]}`, d: `Mismo viaje y los mismos planes; ${DNAME_SHORT[b.id]} sale más barato por noche.` }, r);
@@ -2409,7 +2413,7 @@
     if (S.bag) add({ k: "maleta", icon: "ph-suitcase-rolling", q: 1, t: "Viajar sin maleta de mano", d: "Solo el bolso pequeño que incluye la tarifa. Ojo: en la lancha también ayuda viajar liviano." }, evalState(st => { st.bag = false; }));
     // Planes con costo
     Object.keys(B.it.placed).forEach(id => { const a = allActs().find(x => x.id === id); if (!a || a.lvl === "must" || a.custom) return;
-      add({ k: "plan", icon: ACT_ICON[id] || "ph-star", q: a.lvl === "opt" ? 1 : 2, t: `Quitar: ${a.t}`, d: `Es ${LVL[a.lvl].toLowerCase()}.` }, evalState(st => { st.acts[id] = false; }));
+      add({ k: "plan", icon: ACT_ICON[id] || "ph-star", q: a.lvl === "opt" ? 1 : 2, t: `Quitar: ${a.t}`, d: `Marcado como ${LVL[a.lvl].toLowerCase()}.` }, evalState(st => { st.acts[id] = false; }));
     });
     // Mejor por grupo, sin repetir el mismo tipo de cambio para el mismo destino
     out.sort((x, y) => x.q - y.q || y.save - x.save);
@@ -2462,6 +2466,7 @@
         puentes: Object.fromEntries(Object.entries(PUENTES).map(([k, v]) => [k, v.label + " " + v.sub])),
         vuelos_puente_actual: { salida: fl("out"), regreso: fl("back") },
         hoteles: Object.fromEntries(DESTS.map(d => [d.id, d.hotels.filter(h => h.rate[S.pu]).map(h => ({ id: h.id, nombre: h.name, donde: h.where, nota: h.score, precio_noche: ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]), google: h.g || null, wifi_huespedes: h.wifi || null, wifi_mbps: h.mbps || null, planta_electrica: !!h.power, nota_teletrabajo: workScore(h), wifi_en_google: h.wnote || null, ideal_trabajo_remoto: remoteOK(h), info: h.info }))])),
+        hoteles_ya_reservados: "Tolú ya está reservado (Hotel Pizzería Ópera, 4 noches). No sugerir otros hoteles ni cambiar noches en Tolú.",
         regla_hoteles: "Todos deben tener aire acondicionado, baño privado y quedar céntricos. Nunca recomendar hoteles sin aire ni lejos del centro.",
         hoteles_descartados: DESCARTADOS,
         hoteles_recomendados_por_viajeros: Object.fromEntries(DESTS.map(d => [d.id, (HOTEL_YT[d.id] || []).map(h => ({ nombre: h.name, donde: h.where, booking: h.score, google: h.g || null, precio: h.priceTxt, nota: h.yt, whatsapp: h.tel || null, descartado: !!h.bad, nota_teletrabajo: workScore(h), wifi_en_google: h.wnote || null }))])),
