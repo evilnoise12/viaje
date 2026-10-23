@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.33">
+<meta name="app-version" content="2026-10-22.34">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -86,6 +86,36 @@
   .hl-desc { margin: 16px 2px 8px; font-size: 13px; color: var(--muted); } .hl-desc summary { cursor: pointer; font-weight: 600; min-height: 36px; display: flex; align-items: center; } .hl-desc ul { margin: 6px 0 0; padding-left: 18px; } .hl-desc li { margin: 4px 0; }
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; } .split > div { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 2px; } .split span { font-size: 13px; color: var(--muted); } .split b { font-size: 18px; } .split small { font-size: 12px; color: var(--muted); line-height: 1.3; }
   .lines .pp { color: var(--muted); font-size: 12px; }
+  .v-head h1 { font-size: 26px; line-height: 1.15; letter-spacing: -.01em; }
+  .v-head p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .v-status { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 18px; }
+  .vst { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-size: 13px; font-weight: 600; padding: 6px 11px; border-radius: 999px; border: 0; }
+  .vst.ok { background: #e3f4ea; color: #1f6b3d; } .vst.todo { background: var(--warn-soft); color: var(--warn); cursor: pointer; } .vst.todo:active { opacity: .7; }
+  .v-stage { margin-bottom: 22px; }
+  .v-sh { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 0 2px 8px; }
+  .v-sh > b { font-size: 18px; color: var(--dc); flex: none; } .v-sh > span { font-size: 13px; color: var(--muted); text-align: right; }
+  .v-sh .ok { color: var(--ok); font-weight: 600; } .v-sh .todo { color: var(--warn); font-weight: 600; } .v-sh i { vertical-align: -2px; }
+  .v-acts { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 16px; margin: 0 -16px 10px; padding: 0 16px 4px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .v-acts::-webkit-scrollbar { display: none; }
+  .v-ac { flex: none; width: 72%; max-width: 300px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 0; }
+  .v-ac img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--surface-2); }
+  .v-ac figcaption { padding: 8px 10px 10px; } .v-ac b { display: block; font-size: 14px; font-weight: 600; } .v-ac small { display: block; font-size: 12px; color: var(--muted); }
+  .v-days { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--dc); border-radius: 14px; overflow: hidden; }
+  .v-day + .v-day { border-top: 1px solid var(--line); }
+  .v-day > summary { list-style: none; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer; -webkit-user-select: none; user-select: none; }
+  .v-day > summary::-webkit-details-marker { display: none; }
+  .v-day > summary:active { background: var(--surface-2); }
+  .v-day[open] > summary { background: #fafcfb; }
+  .v-num { text-align: center; line-height: 1.05; } .v-num b { display: block; font-size: 20px; } .v-num small { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+  .v-num em { display: block; font-style: normal; font-size: 10px; font-weight: 700; color: var(--warn); }
+  .v-txt { min-width: 0; } .v-txt b { display: block; font-size: 15px; font-weight: 600; } .v-txt small { display: block; font-size: 13px; color: var(--muted); }
+  .v-wx { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 3px; } .v-wx i { font-size: 18px; color: #c9a227; }
+  .v-det { padding: 2px 14px 14px 70px; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; }
+  .v-det div { display: flex; gap: 8px; } .v-det i { color: var(--dc); font-size: 17px; margin-top: 2px; flex: none; }
+  .v-edit { display: flex; gap: 8px; margin-top: 4px; } .v-edit .mini { flex: 1; }
+  .v-more { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin-top: 16px; }
+  .v-more button { border: 0; background: none; font: inherit; font-size: 14px; color: var(--accent); font-weight: 500; padding: 8px 2px; min-height: 40px; }
+  .v-credit { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
   .hl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 2px 8px; font-size: 13px; color: var(--muted); }
   .hl-sort { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 999px; padding: 6px 11px; min-height: 36px; font-size: 13px; cursor: pointer; white-space: nowrap; }
   .hl-sort { transition: transform 100ms ease-out, background 100ms; } .hl-sort:active { transform: scale(.97); }
@@ -727,7 +757,8 @@
 <div class="app">
   <aside class="side" aria-label="Menú">
     <div class="logo"><img src="apple-touch-icon.png" alt="" width="30" height="30" class="logo-img">Vacas</div>
-    <button class="nav-btn" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
+    <button class="nav-btn" data-view-btn="viaje"><i class="ph ph-calendar-check" aria-hidden="true"></i>Viaje</button>
+    <button class="nav-btn" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Cambiar plan</button>
     <button class="nav-btn" data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
     <button class="nav-btn" data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
@@ -746,6 +777,15 @@
       <button type="button" class="tot" data-view-btn="costos" aria-label="Ver costos"><span class="diff" data-diff aria-hidden="true"></span><b class="num" data-f-total aria-live="polite">$0</b><span class="g" data-top-goal>total pareja</span></button>
       <div class="meter" aria-hidden="true"><i data-meter></i></div>
     </header>
+
+    <section class="view" data-view="viaje" hidden>
+      <header class="v-head"><h1 data-v-title>Viaje</h1><p data-v-meta></p></header>
+      <div class="v-status" data-v-status></div>
+      <div data-v-stages></div>
+      <div class="v-edit"><button type="button" class="mini primary" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Cambiar plan</button><button type="button" class="mini" data-view-btn="dias"><i class="ph ph-map-trifold" aria-hidden="true"></i>Mapa y detalle</button></div>
+      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="calendario">Calendario</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
+      <p class="v-credit">Fotos de actividades: Wikimedia Commons</p>
+    </section>
 
     <section class="view" data-view="armar">
       <div class="view-head"><div><h1>Armar el viaje</h1></div><span class="countdown" data-countdown hidden></span></div>
@@ -971,11 +1011,10 @@
 </div>
 
 <nav class="bottom" aria-label="Navegación">
-  <button data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Armar</button>
-  <button data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
-  <button data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Días</button>
+  <button data-view-btn="viaje"><i class="ph ph-calendar-check" aria-hidden="true"></i>Viaje</button>
+  <button data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
   <button data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
-  <button data-view-btn="mas"><i class="ph ph-dots-three-outline" aria-hidden="true"></i>Más</button>
+  <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
   <button data-view-btn="asistente" class="nav-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente</button>
 </nav>
 <div class="a2hs-backdrop" data-a2hs-bg hidden></div>
@@ -1578,7 +1617,7 @@
     const fs = captureFocus();
     fixHotels();
     const C = costs(); LAST = C;
-    renderTop(C); renderHotels(); renderRoute(); $$("[data-only]").forEach(el => { el.hidden = el.dataset.only !== RUTA; }); if (renderGuide.r !== RUTA) { renderGuide.r = RUTA; renderGuide(); } renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderScen(); renderChecks(C); renderInfo(C);
+    renderTop(C); renderHotels(); renderRoute(); $$("[data-only]").forEach(el => { el.hidden = el.dataset.only !== RUTA; }); if (renderGuide.r !== RUTA) { renderGuide.r = RUTA; renderGuide(); } renderWxStrip(); renderArmar(C); renderSugg(); if (typeof renderAI === "function" && AI_READY !== null) renderAI(); renderCostos(C); renderCal(C); renderDays(C); renderViaje(C); renderScen(); renderChecks(C); renderInfo(C);
     refreshSheets();
     restoreFocus(fs);
     if (save) persist();
@@ -2198,6 +2237,58 @@
     const p = P(), o = p.out[S.out], b = p.back[S.back], d = C.it.pasDay;
     return `Hola. Somos 2 personas y queremos hacer una pasadía a Tintipán o Múcura${d ? ` el ${dlong(d.date)}` : ""}, saliendo desde Tolú o Coveñas. Estaremos en la zona entre el ${dlong(o.date)} y el ${dlong(b.date)}. ¿Qué precio tiene por persona, qué incluye y si recogen en el hotel?`;
   }
+  const WM = "https://upload.wikimedia.org/wikipedia/commons/thumb/";
+  const VPICS = {
+    golfo: [["cienaga", "7/7f/Cienaga_de_la_Caimanera%2C_Sucre.jpg/960px-Cienaga_de_la_Caimanera%2C_Sucre.jpg", "Canoa por la Ciénaga"],
+      [null, "7/75/Cove%C3%B1as_-_Vista_playa_1.jpg/960px-Cove%C3%B1as_-_Vista_playa_1.jpg", "Playa en Coveñas", "20 min en colectivo, 6.000"],
+      ["frances", "5/51/Playa_El_Franc%C3%A9s%2C_Tol%C3%BA.JPG/960px-Playa_El_Franc%C3%A9s%2C_Tol%C3%BA.JPG", "Playa El Francés"],
+      ["anteros", "5/5d/Bah%C3%ADa_Cispata_-_San_Antero_-_Hector_Pertuz.jpg/960px-Bah%C3%ADa_Cispata_-_San_Antero_-_Hector_Pertuz.jpg", "Bahía de Cispatá"],
+      ["tolu", "0/06/Malecon%2C_Santiago_de_Tolu%2C_Sucre.jpg/960px-Malecon%2C_Santiago_de_Tolu%2C_Sucre.jpg", "Malecón de Tolú"]],
+    rincon: [["pasadia", "6/67/Paisaje_Caribe%C3%B1o_en_Isla_Tintip%C3%A1n.jpg/960px-Paisaje_Caribe%C3%B1o_en_Isla_Tintip%C3%A1n.jpg", "Isla Tintipán"],
+      ["pasadia", "9/9f/Isla_M%C3%BAcura_-_playa_-_Colombia.jpg/960px-Isla_M%C3%BAcura_-_playa_-_Colombia.jpg", "Isla Múcura"],
+      ["pasadia", "1/14/Santa_Cruz_del_Islote_2022_01.jpg/960px-Santa_Cruz_del_Islote_2022_01.jpg", "Santa Cruz del Islote"],
+      ["biolum", "8/87/Bioluminescence_in_Porto_de_Barcas.jpg/960px-Bioluminescence_in_Porto_de_Barcas.jpg", "Bioluminiscencia"],
+      ["tranquila", "e/e2/Playa_Rinc%C3%B3n.jpg/960px-Playa_Rinc%C3%B3n.jpg", "Playa de Rincón"]],
+    ctg: [["centro", "f/f4/Puerta_del_Reloj%2C_Cartagena_02.jpg/960px-Puerta_del_Reloj%2C_Cartagena_02.jpg", "Ciudad Amurallada"],
+      ["getsemani", "8/8c/Graffiti_in_Getseman%C3%AD%2C_Cartagena_01.jpg/960px-Graffiti_in_Getseman%C3%AD%2C_Cartagena_01.jpg", "Getsemaní"],
+      ["muralla", "4/49/Graffiti_in_Getseman%C3%AD%2C_Cartagena_03.jpg/960px-Graffiti_in_Getseman%C3%AD%2C_Cartagena_03.jpg", "Callejón Angosto"]]
+  };
+  function renderViaje(C) {
+    const box = $("[data-v-stages]"); if (!box) return;
+    const p = P(), out = p.out[S.out], back = p.back[S.back], it = C.it, list = allActs(), nd = DESTS.filter(d => S.n[d.id]);
+    const names = nd.map(d => ({ golfo: "Tolú", rincon: "Rincón", ctg: "Cartagena" }[d.id] || d.name));
+    $("[data-v-title]").textContent = names.length > 1 ? names.slice(0, -1).join(", ") + " y " + names.slice(-1) : names[0] || "Viaje";
+    $("[data-v-meta]").textContent = `${cap(dlabel(out.date))} al ${dlabel(back.date)} · ${noches(totalNights())}`;
+    const done = [], todo = [];
+    (out.bought ? done : todo).push("Vuelo de ida");
+    nd.forEach(d => { const h = hotelOf(d); (h.booked ? done : todo).push("Hotel en " + DNAME_SHORT[d.id]); });
+    (back.bought ? done : todo).push("Vuelo de regreso");
+    $("[data-v-status]").innerHTML = done.map(t => `<span class="vst ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>${t}</span>`).join("")
+      + (todo.length ? `<button type="button" class="vst todo" data-view-btn="pendientes"><i class="ph ph-circle-dashed" aria-hidden="true"></i>Faltan ${todo.length}</button>` : "");
+    // Días agrupados por dónde duermen; el día del regreso va con el último destino
+    const groups = []; it.days.forEach(d => { const loc = d.loc || (groups.length ? groups[groups.length - 1].loc : d.stay); const g = groups[groups.length - 1]; if (g && g.loc === loc) g.days.push(d); else groups.push({ loc, days: [d] }); });
+    const pp = v => v ? `${fmt(v / 2)} p/p` : "Gratis";
+    box.innerHTML = groups.map(g => {
+      const d = DESTS.find(x => x.id === g.loc); if (!d) return "";
+      const h = hotelOf(d), pics = (VPICS[g.loc] || []).filter(([id]) => !id || it.placed[id] || list.some(a => a.id === id));
+      const strip = pics.length ? `<div class="v-acts">${pics.map(([id, img, t, sub]) => { const pl = id && it.placed[id], a = id && list.find(x => x.id === id);
+        const s2 = sub || (pl ? `${cap(dlabel(pl.iso))}${a ? " · " + pp(actCost(a, it)) : ""}` : "Opcional");
+        return `<figure class="v-ac"><img src="${WM + img}" alt="" loading="lazy" decoding="async"><figcaption><b>${t}</b><small>${s2}</small></figcaption></figure>`; }).join("")}</div>` : "";
+      const rows = g.days.map(day => {
+        // Días de viaje: el título es el trayecto; los planes van debajo
+        const acts = day.items.filter(x => x.k === "act"), fl = day.items.find(x => x.k === "flight"), mv = day.items.find(x => x.k === "move");
+        const main = fl || mv || acts.find(x => x.act === "pasadia") || acts[0] || day.items.find(x => x.k === "backup") || day.items[0];
+        const SN = { golfo: "Tolú", rincon: "Rincón del Mar", ctg: "Cartagena" }, dn = SN[day.loc] || (day.loc ? destName(day.loc) : "");
+        const title = fl ? (day.i === 0 ? "Vuelo y llegada a " + dn : "Regreso a Bogotá") : mv ? "Paso a " + dn : main.t;
+        const head = fl ? `${(day.i === 0 ? out : back).air} ${(day.i === 0 ? out : back).time.split("→")[0].trim()}` : mv ? `${MOVE_MODE[day.move]}, ${MOVE_T[day.move]}` : "";
+        const sub = [head].concat(day.items.filter(x => x !== main && x.k !== "rest" && x.k !== "move" && x.k !== "flight").map(x => x.t), day.eve.map(e => e.t)).filter(Boolean).join(" · ") || (main.k === "rest" ? main.d : "");
+        const w = wxDay(day.loc || g.loc, day.iso);
+        const det = day.items.map(x => `<div><i class="ph ${x.icon}" aria-hidden="true"></i><span><b>${esc(x.t)}</b> ${esc(x.d || "")}</span></div>`).join("") + day.eve.map(e => `<div><i class="ph ${e.icon || "ph-moon-stars"}" aria-hidden="true"></i><span><b>De noche:</b> ${esc(e.t)}</span></div>`).join("");
+        return `<details class="v-day"><summary><span class="v-num"><b>${day.date.getDate()}</b><small>${WDS[day.date.getDay()]}</small>${day.fest ? `<em>festivo</em>` : ""}</span><span class="v-txt"><b>${esc(title)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span>${w ? `<span class="v-wx"><i class="ph-fill ${w.look.icon}" aria-hidden="true"></i>${w.tmax}°</span>` : `<span></span>`}</summary><div class="v-det">${det}</div></details>`;
+      }).join("");
+      return `<section class="v-stage c-${g.loc}"><div class="v-sh"><b>${esc(d.name.replace(" o Coveñas", ""))}</b><span>${noches(S.n[g.loc])} · ${esc(h.name)} · ${h.booked ? `<span class="ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>reservado</span>` : `<span class="todo">por reservar</span>`}</span></div>${strip}<div class="v-days">${rows}</div></section>`;
+    }).join("");
+  }
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     const items = o.bought
@@ -2668,14 +2759,14 @@
   let curView = null; const scrollMem = {};
   const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   function showView(v) {
-    if (!document.querySelector(`[data-view="${v}"]`)) v = "armar";
+    if (!document.querySelector(`[data-view="${v}"]`)) v = "viaje";
     if (v === "mas" && window.matchMedia && matchMedia("(min-width: 861px)").matches) v = "comparar";
     if (v === curView) { window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" }); return; }
     if (curView) scrollMem[curView] = window.scrollY;
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     if (v === "dias") setTimeout(initMaps, 30); else killMaps();
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = (v === "comparar" || v === "pendientes" || v === "info" || v === "costos" || v === "hoteles") && b.dataset.viewBtn === "mas" && b.closest(".bottom");
+      const inMas = ["armar", "dias", "calendario", "comparar", "info", "hoteles"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
@@ -2706,7 +2797,8 @@
     const n = norm(h); if (enc(n) === enc(S)) return;
     pendingShared = n; askShared();
   });
-  showView(store.get("caribe-view", "armar"));
+  if (!store.get("caribe-viaje-first", false)) { store.set("caribe-view", "viaje"); store.set("caribe-viaje-first", true); }
+  showView(store.get("caribe-view", "viaje"));
   loadWeather(false);
   renderGuide();
   aiCheck();
