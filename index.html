@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.14">
+<meta name="app-version" content="2026-10-23.15">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1767,7 +1767,7 @@
     const catOf = r => r.cat === "vuelos" ? "Vuelos" : r.cat === "hospedaje" ? "Hoteles" : r.cat === "traslados" || /^Transporte local/.test(r.t) ? "Transporte" : r.cat === "comida" ? "Comida" : r.cat === "planes" ? "Planes" : "Imprevistos";
     const CATS = ["Vuelos", "Hoteles", "Transporte", "Comida", "Planes", "Imprevistos"], CI = { Vuelos: "ph-airplane-tilt", Hoteles: "ph-bed", Transporte: "ph-bus", Comida: "ph-fork-knife", Planes: "ph-compass", Imprevistos: "ph-umbrella" };
     C.rows.forEach(r => { if (!r.v) return; const c = catOf(r); if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); A.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); } else J.push({ t: r.t, v: r.v, est: r.est, c }); });
-    const it = r => `${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}`;
+    const it = r => `${r.t}${r.c === "Transporte" ? ` · ${fmt(r.v / 2)} × 2` : ""}${r.est ? ` <span class="tag est">estimado</span>` : ""}`;
     const block = (who, list) => `<div class="card"><h2 class="desg-h"><i class="ph ph-receipt" aria-hidden="true"></i>Desglose de ${who}</h2><div class="lines">` + CATS.map(c => { const l = list.filter(r => r.c === c); if (!l.length) return ""; const sum = l.reduce((s, r) => s + r.v, 0);
       return `<div class="lc"><i class="ph ${CI[c]}" aria-hidden="true"></i>${c}${l.length === 1 ? `<small>${it(l[0])}</small>` : ""}</div><div class="num lc">${fmtV(sum)}</div>` + (l.length > 1 ? l.map(r => `<div class="li">${it(r)}</div><div class="num li ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") : "");
     }).join("") + `<div class="totl">Total ${who}</div><div class="num totl">${fmt(list.reduce((s, r) => s + r.v, 0))}</div></div></div>`;
