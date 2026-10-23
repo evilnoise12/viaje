@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.21">
+<meta name="app-version" content="2026-10-22.22">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -213,6 +213,7 @@
   @media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } .pick { min-width: 0; flex: 1 1 130px; } }
   .tag { display: inline-flex; align-items: center; font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: var(--pill); white-space: nowrap; vertical-align: 1px; }
   .tag.ok { background: var(--surface-2); color: var(--muted); }
+  .locked { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #1f6b3d; background: #e3f4ea; border-radius: 999px; padding: 6px 10px; white-space: nowrap; }
   .tag.bought { background: #e3f4ea; color: #1f6b3d; font-weight: 600; gap: 3px; margin-right: 4px; }
   .tag.est { background: #fff4d6; color: #7a5300; }
   .tag.ed { background: #e7e3fb; color: #4b3aa8; }
@@ -999,7 +1000,7 @@
         { id: "monaco", name: "Habitaciones Mónaco", where: "Coveñas, primera ensenada", score: "sin nota", rate: { p2: 100000, p16: 100000 }, info: "Aire y baño privado. Precio de 2024 visto en un video; confirmar en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Habitaciones+M%C3%B3naco+Cove%C3%B1as" },
         { id: "saray", name: "Hospedaje Saray Sofía", where: "Coveñas, 1,3 km de la playa", score: "9,8", g: "5,0 (5)", rate: { p2: 83300, p16: 83300 }, ver: "22 oct", info: "Aire, cuarto pequeño. Cancelación gratis. Pocas reseñas, todas buenas.", url: "https://www.booking.com/hotel/co/saray-del-mar.es.html" },
         { id: "oasis", name: "Oasis de Tolú", where: "Tolú, 800 m de la playa", score: "8,5", g: "4,2 (77)", rate: { p2: 89650, p16: 83300 }, ver: "22 oct", info: "Habitación triple (1 doble y 1 sencilla). En Google sale más bajo que en Booking. Solo efectivo o transferencia.", url: "https://www.booking.com/hotel/co/oasis-de-tolu.es.html" },
-        { id: "opera", rec: true, booked: "4 noches, 1 al 5 nov, $406.800 con Genius", name: "Hotel Pizzería Ópera", where: "Tolú, a pasos de la playa y del malecón", score: "8,8", rc: 468, g: "4,6 (344)", rate: { p2: 101700, p16: null }, ver: "22 oct", info: "Hotel sencillo y limpio con aire y pizzería, cerca de la policía. Reseñas recientes buenas; algunas de 2023 y 2024 se quejan del trato de la dueña. Quedan pocas a este precio.", url: "https://www.booking.com/hotel/co/pizzeria-opera-tolu.es.html", img: ["106106939?k=69d7f8531a2ef96f24c056c8eb68824df7eaffa8ba9ba64015641cfafc04616d"] },
+        { id: "opera", rec: true, booked: "4 noches, 1 al 5 nov, $406.800 con Genius", bookedN: 4, name: "Hotel Pizzería Ópera", where: "Tolú, a pasos de la playa y del malecón", score: "8,8", rc: 468, g: "4,6 (344)", rate: { p2: 101700, p16: null }, ver: "22 oct", info: "Hotel sencillo y limpio con aire y pizzería, cerca de la policía. Reseñas recientes buenas; algunas de 2023 y 2024 se quejan del trato de la dueña. Quedan pocas a este precio.", url: "https://www.booking.com/hotel/co/pizzeria-opera-tolu.es.html", img: ["106106939?k=69d7f8531a2ef96f24c056c8eb68824df7eaffa8ba9ba64015641cfafc04616d"] },
         { id: "puerto", rec: true, name: "Hotel El Puerto", where: "Tolú centro, calle 11: a 1 cuadra del malecón y a 300 m del parque", score: "9,2", rc: 251, g: "4,8 (31)", rate: { p2: 106700, p16: null }, ver: "22 oct", info: "Doble grande con baño privado y aire. Ambiente familiar y tranquilo; en Google destacan que el aire funciona muy bien y que les guardaron las maletas mientras iban a las islas.", url: "https://www.booking.com/hotel/co/hospedaje-el-puerto.es.html", img: ["293351970?k=42d60fe764eb4f965a3ea579334ed5ae7057f25c1273d00d544b67477c0c03cb"] },
         { id: "canadian", name: "Canadian House Summer Home", where: "Tolú centro, carrera 4: a 3 cuadras del malecón", score: "8,2", rc: 20, g: "4,4", rate: { p2: 68800, p16: null }, ver: "22 oct", info: "Doble con baño privado y aire; queda 1. Pocas reseñas: confirmar antes de reservar.", url: "https://www.booking.com/hotel/co/casa-bonita-santiago-de-tolu.es.html", img: ["672719785?k=36cd70fe2ebeef524e1f01f707c7a8defa1a8f7149682f33397b154032bb388a"] },
         { id: "aquamarina", name: "AquaMarina Hostal", where: "Tolú, carrera 6: a 5 cuadras del malecón", score: "8,6", rc: 16, g: "4,4 (24)", rate: { p2: 80000, p16: null }, ver: "22 oct", info: "Habitación familiar (1 doble y 1 sencilla) con baño privado y aire; queda 1. Se anuncia como hostal.", url: "https://www.booking.com/hotel/co/aquamarina-hostal.es.html", img: ["499811205?k=c005af65c3534770f7ebaf2b95b06e4a82df572d3d01d994df00a715a7b6b1bd"] },
@@ -1319,6 +1320,8 @@
   const totalNights = () => Math.round((D(P().back[S.back].date) - D(P().out[S.out].date)) / 864e5);
   const sumNights = () => DESTS.reduce((s, d) => s + S.n[d.id], 0);
   const hotelOf = d => d.hotels.find(h => h.id === S.h[d.id]);
+  /* Destino con hotel ya reservado: noches y hotel quedan fijos */
+  const lockedN = d => { const h = hotelOf(d); return h && h.booked && h.bookedN ? h.bookedN : 0; };
   const ov = (k, def) => Object.prototype.hasOwnProperty.call(S.over, k) ? S.over[k] : def;
   const rateOf = h => h && h.rate[S.pu] ? ov(`h.${S.pu}.${h.id}`, h.rate[S.pu]) : null;
   const fPrice = (side, k) => ov(`f.${S.pu}.${side}.${k}`, P()[side][k].price);
@@ -1345,8 +1348,9 @@
     let diff = totalNights() - sumNights(), guard = 50;
     const order = ["ctg", "golfo", "rincon"];
     const most = cond => DESTS.filter(cond).sort((a, b) => S.n[b.id] - S.n[a.id] || order.indexOf(a.id) - order.indexOf(b.id))[0];
-    while (diff > 0 && guard--) { const d = most(() => true); S.n[d.id]++; diff--; }
-    while (diff < 0 && guard--) { const d = most(x => S.n[x.id] > x.min); if (!d) break; S.n[d.id]--; diff++; }
+    DESTS.forEach(d => { const L = lockedN(d); if (L && S.n[d.id] !== L) { diff += S.n[d.id] - L; S.n[d.id] = L; } });
+    while (diff > 0 && guard--) { const d = most(x => !lockedN(x)); if (!d) break; S.n[d.id]++; diff--; }
+    while (diff < 0 && guard--) { const d = most(x => S.n[x.id] > x.min && !lockedN(x)); if (!d) break; S.n[d.id]--; diff++; }
   }
   function workdays() {
     const a = D(P().out[S.out].date), b = D(P().back[S.back].date); let n = 0;
@@ -1620,13 +1624,13 @@
     $("[data-nights-alert]").innerHTML = diff === 0 ? `<div class="alert"><i class="ph ph-check-circle" aria-hidden="true"></i><div>Las ${TN} noches están repartidas.</div></div>`
       : `<div class="alert bad"><i class="ph ph-warning" aria-hidden="true"></i><div>${diff > 0 ? `Falta repartir ${noches(diff)}.` : `Sobran ${noches(-diff)}: quita en algún destino.`} Van ${SN} de ${TN}.<div><button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button></div></div></div>`;
     $("[data-dests]").innerHTML = DESTS.map(d => {
-      const n = S.n[d.id], h = hotelOf(d), r = rateOf(h), key = `h.${S.pu}.${h.id}`;
+      const n = S.n[d.id], h = hotelOf(d), r = rateOf(h), key = `h.${S.pu}.${h.id}`, L = lockedN(d);
       return `<div class="dest c-${d.id} ${n ? "" : "off"}">
         <div class="dest-head"><span class="dest-ic"><i class="ph ${d.icon}" aria-hidden="true"></i></span><div class="dest-name"><b>${d.name}</b><small>${d.blurb}</small></div>
-          <div class="stepper" role="group" aria-label="Noches en ${d.name}"><button type="button" data-step="${d.id}" data-d="-1" aria-label="Quitar una noche en ${d.name}" ${n <= d.min ? "disabled" : ""}>&minus;</button><output>${noches(n)}</output><button type="button" data-step="${d.id}" data-d="1" aria-label="Agregar una noche en ${d.name}">+</button></div></div>
+          ${L ? `<span class="locked"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>${noches(n)} · reservado</span>` : `<div class="stepper" role="group" aria-label="Noches en ${d.name}"><button type="button" data-step="${d.id}" data-d="-1" aria-label="Quitar una noche en ${d.name}" ${n <= d.min ? "disabled" : ""}>&minus;</button><output>${noches(n)}</output><button type="button" data-step="${d.id}" data-d="1" aria-label="Agregar una noche en ${d.name}">+</button></div>`}</div>
         ${n ? `<div class="hotel-sel"><div class="hs-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span><span class="tags">${tag(key)}${r > CAP ? `<span class="tag bad">Pasa el tope</span>` : ""}${/solo efectivo/i.test(h.info) ? `<span class="tag cash">Solo efectivo</span>` : ""}</span></div>
           <div class="hs-price"><b class="num">${fmt(r)}</b><span>la noche</span><span class="num">${noches(n)}: ${fmt(r * n)}</span></div>
-          <div class="hs-act"><button type="button" class="mini" data-hsheet="${d.id}"><i class="ph ph-swap" aria-hidden="true"></i>Cambiar</button><button type="button" class="mini" data-hview="${d.id}"><i class="ph ph-images" aria-hidden="true"></i>Fotos</button><a class="mini" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a></div></div>`
+          <div class="hs-act">${L ? "" : `<button type="button" class="mini" data-hsheet="${d.id}"><i class="ph ph-swap" aria-hidden="true"></i>Cambiar</button>`}<button type="button" class="mini" data-hview="${d.id}"><i class="ph ph-images" aria-hidden="true"></i>Fotos</button><a class="mini" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a></div></div>`
         : `<p class="small muted" style="margin-top:8px">Sin noches aquí. Toca + para incluir ${d.name}.</p>`}
       </div>`;
     }).join("");
@@ -1971,7 +1975,7 @@
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
         ${tags.length ? `<div class="hc-tags">${tags.join("")}</div>` : ""}
         ${h.info ? `<p class="hc-info">${esc(h.info)}</p>` : ""}${h.wnote ? `<p class="hc-info"><i class="ph ph-laptop" aria-hidden="true"></i> ${esc(h.wnote)}</p>` : ""}${h.yt ? `<p class="hc-info"><i class="ph-fill ph-youtube-logo" style="color:#c4302b" aria-hidden="true"></i> ${esc(h.yt)}</p>` : ""}
-        <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>WhatsApp</a>` : ""}${h.ll ? `<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Cómo llegar</a>` : ""}${!extra && avail && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
+        <div class="hc-foot"><div class="hc-price">${price}</div><div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a><a class="mini" href="${googleHotelsURL(h, d.id)}" target="_blank" rel="noopener">Google</a>${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo" aria-hidden="true"></i>WhatsApp</a>` : ""}${h.ll ? `<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Cómo llegar</a>` : ""}${!extra && avail && !on && !lockedN(d) ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}</div></div>
       </div>
     </article>`;
   }
@@ -2014,7 +2018,7 @@
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
         ${wifiTag(h) || h.booked ? `<div class="hc-tags">${h.booked ? `<span class="ok rw"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Reservado</span>` : ""}${wifiTag(h)}</div>` : ""}
         <div class="h3c-p"><b class="num">${fmt(r)}</b><small>la noche${n ? ` · ${noches(n)}: ${fmt(r * n)}` : ""}</small></div>
-        <div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${on ? "" : `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>`}</div>
+        <div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${on || lockedN(d) ? "" : `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>`}</div>
       </div>
     </article>`;
   }
@@ -2036,7 +2040,7 @@
   function hotelPopup(h, d, extra) {
     const [ci, co] = stayOf(d.id), bk = bookingURL(h, ci, co), img = picURL(h, 0, "max300"), on = !extra && S.h[d.id] === h.id, r = extra ? null : rateOf(h), av = extra || !!h.rate[S.pu];
     return `<div class="mpop">${img ? `<img src="${img}" alt="">` : ""}<b>${esc(h.name)}${on ? " · en tu plan" : ""}</b><small>${h.score && h.score !== "–" ? `Booking ${esc(h.score)}` : "Sin nota en Booking"}${h.g ? ` · Google ${esc(h.g)}` : ""}</small><small>${extra ? esc(h.priceTxt || "") : av ? `${fmt(r)} la noche` : "Sin cupo en este puente"}</small>${h.bad ? `<small style="color:#b4561f">Malas reseñas en Google</small>` : ""}${workScore(h) != null ? `<small style="${remoteOK(h) ? "color:#1f6b3d" : ""}">💻 ${remoteOK(h) ? "Ideal para trabajar" : "Teletrabajo"} ${wsTxt(workScore(h))}</small>` : ""}
-      <div class="row"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${!extra && av && !on ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
+      <div class="row"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${!extra && av && !on && !lockedN(d) ? `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>` : ""}${h.tel ? `<a class="mini" href="https://wa.me/57${h.tel}" target="_blank" rel="noopener">WhatsApp</a>` : ""}<a class="mini" href="${dirURL(h.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
   }
   const placePopup = p => `<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t || "")}</small><div class="row"><a class="mini" href="${dirURL(p.ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`;
   function routeMap(el) {
@@ -2269,9 +2273,9 @@
     if (ds.priceReset) { delete S.over[ds.priceReset]; closeSheet(sheet2); render(); toast("Volvió al precio original."); return; }
     if (t.hasAttribute("data-balance")) { balance(); render(); toast("Noches repartidas."); return; }
     if (ds.step) {
-      const id = ds.step, dv = +ds.d, d = DESTS.find(x => x.id === id);
+      const id = ds.step, dv = +ds.d, d = DESTS.find(x => x.id === id); if (lockedN(d)) return;
       if (dv > 0 && sumNights() >= totalNights()) {
-        const donor = DESTS.filter(x => x.id !== id && S.n[x.id] > x.min).sort((a, b) => S.n[b.id] - S.n[a.id])[0];
+        const donor = DESTS.filter(x => x.id !== id && S.n[x.id] > x.min && !lockedN(x)).sort((a, b) => S.n[b.id] - S.n[a.id])[0];
         if (!donor) return; S.n[donor.id]--;
       }
       if (dv < 0 && S.n[id] <= d.min) return;
