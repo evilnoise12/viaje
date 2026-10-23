@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.7">
+<meta name="app-version" content="2026-10-23.8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1748,7 +1748,7 @@
     /* Julio paga hoteles y comida; el resto (vuelos, traslados, planes, imprevistos) se divide por mitades */
     /* Julio paga hoteles, comida y todos los transportes internos; vuelos, planes e imprevistos van por mitades */
     const mine = C.cats.hospedaje + C.cats.comida + C.cats.traslados + C.local, half = (C.total - mine) / 2;
-    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles, comida y transportes ${fmt(mine)} + su vuelo y sus planes</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Su vuelo y sus planes${S.cont ? ", e imprevistos" : ""}</small></div>`;
+    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles, comida, transportes, su vuelo y sus planes</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Su vuelo y sus planes${S.cont ? ", e imprevistos" : ""}</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
     $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}${(r.cat === "vuelos" || r.cat === "planes" || /^Imprevistos/.test(r.t)) && r.v > 0 ? `<small class="pp"> · ${fmt(r.v / 2)} por persona</small>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
