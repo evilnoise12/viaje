@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.32">
+<meta name="app-version" content="2026-10-22.33">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1925,7 +1925,7 @@
     it.days.forEach(d => { if (!cur || cur.loc !== d.stay) { cur = { loc: d.stay, days: [] }; blocks.push(cur); } cur.days.push(d); });
     $("[data-itin]").innerHTML = `<div class="map-card"><div class="map-h"><b><i class="ph-fill ph-map-trifold" aria-hidden="true"></i>Ruta del viaje</b><a href="${routeLink()}" target="_blank" rel="noopener">Abrir en Google Maps</a></div><div class="map" id="map-route" role="region" aria-label="Mapa de la ruta del viaje"></div><p class="map-legend"><span><i class="ph-fill ph-airplane"></i> Aeropuertos</span><span>1, 2, 3: paradas en orden</span><span>Línea punteada: lancha a las islas</span></p></div>` + blocks.map(b => {
       const dest = DESTS.find(x => x.id === b.loc), h = hotelOf(dest);
-      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] ? hotelsRow(dest) + `<div class="map dmap" data-dmap="${b.loc}" role="region" aria-label="Mapa de ${esc(dest.name)}"></div><p class="map-legend"><span><b>$121k</b> precio por noche</span><span>Verde: tu hotel</span><span>★ recomendados en videos</span><span>Íconos: planes y lugares</span></p>` : ""}${b.days.map(d => `
+      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] ? hotelsRow(dest) + (lockedN(dest) ? "" : `<div class="map dmap" data-dmap="${b.loc}" role="region" aria-label="Mapa de ${esc(dest.name)}"></div><p class="map-legend"><span><b>$121k</b> precio por noche</span><span>Verde: tu hotel</span><span>★ recomendados en videos</span><span>Íconos: planes y lugares</span></p>`) : ""}${b.days.map(d => `
         <article class="day" id="day-${d.iso}"><div class="date"><b class="num">${d.date.getDate()}</b><span>${WD[d.date.getDay()]}</span>${d.fest ? `<span class="fe">festivo</span>` : ""}</div><div class="day-body">
           ${d.move ? `<div>${moveChip(d.move)}</div>` : ""}
           ${d.items.map(x => itemHTML(x) + (x.k === "act" ? moveSelect(x.act, d, it) : "")).join("")}
