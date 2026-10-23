@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.20">
+<meta name="app-version" content="2026-10-22.21">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -985,7 +985,7 @@
   const PUENTES = {
     p2: { label: "Puente del 2", sub: "dom 1 al mar 10 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
-      out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: "YFVQ8U", note: "Comprado, vuelo JA 5380. Tarifa Basic: solo mochila bajo el asiento. Check-in desde el jueves 29 de octubre" } },
+      out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "Comprado, vuelo JA 5380. Tarifa Basic: solo mochila bajo el asiento. Check-in desde el jueves 29 de octubre" } },
       back: { mar: { date: "2026-11-10", air: "LATAM", time: "13:35 → 15:10", price: 194990, ver: "22 oct", note: "Cuadra con 9 noches" },
               mie: { date: "2026-11-11", air: "Wingo", time: "13:01 → 14:30", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida" },
               jue: { date: "2026-11-12", air: "Wingo", time: "20:11 → 21:40", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida. De noche" } } }
@@ -999,7 +999,7 @@
         { id: "monaco", name: "Habitaciones Mónaco", where: "Coveñas, primera ensenada", score: "sin nota", rate: { p2: 100000, p16: 100000 }, info: "Aire y baño privado. Precio de 2024 visto en un video; confirmar en Booking.", url: "https://www.booking.com/searchresults.es.html?ss=Habitaciones+M%C3%B3naco+Cove%C3%B1as" },
         { id: "saray", name: "Hospedaje Saray Sofía", where: "Coveñas, 1,3 km de la playa", score: "9,8", g: "5,0 (5)", rate: { p2: 83300, p16: 83300 }, ver: "22 oct", info: "Aire, cuarto pequeño. Cancelación gratis. Pocas reseñas, todas buenas.", url: "https://www.booking.com/hotel/co/saray-del-mar.es.html" },
         { id: "oasis", name: "Oasis de Tolú", where: "Tolú, 800 m de la playa", score: "8,5", g: "4,2 (77)", rate: { p2: 89650, p16: 83300 }, ver: "22 oct", info: "Habitación triple (1 doble y 1 sencilla). En Google sale más bajo que en Booking. Solo efectivo o transferencia.", url: "https://www.booking.com/hotel/co/oasis-de-tolu.es.html" },
-        { id: "opera", rec: true, name: "Hotel Pizzería Ópera", where: "Tolú, a pasos de la playa y del malecón", score: "8,8", rc: 468, g: "4,6 (344)", rate: { p2: 120300, p16: null }, ver: "22 oct", info: "Hotel sencillo y limpio con aire y pizzería, cerca de la policía. Reseñas recientes buenas; algunas de 2023 y 2024 se quejan del trato de la dueña. Quedan pocas a este precio.", url: "https://www.booking.com/hotel/co/pizzeria-opera-tolu.es.html", img: ["106106939?k=69d7f8531a2ef96f24c056c8eb68824df7eaffa8ba9ba64015641cfafc04616d"] },
+        { id: "opera", rec: true, booked: "4 noches, 1 al 5 nov, $406.800 con Genius", name: "Hotel Pizzería Ópera", where: "Tolú, a pasos de la playa y del malecón", score: "8,8", rc: 468, g: "4,6 (344)", rate: { p2: 101700, p16: null }, ver: "22 oct", info: "Hotel sencillo y limpio con aire y pizzería, cerca de la policía. Reseñas recientes buenas; algunas de 2023 y 2024 se quejan del trato de la dueña. Quedan pocas a este precio.", url: "https://www.booking.com/hotel/co/pizzeria-opera-tolu.es.html", img: ["106106939?k=69d7f8531a2ef96f24c056c8eb68824df7eaffa8ba9ba64015641cfafc04616d"] },
         { id: "puerto", rec: true, name: "Hotel El Puerto", where: "Tolú centro, calle 11: a 1 cuadra del malecón y a 300 m del parque", score: "9,2", rc: 251, g: "4,8 (31)", rate: { p2: 106700, p16: null }, ver: "22 oct", info: "Doble grande con baño privado y aire. Ambiente familiar y tranquilo; en Google destacan que el aire funciona muy bien y que les guardaron las maletas mientras iban a las islas.", url: "https://www.booking.com/hotel/co/hospedaje-el-puerto.es.html", img: ["293351970?k=42d60fe764eb4f965a3ea579334ed5ae7057f25c1273d00d544b67477c0c03cb"] },
         { id: "canadian", name: "Canadian House Summer Home", where: "Tolú centro, carrera 4: a 3 cuadras del malecón", score: "8,2", rc: 20, g: "4,4", rate: { p2: 68800, p16: null }, ver: "22 oct", info: "Doble con baño privado y aire; queda 1. Pocas reseñas: confirmar antes de reservar.", url: "https://www.booking.com/hotel/co/casa-bonita-santiago-de-tolu.es.html", img: ["672719785?k=36cd70fe2ebeef524e1f01f707c7a8defa1a8f7149682f33397b154032bb388a"] },
         { id: "aquamarina", name: "AquaMarina Hostal", where: "Tolú, carrera 6: a 5 cuadras del malecón", score: "8,6", rc: 16, g: "4,4 (24)", rate: { p2: 80000, p16: null }, ver: "22 oct", info: "Habitación familiar (1 doble y 1 sencilla) con baño privado y aire; queda 1. Se anuncia como hostal.", url: "https://www.booking.com/hotel/co/aquamarina-hostal.es.html", img: ["499811205?k=c005af65c3534770f7ebaf2b95b06e4a82df572d3d01d994df00a715a7b6b1bd"] },
@@ -1407,7 +1407,7 @@
       days.push({ i, date, iso: k, loc, stay: loc || seq[N - 1], fest: k === p.festivo, wkend: w === 0 || w === 6, move: i < N && loc !== prev ? prev + "-" + loc : null, items: [], eve: [], tarde: false, backup: false });
     }
     days[0].late = late;
-    days[0].items.push({ k: "flight", icon: "ph-airplane-takeoff", t: `Vuelo a ${R.airport}`, d: `${out.air}, ${out.time}.${out.bought ? ` Comprado: reserva ${out.bought}.` : ""} ` + (late
+    days[0].items.push({ k: "flight", icon: "ph-airplane-takeoff", t: `Vuelo a ${R.airport}`, d: `${out.air}, ${out.time}.${out.bought ? " Comprado." : ""} ` + (late
       ? R.lateTxt
       : MOVES["air-" + days[0].loc][0] + ".") });
     days.forEach(d => { if (d.i > 0 && d.move) d.items.push({ k: "move", icon: "ph-bus", t: "Traslado a " + destName(d.loc), d: MOVES[d.move][0] + "." }); });
@@ -1610,7 +1610,7 @@
     const fl = side => Object.entries(p[side]).map(([k, v]) => { const key = `f.${S.pu}.${side}.${k}`, pr = ov(key, v.price);
       return pickBtn(S[side] === k, `<b class="fl-h"><i class="ph-fill ${side === "out" ? "ph-airplane-takeoff" : "ph-airplane-landing"}" aria-hidden="true"></i>${DAYNAME[k]} ${+v.date.slice(8)} ${MO[+v.date.slice(5, 7) - 1]}</b><span>${v.air} ${v.time}</span><span class="num">${fmt(pr)}${isEdited(key) ? " · editado" : ""}</span>${v.warn ? `<span class="warn-t">${v.warn}</span>` : ""}${v.note ? `<span>${v.note}</span>` : ""}`, `data-set="${side}" data-v="${k}"`); }).join("");
     $("[data-out]").innerHTML = fl("out"); $("[data-back]").innerHTML = fl("back");
-    const pl = (side, k, word) => { const key = `f.${S.pu}.${side}.${k}`, bt = P()[side][k].bought; if (bt) return `<span><b class="tag bought"><i class="ph-fill ph-check-circle" aria-hidden="true"></i> Comprado</b> Reserva <b>${bt}</b> · <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>`; return `<span>${word}: <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>${tag(key)}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button>`; };
+    const pl = (side, k, word) => { const key = `f.${S.pu}.${side}.${k}`, bt = P()[side][k].bought; if (bt) return `<span><b class="tag bought"><i class="ph-fill ph-check-circle" aria-hidden="true"></i> Comprado</b> <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>`; return `<span>${word}: <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>${tag(key)}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button>`; };
     $("[data-price-out]").innerHTML = pl("out", S.out, "Ida elegida");
     $("[data-price-back]").innerHTML = pl("back", S.back, "Regreso elegido");
     $("[data-bag]").innerHTML = C.bagLegs ? `<label class="switch-row"><input type="checkbox" role="switch" data-bag-toggle ${S.bag ? "checked" : ""}><span class="sw" aria-hidden="true"></span><span class="txt"><b>Llevar maleta de mano</b><span>${[out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air).join(" y ")} solo incluye un bolso pequeño. ${fmt(C.bagV)} por trayecto por persona: ${fmt(C.bagLegs * 2 * C.bagV)} en total.</span></span></label><div class="price-line">${tag("bag")}<button type="button" class="link-btn" data-edit="bag"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio de la maleta</button></div>` : "";
@@ -1948,6 +1948,7 @@
     const [ci, co] = stayOf(d.id), n = S.n[d.id], bk = bookingURL(h, ci, co), on = !extra && S.h[d.id] === h.id;
     const r = extra ? null : rateOf(h), avail = extra || !!h.rate[S.pu], img = picURL(h);
     const tags = [];
+    if (h.booked) tags.push(`<span class="ok rw"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Reservado</span>`);
     if (h.rec) tags.push(`<span class="ok">Recomendado</span>`);
     if (wifiTag(h)) tags.push(wifiTag(h));
     if (h.bad) tags.push(`<span class="bad">Malas reseñas en Google</span>`);
@@ -2011,7 +2012,7 @@
         <a class="hc-name" href="${bk}" target="_blank" rel="noopener">${esc(h.name)}</a>
         <div class="hc-score"><span class="sc">${esc(h.score)}</span><span><b>${scoreLabel(h.score)}</b></span>${h.g ? `<span class="gsc">G</span><span>${esc(h.g)}</span>` : ""}</div>
         <div class="hc-where"><i class="ph ph-map-pin" aria-hidden="true"></i><span>${esc(h.where)}</span></div>
-        ${wifiTag(h) ? `<div class="hc-tags">${wifiTag(h)}</div>` : ""}
+        ${wifiTag(h) || h.booked ? `<div class="hc-tags">${h.booked ? `<span class="ok rw"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Reservado</span>` : ""}${wifiTag(h)}</div>` : ""}
         <div class="h3c-p"><b class="num">${fmt(r)}</b><small>la noche${n ? ` · ${noches(n)}: ${fmt(r * n)}` : ""}</small></div>
         <div class="hc-btns"><a class="mini primary" href="${bk}" target="_blank" rel="noopener">Booking</a>${on ? "" : `<button type="button" class="mini" data-hotel="${d.id}" data-v="${h.id}">Elegir</button>`}</div>
       </div>
@@ -2161,11 +2162,12 @@
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     const items = o.bought
-      ? [[`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada (reserva ${o.bought}).`],
-         ["checkin-ida", "Check-in de la ida en JetSMART", `Desde el jueves 29 de octubre, con la reserva ${o.bought}. Ahí asignan los asientos gratis; guarda la tarjeta de embarque en el celular (imprimirla en el aeropuerto cuesta desde $24.000).`]]
+      ? [[`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada.`],
+         ["checkin-ida", "Check-in de la ida en JetSMART", `Desde el jueves 29 de octubre, con el código de reserva que llegó al correo. Ahí asignan los asientos gratis; guarda la tarjeta de embarque en el celular (imprimirla en el aeropuerto cuesta desde $24.000).`]]
       : [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
     let d0 = D(o.date);
     DESTS.forEach(d => { const n = S.n[d.id]; if (!n) return; const h = hotelOf(d), ci = iso(d0), co = iso(addDays(d0, n)); d0 = addDays(d0, n);
+      if (h.booked) { items.push([`hb-${d.id}-${h.id}`, `${h.name} reservado`, `${h.booked}. Pedir habitación interior por el chat de Booking.`]); return; }
       items.push([`h-${d.id}-${h.id}-${ci}`, `Reservar ${h.name}`, `<a href="${h.url}?checkin=${ci}&amp;checkout=${co}&amp;group_adults=2&amp;selected_currency=COP" target="_blank" rel="noopener">${noches(n)}, del ${+ci.slice(8)} ${MO[+ci.slice(5, 7) - 1]} al ${+co.slice(8)} ${MO[+co.slice(5, 7) - 1]}</a> · <a href="${mapsURL(h, d)}" target="_blank" rel="noopener">Mapa</a>. ${h.info}`]); });
     const pc = pasadiaContact(it);
     if (pc) items.push([`pasadia-${it.pasDay.iso}`, "Reservar la pasadía", `Para el ${dlong(it.pasDay.date)}, desde ${pc.from}, ${pc.who}.${it.pasDay.loc === "rincon" ? "" : ` <a href="https://wa.me/573014087371?text=${encodeURIComponent(agencyMsg(C))}" target="_blank" rel="noopener">Escribir a Trixie por WhatsApp</a>.`} Preguntar si recogen en el hotel.`]);
@@ -2446,7 +2448,8 @@
     const fl = side => Object.fromEntries(Object.entries(p[side]).map(([k, v]) => [k, { fecha: v.date, aerolinea: v.air, hora: v.time, precio_pp: fPrice(side, k), aviso: v.warn || "" }]));
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
-      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), reserva YFVQ8U, pagado $388.336. Check-in desde el 29 oct. El regreso aún no está comprado.",
+      hotel_tolu_reservado: "Hotel Pizzería Ópera, 1 al 5 nov (4 noches), $406.800 en Booking con Genius.",
+      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. El regreso aún no está comprado.",
       quien_paga: "Julio paga hoteles y comida; vuelos, traslados, planes e imprevistos se dividen por mitades con Alejandra.",
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
         planes_activos: Object.keys(it.placed), pasadia_fecha: it.placed.pasadia ? it.placed.pasadia.iso : null, total_pareja: Math.round(C.total), meta: S.goal,
