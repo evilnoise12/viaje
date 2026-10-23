@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.28">
+<meta name="app-version" content="2026-10-22.29">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -57,6 +57,8 @@
   .mk > span.stop { width: 26px; height: 26px; padding: 0; display: grid; place-items: center; transform: translate(-50%, -50%); color: #fff; border: 2px solid #fff; background: var(--accent); font-size: 13px; }
   .mk > span.stop.c-golfo { background: var(--golfo); } .mk > span.stop.c-rincon { background: var(--rincon); } .mk > span.stop.c-ctg { background: var(--ctg); } .mk > span.stop.c-minca { background: var(--minca); }
   .mk > span.air { transform: translate(-50%, -50%); padding: 5px; font-size: 15px; background: #13201d; color: #fff; border-color: #13201d; }
+  .mk > span.lbl { transform: translate(16px, -50%); background: rgba(255,255,255,.88); border: none; padding: 2px 6px; font-size: 12px; font-weight: 700; color: #13201d; box-shadow: none; pointer-events: none; }
+  .mk > span.lbl.left { transform: translate(calc(-100% - 16px), -50%); }
   .mk > span.beach { transform: translate(-50%, -50%); font-size: 12px; background: #fff7e0; color: #8a5a00; border-color: #f0d48a; }
   .mk > span.isl { transform: translate(-50%, -50%); padding: 4px; font-size: 14px; background: #0b8a8a; color: #fff; border-color: #0b8a8a; }
   .mpop { width: 210px; }
@@ -2057,9 +2059,12 @@
     const C = LAST, it = C.it, m = baseMap(el), pts = [], order = [...new Set(buildRoute())];
     const air0 = PLACES.find(p => p.r === RUTA && p.k === "air"), air1 = PLACES.find(p => (p.r === RUTA || p.r === "*") && p.k === "air2");
     const stopLL = id => { const d = DESTS.find(x => x.id === id), h = hotelOf(d); return h.ll || (PLACES.find(p => p.d === id) || {}).ll; };
-    if (air0) { L.marker(air0.ll, { icon: pin(`<i class="ph-fill ${air0.i}"></i>`, "air") }).addTo(m).bindPopup(placePopup(air0)); pts.push(air0.ll); }
+    const label = (ll, txt, left) => L.marker(ll, { icon: pin(esc(txt), left ? "lbl left" : "lbl"), interactive: false, keyboard: false }).addTo(m);
+    const STOPN = { golfo: "Tolú", rincon: "Rincón del Mar", ctg: "Cartagena", minca: "Minca" };
+    if (air0) { L.marker(air0.ll, { icon: pin(`<i class="ph-fill ${air0.i}"></i>`, "air") }).addTo(m).bindPopup(placePopup(air0)); pts.push(air0.ll); label(air0.ll, R.airport); }
     let prev = "air";
     order.forEach((id, i) => { const ll = stopLL(id); if (!ll) return; const d = DESTS.find(x => x.id === id), h = hotelOf(d), mv = prev + "-" + id;
+      label(ll, STOPN[id] || d.name);
       L.marker(ll, { icon: pin(i + 1, "stop c-" + id) }).addTo(m).bindPopup(`<div class="mpop"><b>${i + 1}. ${esc(d.name)}</b><small>${noches(S.n[id])} · ${esc(h.name)}</small>${MOVE_MODE[mv] ? `<small>Llegar: ${MOVE_MODE[mv]}, ${MOVE_T[mv]}</small>` : ""}<div class="row"><a class="mini" href="${dirURL(ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`);
       pts.push(ll); prev = id; });
     if (air1) { L.marker(air1.ll, { icon: pin(`<i class="ph-fill ${air1.i}"></i>`, "air") }).addTo(m).bindPopup(placePopup(air1)); pts.push(air1.ll); }
@@ -2068,6 +2073,7 @@
     const pl = it.placed && it.placed.pasadia;
     if (pl) { const from = pl.loc === "rincon" ? PLACES.find(p => p.id === "rinconpueblo") : PLACES.find(p => p.id === "muelle"), isl = PLACES.filter(p => p.r === RUTA && p.k === "isla");
       if (from && isl.length) { L.polyline([from.ll, isl[0].ll], { color: "#0b8a8a", weight: 3, dashArray: "6 7" }).addTo(m);
+        label(isl[0].ll, "Islas", true);
         isl.forEach(p => { L.marker(p.ll, { icon: pin(`<i class="ph-fill ${p.i}"></i>`, "isl") }).addTo(m).bindPopup(`<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t)}</small><small>Pasadía el ${dlabel(pl.iso)} desde ${pl.loc === "rincon" ? "Rincón del Mar" : "Tolú"}.</small></div>`); pts.push(p.ll); }); } }
     if (pts.length) m.fitBounds(pts, { padding: [26, 26] });
   }
