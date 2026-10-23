@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.8">
+<meta name="app-version" content="2026-10-23.9">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -566,6 +566,9 @@
   .lines > div:nth-child(odd) { color: var(--muted); }
   .lines > div:nth-child(even) { text-align: right; font-weight: 500; white-space: nowrap; }
   .lines > div.neg { color: var(--accent); }
+  .lines > div.lh { grid-column: 1 / -1; color: var(--text); font-weight: 700; font-size: 15px; padding: 14px 0 6px; border-bottom: 2px solid var(--line); }
+  .lines > div.lh + div { display: none; }
+  .lines > div.gt { font-size: 16px; padding-top: 14px; border-bottom: 0; }
   .lines > div.totl { font-weight: 700; color: var(--text); border-bottom: 0; }
   .field { display: grid; gap: 6px; margin-top: 14px; border: 0; padding: 0; min-width: 0; }
   .field > span, .field legend { font-size: 13px; color: var(--muted); font-weight: 500; padding: 0; }
@@ -1750,7 +1753,12 @@
     const mine = C.cats.hospedaje + C.cats.comida + C.cats.traslados + C.local, half = (C.total - mine) / 2;
     $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles, comida, transportes, su vuelo y sus planes</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Su vuelo y sus planes${S.cont ? ", e imprevistos" : ""}</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
-    $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}${(r.cat === "vuelos" || r.cat === "planes" || /^Imprevistos/.test(r.t)) && r.v > 0 ? `<small class="pp"> · ${fmt(r.v / 2)} por persona</small>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
+    /* Desglose por persona: Julio paga hoteles, comida y transportes; cada uno su vuelo, sus planes y sus imprevistos */
+    const J = [], A = [], shared = r => r.cat === "vuelos" || r.cat === "planes" || /^Imprevistos/.test(r.t);
+    const lbl = r => r.cat === "vuelos" ? r.t.replace("Vuelos, 2 personas", "Vuelo de ida y regreso").replace(/, \d+ trayectos? por 2$/, "") : r.cat === "planes" ? r.t.replace("Planes en el itinerario", "Planes") : r.t;
+    C.rows.forEach(r => { if (!r.v) return; if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est }); A.push({ t: lbl(r), v: r.v / 2, est: r.est }); } else J.push(r); });
+    const block = (who, list) => `<div class="lh">${who}</div><div></div>` + list.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total ${who}</div><div class="num totl">${fmt(list.reduce((s, r) => s + r.v, 0))}</div>`;
+    $("[data-lines]").innerHTML = block("Julio", J) + block("Alejandra", A) + `<div class="totl gt">Total del viaje</div><div class="num totl gt">${fmt(C.total)}</div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
     const gap = S.goal - C.total, gs = $("[data-goal-state]");
     gs.className = "goal-state " + (gap >= 0 ? "ok" : "over"); gs.textContent = gap >= 0 ? `Sobran ${fmt(gap)}` : `Se pasa por ${fmt(-gap)}`;
