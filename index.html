@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.15">
+<meta name="app-version" content="2026-10-23.16">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1428,6 +1428,7 @@
     return digits ? +digits : null;
   }
   function fixHotels() {
+    DESTS.forEach(d => { const b = d.hotels.find(h => h.booked); if (b && S.h[d.id] !== b.id) S.h[d.id] = b.id; }); // un hotel reservado manda sobre lo guardado
     DESTS.forEach(d => { const h = hotelOf(d); if (!h || !h.rate[S.pu]) { const ok = d.hotels.find(x => x.rate[S.pu]); if (ok) S.h[d.id] = ok.id; } });
   }
   function balance() {
