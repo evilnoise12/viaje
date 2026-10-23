@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.26">
+<meta name="app-version" content="2026-10-22.27">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -57,6 +57,7 @@
   .mk > span.stop { width: 26px; height: 26px; padding: 0; display: grid; place-items: center; transform: translate(-50%, -50%); color: #fff; border: 2px solid #fff; background: var(--accent); font-size: 13px; }
   .mk > span.stop.c-golfo { background: var(--golfo); } .mk > span.stop.c-rincon { background: var(--rincon); } .mk > span.stop.c-ctg { background: var(--ctg); } .mk > span.stop.c-minca { background: var(--minca); }
   .mk > span.air { transform: translate(-50%, -50%); padding: 5px; font-size: 15px; background: #13201d; color: #fff; border-color: #13201d; }
+  .mk > span.beach { transform: translate(-50%, -50%); font-size: 12px; background: #fff7e0; color: #8a5a00; border-color: #f0d48a; }
   .mk > span.isl { transform: translate(-50%, -50%); padding: 4px; font-size: 14px; background: #0b8a8a; color: #fff; border-color: #0b8a8a; }
   .mpop { width: 210px; }
   .mpop img { width: 100%; height: 96px; object-fit: cover; border-radius: 8px; display: block; margin-bottom: 6px; }
@@ -1208,6 +1209,7 @@
     { id: "muelle", r: "golfo", d: "golfo", i: "ph-anchor", n: "Muelle turístico de Tolú", t: "De aquí salen las lanchas a Tintipán y Múcura.", ll: [9.52185, -75.58658] },
     { id: "malecon", r: "golfo", d: "golfo", i: "ph-bicycle", n: "Malecón de Tolú", t: "Atardecer, bicitaxis y comida callejera.", ll: [9.52359, -75.58577] },
     { id: "cienaga", r: "golfo", d: "golfo", i: "ph-boat", n: "Ciénaga La Caimanera", t: "Canoa entre manglares, mejor temprano.", ll: [9.43567, -75.62859] },
+    { id: "covenas", r: "golfo", d: "golfo", k: "playa", i: "ph-umbrella-simple", n: "Coveñas (segunda ensenada)", t: "La playa para bañarse, más tranquila que La Coquerita. 20 minutos en colectivo desde Tolú (unos 6.000).", ll: [9.4228, -75.6398] },
     { id: "coquerita", r: "golfo", d: "golfo", i: "ph-umbrella-simple", n: "Playa de Coveñas (La Coquerita)", t: "La playa grande y de mar tranquilo; zona animada.", ll: [9.4039, -75.67935] },
     { id: "frances", r: "golfo", d: "golfo", i: "ph-person-simple-swim", n: "Playa El Francés", t: "Agua clara para caretear, al norte de Tolú.", ll: [9.56607, -75.57374] },
     { id: "museo", r: "golfo", d: "golfo", i: "ph-anchor-simple", n: "Museo de Infantería de Marina", t: "Gratis y con guía. Buen plan si llueve.", ll: [9.40716, -75.68816] },
@@ -2061,6 +2063,7 @@
       L.marker(ll, { icon: pin(i + 1, "stop c-" + id) }).addTo(m).bindPopup(`<div class="mpop"><b>${i + 1}. ${esc(d.name)}</b><small>${noches(S.n[id])} · ${esc(h.name)}</small>${MOVE_MODE[mv] ? `<small>Llegar: ${MOVE_MODE[mv]}, ${MOVE_T[mv]}</small>` : ""}<div class="row"><a class="mini" href="${dirURL(ll)}" target="_blank" rel="noopener">Cómo llegar</a></div></div>`);
       pts.push(ll); prev = id; });
     if (air1) { L.marker(air1.ll, { icon: pin(`<i class="ph-fill ${air1.i}"></i>`, "air") }).addTo(m).bindPopup(placePopup(air1)); pts.push(air1.ll); }
+    PLACES.filter(p => p.r === RUTA && p.k === "playa").forEach(p => L.marker(p.ll, { icon: pin(`<i class="ph-fill ${p.i}"></i> Coveñas`, "beach") }).addTo(m).bindPopup(placePopup(p)));
     L.polyline(pts, { color: "#0d7468", weight: 3, opacity: .85 }).addTo(m);
     const pl = it.placed && it.placed.pasadia;
     if (pl) { const from = pl.loc === "rincon" ? PLACES.find(p => p.id === "rinconpueblo") : PLACES.find(p => p.id === "muelle"), isl = PLACES.filter(p => p.r === RUTA && p.k === "isla");
