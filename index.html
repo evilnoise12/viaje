@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.4">
+<meta name="app-version" content="2026-10-23.5">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1332,7 +1332,7 @@
 
   /* ---------- Estado ---------- */
   const defaultState = () => ({ ruta: RUTA, pu: "p2", out: "dom", back: "mar", n: Object.assign({}, R.n), h: Object.assign({}, R.h), food: "aj",
-    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 10, notes: {}, pin: RUTA === "golfo" ? { cienaga: "2026-11-02", pasadia: "2026-11-05" } : {}, over: {}, custom: [] });
+    acts: Object.fromEntries(ACTS.map(a => [a.id, a.lvl !== "opt"])), goal: 4500000, bag: false, cont: 0, notes: {}, pin: RUTA === "golfo" ? { cienaga: "2026-11-02", pasadia: "2026-11-05" } : {}, over: {}, custom: [] });
   const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
                   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
   const enc = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -1747,7 +1747,7 @@
     $("[data-total]").textContent = fmt(C.total);
     /* Julio paga hoteles y comida; el resto (vuelos, traslados, planes, imprevistos) se divide por mitades */
     const mine = C.cats.hospedaje + C.cats.comida, half = (C.total - mine) / 2;
-    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles y comida ${fmt(mine)} + mitad del resto</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Mitad de vuelos, traslados, planes e imprevistos</small></div>`;
+    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles y comida ${fmt(mine)} + mitad del resto</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Mitad de vuelos, traslados y planes${S.cont ? " e imprevistos" : ""}</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
     $("[data-lines]").innerHTML = C.rows.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}${r.cat !== "hospedaje" && r.cat !== "comida" && r.v > 0 ? `<small class="pp"> · ${fmt(r.v / 2)} por persona</small>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total</div><div class="num totl">${fmt(C.total)}</div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
@@ -2801,6 +2801,7 @@
   }
 
   /* ---------- Inicio ---------- */
+  if (!store.get("caribe-cont0", false)) { S.cont = 0; store.set("caribe-cont0", true); }
   if (!store.get("caribe-food-aj", false)) { S.food = "aj"; store.set("caribe-food-aj", true); }
   if (!store.get("caribe-plan-333", false)) {
     S.out = "dom"; S.back = "mar"; S.n.golfo = 3; S.n.rincon = 3; S.n.ctg = 3;
