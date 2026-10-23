@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.29">
+<meta name="app-version" content="2026-10-22.30">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -59,7 +59,7 @@
   .mk > span.air { transform: translate(-50%, -50%); padding: 5px; font-size: 15px; background: #13201d; color: #fff; border-color: #13201d; }
   .mk > span.lbl { transform: translate(16px, -50%); background: rgba(255,255,255,.88); border: none; padding: 2px 6px; font-size: 12px; font-weight: 700; color: #13201d; box-shadow: none; pointer-events: none; }
   .mk > span.lbl.left { transform: translate(calc(-100% - 16px), -50%); }
-  .mk > span.beach { transform: translate(-50%, -50%); font-size: 12px; background: #fff7e0; color: #8a5a00; border-color: #f0d48a; }
+  .mk > span.beach { transform: translate(calc(-100% - 6px), -50%); font-size: 12px; background: #fff7e0; color: #8a5a00; border-color: #f0d48a; }
   .mk > span.isl { transform: translate(-50%, -50%); padding: 4px; font-size: 14px; background: #0b8a8a; color: #fff; border-color: #0b8a8a; }
   .mpop { width: 210px; }
   .mpop img { width: 100%; height: 96px; object-fit: cover; border-radius: 8px; display: block; margin-bottom: 6px; }
@@ -2045,7 +2045,19 @@
   function baseMap(el) {
     const m = L.map(el, { scrollWheelZoom: false, dragging: true });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(m);
+    m.on("zoomend moveend resize", () => declutter(m)); setTimeout(() => declutter(m), 350);
     MAPS.push(m); return m;
+  }
+  /* Evita marcas solapadas: muestra primero las más importantes y oculta las que chocan; al acercar el mapa reaparecen */
+  function declutter(m) {
+    const box = m.getContainer(); if (!box.isConnected) return;
+    const rank = s => { const c = s.classList; return c.contains("on") || c.contains("stop") ? 5 : c.contains("air") || c.contains("isl") ? 4 : c.contains("lbl") || c.contains("beach") ? 3 : c.contains("pl") || c.contains("yt") || c.contains("off") || c.contains("bad") ? 1 : 2; };
+    const spans = [...box.querySelectorAll(".mk > span")]; spans.forEach(s => s.style.visibility = "");
+    const kept = [], hit = (a, b) => a.left < b.right + 2 && b.left < a.right + 2 && a.top < b.bottom + 2 && b.top < a.bottom + 2;
+    spans.map((s, i) => ({ s, i, r: rank(s) })).sort((a, b) => b.r - a.r || a.i - b.i).forEach(({ s }) => {
+      const rc = s.getBoundingClientRect(); if (!rc.width) return;
+      if (kept.some(k => hit(k, rc))) s.style.visibility = "hidden"; else kept.push(rc);
+    });
   }
   const pin = (html, cls) => L.divIcon({ className: "mk", html: `<span class="${cls}">${html}</span>`, iconSize: [0, 0] });
   const kShort = v => "$" + Math.round(v / 1000) + "k";
@@ -2074,7 +2086,7 @@
     if (pl) { const from = pl.loc === "rincon" ? PLACES.find(p => p.id === "rinconpueblo") : PLACES.find(p => p.id === "muelle"), isl = PLACES.filter(p => p.r === RUTA && p.k === "isla");
       if (from && isl.length) { L.polyline([from.ll, isl[0].ll], { color: "#0b8a8a", weight: 3, dashArray: "6 7" }).addTo(m);
         label(isl[0].ll, "Islas", true);
-        isl.forEach(p => { L.marker(p.ll, { icon: pin(`<i class="ph-fill ${p.i}"></i>`, "isl") }).addTo(m).bindPopup(`<div class="mpop"><b>${esc(p.n)}</b><small>${esc(p.t)}</small><small>Pasadía el ${dlabel(pl.iso)} desde ${pl.loc === "rincon" ? "Rincón del Mar" : "Tolú"}.</small></div>`); pts.push(p.ll); }); } }
+        isl.slice(0, 1).forEach(p => { L.marker(p.ll, { icon: pin(`<i class="ph-fill ph-island"></i>`, "isl") }).addTo(m).bindPopup(`<div class="mpop"><b>Islas de San Bernardo</b><small>${isl.map(x => esc(x.n)).join(", ")}</small><small>Pasadía el ${dlabel(pl.iso)} desde ${pl.loc === "rincon" ? "Rincón del Mar" : "Tolú"}.</small></div>`); pts.push(p.ll); }); } }
     if (pts.length) m.fitBounds(pts, { padding: [26, 26] });
   }
   function destMap(el, id) {
