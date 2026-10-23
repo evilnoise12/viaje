@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.9">
+<meta name="app-version" content="2026-10-23.11">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -568,6 +568,12 @@
   .lines > div.neg { color: var(--accent); }
   .lines > div.lh { grid-column: 1 / -1; color: var(--text); font-weight: 700; font-size: 15px; padding: 14px 0 6px; border-bottom: 2px solid var(--line); }
   .lines > div.lh + div { display: none; }
+  .lines > div.lc { color: var(--text); font-weight: 600; } .lines > div.lc i { color: var(--accent); margin-right: 6px; vertical-align: -2px; }
+  .lines > div.lc small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin: 2px 0 0 22px; }
+  .lines > div.li { padding: 5px 0 5px 22px; font-size: 13px; border-bottom-style: dashed; } .lines > div.li.num { padding-left: 0; font-weight: 400; color: var(--muted); }
+  .desg { display: grid; gap: 12px; align-content: start; }
+  .desg-h { margin-bottom: 6px; }
+  .desg-t { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 16px; }
   .lines > div.gt { font-size: 16px; padding-top: 14px; border-bottom: 0; }
   .lines > div.totl { font-weight: 700; color: var(--text); border-bottom: 0; }
   .field { display: grid; gap: 6px; margin-top: 14px; border: 0; padding: 0; min-width: 0; }
@@ -891,7 +897,7 @@
             <button type="button" class="mini" data-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Restablecer</button>
           </div>
         </div>
-        <div class="card"><h2 style="margin-bottom:6px"><i class="ph ph-receipt" aria-hidden="true"></i>Desglose</h2><div class="lines" data-lines></div></div>
+        <div class="desg" data-lines></div>
       </div>
       <div class="card sugg" id="sugerencias" style="margin-top:12px">
         <div class="sg-head"><h2><i class="ph-fill ph-magic-wand" aria-hidden="true"></i>Sugerencias para ahorrar</h2><button type="button" class="mini primary" data-sg-all hidden><i class="ph ph-check-circle" aria-hidden="true"></i>Aplicar las que no pierden calidad</button></div>
@@ -1756,9 +1762,14 @@
     /* Desglose por persona: Julio paga hoteles, comida y transportes; cada uno su vuelo, sus planes y sus imprevistos */
     const J = [], A = [], shared = r => r.cat === "vuelos" || r.cat === "planes" || /^Imprevistos/.test(r.t);
     const lbl = r => r.cat === "vuelos" ? r.t.replace("Vuelos, 2 personas", "Vuelo de ida y regreso").replace(/, \d+ trayectos? por 2$/, "") : r.cat === "planes" ? r.t.replace("Planes en el itinerario", "Planes") : r.t;
-    C.rows.forEach(r => { if (!r.v) return; if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est }); A.push({ t: lbl(r), v: r.v / 2, est: r.est }); } else J.push(r); });
-    const block = (who, list) => `<div class="lh">${who}</div><div></div>` + list.map(r => `<div>${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}</div><div class="num ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") + `<div class="totl">Total ${who}</div><div class="num totl">${fmt(list.reduce((s, r) => s + r.v, 0))}</div>`;
-    $("[data-lines]").innerHTML = block("Julio", J) + block("Alejandra", A) + `<div class="totl gt">Total del viaje</div><div class="num totl gt">${fmt(C.total)}</div>`;
+    const catOf = r => r.cat === "vuelos" ? "Vuelos" : r.cat === "hospedaje" ? "Hoteles" : r.cat === "traslados" || /^Transporte local/.test(r.t) ? "Transporte" : r.cat === "comida" ? "Comida" : r.cat === "planes" ? "Planes" : "Imprevistos";
+    const CATS = ["Vuelos", "Hoteles", "Transporte", "Comida", "Planes", "Imprevistos"], CI = { Vuelos: "ph-airplane-tilt", Hoteles: "ph-bed", Transporte: "ph-bus", Comida: "ph-fork-knife", Planes: "ph-compass", Imprevistos: "ph-umbrella" };
+    C.rows.forEach(r => { if (!r.v) return; const c = catOf(r); if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); A.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); } else J.push({ t: r.t, v: r.v, est: r.est, c }); });
+    const it = r => `${r.t}${r.est ? ` <span class="tag est">estimado</span>` : ""}`;
+    const block = (who, list) => `<div class="card"><h2 class="desg-h"><i class="ph ph-receipt" aria-hidden="true"></i>Desglose de ${who}</h2><div class="lines">` + CATS.map(c => { const l = list.filter(r => r.c === c); if (!l.length) return ""; const sum = l.reduce((s, r) => s + r.v, 0);
+      return `<div class="lc"><i class="ph ${CI[c]}" aria-hidden="true"></i>${c}${l.length === 1 ? `<small>${it(l[0])}</small>` : ""}</div><div class="num lc">${fmtV(sum)}</div>` + (l.length > 1 ? l.map(r => `<div class="li">${it(r)}</div><div class="num li ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") : "");
+    }).join("") + `<div class="totl">Total ${who}</div><div class="num totl">${fmt(list.reduce((s, r) => s + r.v, 0))}</div></div></div>`;
+    $("[data-lines]").innerHTML = block("Alejandra", A) + block("Julio", J) + `<div class="card desg-t"><span>Total del viaje</span><b class="num">${fmt(C.total)}</b></div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
     const gap = S.goal - C.total, gs = $("[data-goal-state]");
     gs.className = "goal-state " + (gap >= 0 ? "ok" : "over"); gs.textContent = gap >= 0 ? `Sobran ${fmt(gap)}` : `Se pasa por ${fmt(-gap)}`;
