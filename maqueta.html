@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f6f5">
+<title>Vacas · Maquetas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  :root {
+    --bg: #f4f6f5; --surface: #fff; --surface-2: #eef2f1; --text: #13201d; --muted: #5b6a65; --line: #e1e7e5;
+    --accent: #0d7468; --accent-soft: #d9efeb; --ok: #1f8a4c; --ok-soft: #e3f4ea; --warn: #b4561f; --warn-soft: #fbeee6;
+    --golfo: #2366a8; --golfo-soft: #e4eef8; --rincon: #a86a00; --rincon-soft: #fcf0d9; --ctg: #b0306a; --ctg-soft: #f8e5ee;
+    --sab: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--text); font: 15px/1.45 "Outfit", system-ui, sans-serif; -webkit-font-smoothing: antialiased; padding-bottom: calc(76px + var(--sab)); }
+  .c-golfo { --dc: var(--golfo); --dcs: var(--golfo-soft); } .c-rincon { --dc: var(--rincon); --dcs: var(--rincon-soft); } .c-ctg { --dc: var(--ctg); --dcs: var(--ctg-soft); }
+
+  .switch { position: sticky; top: 0; z-index: 5; background: rgba(244,246,245,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  .switch p { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border-radius: 12px; padding: 3px; }
+  .seg button { border: 0; background: none; font: inherit; font-weight: 600; font-size: 14px; padding: 8px; border-radius: 9px; color: var(--muted); touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+
+  main { max-width: 520px; margin: 0 auto; padding: 16px; }
+  [hidden] { display: none !important; }
+
+  /* Encabezado del viaje */
+  .trip h1 { font-size: 26px; line-height: 1.15; letter-spacing: -.01em; }
+  .trip .meta { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .status { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 18px; }
+  .st { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; }
+  .st.ok { background: var(--ok-soft); color: #1f6b3d; }
+  .st.todo { background: var(--warn-soft); color: var(--warn); }
+
+  /* Opción A: lista por destino */
+  .stage { margin-bottom: 18px; }
+  .stage-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 0 2px 8px; }
+  .stage-h b { font-size: 17px; color: var(--dc); }
+  .stage-h span { font-size: 13px; color: var(--muted); text-align: right; }
+  .stage-h .tag { display: inline-flex; align-items: center; gap: 3px; font-weight: 600; }
+  .stage-h .tag.ok { color: var(--ok); } .stage-h .tag.todo { color: var(--warn); }
+  .days { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--dc); border-radius: 14px; overflow: hidden; }
+  .day { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border-top: 1px solid var(--line); width: 100%; background: none; border-left: 0; border-right: 0; border-bottom: 0; font: inherit; color: inherit; text-align: left; touch-action: manipulation; }
+  .day:first-child { border-top: 0; }
+  .day:active { background: var(--surface-2); }
+  .d-num { text-align: center; line-height: 1.05; }
+  .d-num b { display: block; font-size: 20px; }
+  .d-num small { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+  .d-txt b { display: block; font-size: 15px; font-weight: 600; }
+  .d-txt small { display: block; font-size: 13px; color: var(--muted); }
+  .d-wx { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 3px; }
+  .d-wx i { font-size: 18px; color: #c9a227; }
+  .day.open { background: #fbfcfc; }
+  .more { grid-column: 1 / -1; padding: 6px 0 2px 56px; display: grid; gap: 6px; font-size: 14px; }
+  .more div { display: flex; gap: 8px; } .more i { color: var(--dc); font-size: 17px; margin-top: 1px; flex: none; }
+  .fest { font-size: 10px; font-weight: 700; color: var(--warn); display: block; }
+  .edit { display: flex; gap: 8px; margin-top: 4px; }
+  .btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 46px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font: inherit; font-weight: 600; font-size: 14px; color: var(--text); touch-action: manipulation; }
+  .btn.pri { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Opción B: hoy / día elegido */
+  .strip { display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px 14px; padding: 2px 16px; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .chip { scroll-snap-align: start; flex: none; width: 52px; padding: 7px 0; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); text-align: center; font: inherit; color: inherit; touch-action: manipulation; }
+  .chip small { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; }
+  .chip b { display: block; font-size: 18px; line-height: 1.1; }
+  .chip i { display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--dc); margin: 4px auto 0; }
+  .chip[aria-pressed="true"] { background: var(--dc); color: #fff; border-color: var(--dc); } .chip[aria-pressed="true"] small { color: rgba(255,255,255,.85); } .chip[aria-pressed="true"] i { background: #fff; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+  .card .where { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--dc); }
+  .card h2 { font-size: 22px; margin: 4px 0 2px; }
+  .card .wx { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  .tl { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 0; }
+  .tl li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .tl li:first-child { border-top: 0; }
+  .tl .t { font-size: 13px; color: var(--muted); font-weight: 600; padding-top: 1px; }
+  .tl b { display: block; font-weight: 600; } .tl small { display: block; color: var(--muted); font-size: 13px; }
+  .stay { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--dcs); font-size: 14px; }
+  .stay i { font-size: 20px; color: var(--dc); }
+  .next { margin-top: 16px; }
+  .next h3 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin: 0 2px 8px; }
+  .todo-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 8px; font-size: 14px; }
+  .todo-row i { font-size: 20px; color: var(--warn); } .todo-row b { font-weight: 600; } .todo-row small { display: block; color: var(--muted); font-size: 12px; }
+
+  /* Carrusel de actividades con fotos */
+  .acts { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px 10px; padding: 0 16px 4px; scroll-padding-left: 16px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .acts::-webkit-scrollbar { display: none; }
+  .ac { flex: none; width: 72%; max-width: 300px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .ac img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--surface-2); }
+  .ac figcaption { padding: 8px 10px 10px; } .ac b { display: block; font-size: 14px; font-weight: 600; } .ac small { display: block; font-size: 12px; color: var(--muted); }
+  .credit { font-size: 11px; color: var(--muted); text-align: center; margin-top: 6px; }
+  /* Barra inferior propuesta */
+  nav.bottom { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(5, 1fr); padding-bottom: var(--sab); z-index: 6; }
+  nav.bottom span { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 8px 0 7px; font-size: 11px; color: var(--muted); }
+  nav.bottom i { font-size: 22px; }
+  nav.bottom span.on { color: var(--accent); font-weight: 600; }
+  .note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 18px; }
+</style>
+</head>
+<body>
+<div class="switch">
+  <p>Maqueta para comparar. No cambia tu plan.</p>
+  <div class="seg" role="group" aria-label="Opciones">
+    <button type="button" aria-pressed="true" data-opt="a">A · Itinerario en lista</button>
+    <button type="button" aria-pressed="false" data-opt="b">B · Día por día</button>
+  </div>
+</div>
+
+<!-- OPCIÓN A -->
+<main data-show="a">
+  <header class="trip">
+    <h1>Tolú, Rincón y Cartagena</h1>
+    <p class="meta">Dom 1 al mar 10 de nov · 9 noches · $4,1 M la pareja</p>
+  </header>
+  <div class="status">
+    <span class="st ok"><i class="ph-fill ph-check-circle"></i>Vuelo de ida</span>
+    <span class="st ok"><i class="ph-fill ph-check-circle"></i>Hotel en Tolú</span>
+    <span class="st todo"><i class="ph ph-circle-dashed"></i>Faltan 3</span>
+  </div>
+
+  <section class="stage c-golfo">
+    <div class="stage-h"><b>Tolú</b><span>3 noches · Ópera · <span class="tag ok"><i class="ph-fill ph-check-circle"></i>reservado</span></span></div><div class="acts"><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Cienaga_de_la_Caimanera%2C_Sucre.jpg/960px-Cienaga_de_la_Caimanera%2C_Sucre.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Canoa por la Ciénaga</b><small>Lun 2 · 30.000 p/p</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Cove%C3%B1as_-_Vista_playa_1.jpg/960px-Cove%C3%B1as_-_Vista_playa_1.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Playa en Coveñas</b><small>Lun 2 · colectivo 6.000</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Playa_El_Franc%C3%A9s%2C_Tol%C3%BA.JPG/960px-Playa_El_Franc%C3%A9s%2C_Tol%C3%BA.JPG" alt="" loading="lazy" decoding="async"><figcaption><b>Playa El Francés</b><small>Mar 3 · careteo</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Bah%C3%ADa_Cispata_-_San_Antero_-_Hector_Pertuz.jpg/960px-Bah%C3%ADa_Cispata_-_San_Antero_-_Hector_Pertuz.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Bahía de Cispatá</b><small>Mar 3 · 50.000 p/p</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Malecon%2C_Santiago_de_Tolu%2C_Sucre.jpg/960px-Malecon%2C_Santiago_de_Tolu%2C_Sucre.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Malecón de Tolú</b><small>Cada tarde</small></figcaption></figure></div>
+    <div class="days">
+      <button class="day open" type="button">
+        <div class="d-num"><b>1</b><small>dom</small></div>
+        <div class="d-txt"><b>Vuelo y llegada a Tolú</b><small>11:05 Bogotá → Montería · colectivo</small></div>
+        <div class="d-wx"><i class="ph-fill ph-cloud-sun"></i>27°</div>
+        <div class="more">
+          <div><i class="ph ph-airplane-takeoff"></i><span>JetSMART 11:05 → 12:35. Solo mochila.</span></div>
+          <div><i class="ph ph-bus"></i><span>Colectivo en la entrada 5 del aeropuerto, 1 h 40, unos 35.000 p/p.</span></div>
+          <div><i class="ph ph-bicycle"></i><span>En la tarde: malecón en bicitaxi y comida callejera.</span></div>
+        </div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>2</b><small>lun</small><span class="fest">festivo</span></div>
+        <div class="d-txt"><b>Canoa por la Ciénaga</b><small>Temprano · en la tarde playa en Coveñas</small></div>
+        <div class="d-wx"><i class="ph-fill ph-sun"></i>29°</div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>3</b><small>mar</small></div>
+        <div class="d-txt"><b>Día libre</b><small>El Francés o San Antero</small></div>
+        <div class="d-wx"><i class="ph-fill ph-cloud-sun"></i>28°</div>
+      </button>
+    </div>
+  </section>
+
+  <section class="stage c-rincon">
+    <div class="stage-h"><b>Rincón del Mar</b><span>3 noches · Cangrejo Azul · <span class="tag todo">por reservar</span></span></div><div class="acts"><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Paisaje_Caribe%C3%B1o_en_Isla_Tintip%C3%A1n.jpg/960px-Paisaje_Caribe%C3%B1o_en_Isla_Tintip%C3%A1n.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Isla Tintipán</b><small>Jue 5 · pasadía</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Isla_M%C3%BAcura_-_playa_-_Colombia.jpg/960px-Isla_M%C3%BAcura_-_playa_-_Colombia.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Isla Múcura</b><small>Jue 5 · pasadía</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Santa_Cruz_del_Islote_2022_01.jpg/960px-Santa_Cruz_del_Islote_2022_01.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Santa Cruz del Islote</b><small>Jue 5 · 10.000</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Bioluminescence_in_Porto_de_Barcas.jpg/960px-Bioluminescence_in_Porto_de_Barcas.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Bioluminiscencia</b><small>Mié 4 · 45.000 p/p</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Playa_Rinc%C3%B3n.jpg/960px-Playa_Rinc%C3%B3n.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Playa de Rincón</b><small>Vie 6 · descanso</small></figcaption></figure></div>
+    <div class="days">
+      <button class="day" type="button">
+        <div class="d-num"><b>4</b><small>mié</small></div>
+        <div class="d-txt"><b>Paso a Rincón</b><small>Bus y moto, 1 h 30 · bioluminiscencia</small></div>
+        <div class="d-wx"><i class="ph-fill ph-cloud-sun"></i>28°</div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>5</b><small>jue</small></div>
+        <div class="d-txt"><b>Pasadía a las islas</b><small>30 min en lancha · 8:30 a 3:30</small></div>
+        <div class="d-wx"><i class="ph-fill ph-sun"></i>29°</div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>6</b><small>vie</small></div>
+        <div class="d-txt"><b>Descanso</b><small>Respaldo si el mar canceló la pasadía</small></div>
+        <div class="d-wx"><i class="ph-fill ph-cloud-sun"></i>28°</div>
+      </button>
+    </div>
+  </section>
+
+  <section class="stage c-ctg">
+    <div class="stage-h"><b>Cartagena</b><span>3 noches · El Altísimo · <span class="tag todo">por reservar</span></span></div><div class="acts"><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Puerta_del_Reloj%2C_Cartagena_02.jpg/960px-Puerta_del_Reloj%2C_Cartagena_02.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Ciudad Amurallada</b><small>Dom 8 · gratis</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Graffiti_in_Getseman%C3%AD%2C_Cartagena_01.jpg/960px-Graffiti_in_Getseman%C3%AD%2C_Cartagena_01.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Getsemaní</b><small>Sáb 7 · de noche</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Graffiti_in_Getseman%C3%AD%2C_Cartagena_03.jpg/960px-Graffiti_in_Getseman%C3%AD%2C_Cartagena_03.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Murales del Callejón Angosto</b><small>Lun 9</small></figcaption></figure></div>
+    <div class="days">
+      <button class="day" type="button">
+        <div class="d-num"><b>7</b><small>sáb</small></div>
+        <div class="d-txt"><b>Paso a Cartagena</b><small>Moto y bus, 2 h 30 · Getsemaní de noche</small></div>
+        <div class="d-wx"><i class="ph-fill ph-cloud-sun"></i>28°</div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>8</b><small>dom</small></div>
+        <div class="d-txt"><b>Ciudad Amurallada a pie</b><small>Museo del Oro gratis · atardecer en la muralla</small></div>
+        <div class="d-wx"><i class="ph-fill ph-sun"></i>29°</div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>9</b><small>lun</small></div>
+        <div class="d-txt"><b>Día libre</b><small>Getsemaní sin afán</small></div>
+        <div class="d-wx"><i class="ph-fill ph-cloud-sun"></i>28°</div>
+      </button>
+      <button class="day" type="button">
+        <div class="d-num"><b>10</b><small>mar</small></div>
+        <div class="d-txt"><b>Regreso a Bogotá</b><small>LATAM 1:35 pm · <span style="color:var(--warn);font-weight:600">por comprar</span></small></div>
+        <div class="d-wx"><i class="ph-fill ph-airplane-landing" style="color:var(--muted)"></i></div>
+      </button>
+    </div>
+  </section>
+
+  <div class="edit">
+    <span class="btn"><i class="ph ph-sliders-horizontal"></i>Cambiar plan</span>
+    <span class="btn"><i class="ph ph-map-trifold"></i>Ver mapa</span>
+  </div>
+  <p class="note">Desliza las fotos de lado. Toca un día para ver el detalle (como el domingo 1).</p><p class="credit">Fotos: Wikimedia Commons</p>
+</main>
+
+<!-- OPCIÓN B -->
+<main data-show="b" hidden>
+  <header class="trip">
+    <h1>Tolú, Rincón y Cartagena</h1>
+    <p class="meta">Dom 1 al mar 10 de nov · 9 noches</p>
+  </header>
+  <div class="strip" style="margin-top:14px">
+    <button class="chip c-golfo" aria-pressed="false"><small>dom</small><b>1</b><i></i></button>
+    <button class="chip c-golfo" aria-pressed="false"><small>lun</small><b>2</b><i></i></button>
+    <button class="chip c-golfo" aria-pressed="false"><small>mar</small><b>3</b><i></i></button>
+    <button class="chip c-rincon" aria-pressed="false"><small>mié</small><b>4</b><i></i></button>
+    <button class="chip c-rincon" aria-pressed="true"><small>jue</small><b>5</b><i></i></button>
+    <button class="chip c-rincon" aria-pressed="false"><small>vie</small><b>6</b><i></i></button>
+    <button class="chip c-ctg" aria-pressed="false"><small>sáb</small><b>7</b><i></i></button>
+    <button class="chip c-ctg" aria-pressed="false"><small>dom</small><b>8</b><i></i></button>
+    <button class="chip c-ctg" aria-pressed="false"><small>lun</small><b>9</b><i></i></button>
+    <button class="chip c-ctg" aria-pressed="false"><small>mar</small><b>10</b><i></i></button>
+  </div>
+
+  <div class="acts"><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Paisaje_Caribe%C3%B1o_en_Isla_Tintip%C3%A1n.jpg/960px-Paisaje_Caribe%C3%B1o_en_Isla_Tintip%C3%A1n.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Isla Tintipán</b><small>Tranquila, con manglares</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Isla_M%C3%BAcura_-_playa_-_Colombia.jpg/960px-Isla_M%C3%BAcura_-_playa_-_Colombia.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Isla Múcura</b><small>Más ambiente</small></figcaption></figure><figure class="ac"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Santa_Cruz_del_Islote_2022_01.jpg/960px-Santa_Cruz_del_Islote_2022_01.jpg" alt="" loading="lazy" decoding="async"><figcaption><b>Santa Cruz del Islote</b><small>La isla más poblada del mundo</small></figcaption></figure></div>
+  <article class="card c-rincon">
+    <div class="where"><i class="ph-fill ph-map-pin"></i>Rincón del Mar · día 5 de 10</div>
+    <h2>Pasadía a las islas</h2>
+    <p class="wx"><i class="ph-fill ph-sun" style="color:#c9a227"></i>29° · poca lluvia en la mañana</p>
+    <ol class="tl">
+      <li><span class="t">8:30</span><div><b>Lancha desde la playa</b><small>30 minutos · 70.000 p/p</small></div></li>
+      <li><span class="t">9:15</span><div><b>Santa Cruz del Islote</b><small>Recorrido y acuario, 10.000</small></div></li>
+      <li><span class="t">10:30</span><div><b>Tintipán o Múcura</b><small>Playa · mojarra unos 35.000</small></div></li>
+      <li><span class="t">3:30</span><div><b>Regreso a Rincón</b><small>Antes de que se pique el mar</small></div></li>
+    </ol>
+    <div class="stay"><i class="ph-fill ph-bed"></i><div><b>Cangrejo Azul</b> · noche 2 de 3 · <span style="color:var(--warn);font-weight:600">por reservar</span></div></div>
+  </article>
+
+  <section class="next">
+    <h3>Pendientes</h3>
+    <div class="todo-row"><i class="ph ph-bed"></i><div><b>Reservar Cangrejo Azul</b><small>4 al 7 nov · 3 noches</small></div></div>
+    <div class="todo-row"><i class="ph ph-airplane-landing"></i><div><b>Comprar el regreso</b><small>Mar 10, LATAM 1:35 pm</small></div></div>
+  </section>
+  <p class="note">Toca otro día arriba para cambiar la tarjeta.</p><p class="credit">Fotos: Wikimedia Commons</p>
+</main>
+
+<nav class="bottom" aria-hidden="true">
+  <span class="on"><i class="ph-fill ph-calendar-check"></i>Viaje</span>
+  <span><i class="ph ph-check-square"></i>Pendientes</span>
+  <span><i class="ph ph-book-open-text"></i>Guía</span>
+  <span><i class="ph ph-wallet"></i>Costos</span>
+  <span><i class="ph ph-sparkle"></i>Asistente</span>
+</nav>
+
+<script>
+  document.querySelectorAll("[data-opt]").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("[data-opt]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    document.querySelectorAll("[data-show]").forEach(m => m.hidden = m.dataset.show !== b.dataset.opt);
+    window.scrollTo(0, 0);
+  }));
+</script>
+</body>
+</html>
