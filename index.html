@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-22.38">
+<meta name="app-version" content="2026-10-22.39">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -782,6 +782,7 @@
     <button class="nav-btn" data-view-btn="dias"><i class="ph ph-list-bullets" aria-hidden="true"></i>Día a día</button>
     <button class="nav-btn" data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
+    <button class="nav-btn" data-view-btn="hoteles"><i class="ph ph-bed" aria-hidden="true"></i>Hoteles</button>
     <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
     <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
@@ -1035,6 +1036,7 @@
   <button data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
   <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
   <button data-view-btn="asistente" class="nav-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente</button>
+  <button data-view-btn="hoteles"><i class="ph ph-bed" aria-hidden="true"></i>Hoteles</button>
 </nav>
 <div class="a2hs-backdrop" data-a2hs-bg hidden></div>
 <div class="a2hs" data-a2hs hidden role="dialog" aria-modal="true" aria-labelledby="a2hs-t">
@@ -2176,7 +2178,7 @@
   }
   function renderHotels() {
     const tabs = $("[data-htabs]"), box = $("[data-hlist]"); if (!tabs || !box) return;
-    if (!DESTS.some(d => d.id === HTAB)) HTAB = (DESTS.find(d => S.n[d.id]) || DESTS[0]).id;
+    if (!DESTS.some(d => d.id === HTAB)) HTAB = (DESTS.find(d => S.n[d.id] && !lockedN(d)) || DESTS.find(d => S.n[d.id]) || DESTS[0]).id;
     tabs.innerHTML = DESTS.map(d => `<button type="button" role="tab" class="g-tab c-${d.id}" aria-selected="${d.id === HTAB}" data-htab="${d.id}"><i class="ph ${d.icon}" aria-hidden="true"></i>${d.name}</button>`).join("");
     const d = DESTS.find(x => x.id === HTAB), n = S.n[d.id], [ci, co] = stayOf(d.id);
     const ws = h => workScore(h) == null ? -1 : workScore(h), keep = h => !HWORK || ws(h) >= 8;
@@ -2791,7 +2793,7 @@
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     if (v === "dias") setTimeout(initMaps, 30); else killMaps();
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = ["armar", "dias", "calendario", "comparar", "info", "hoteles"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
+      const inMas = ["armar", "dias", "calendario", "comparar", "info"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
