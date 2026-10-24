@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.19">
+<meta name="app-version" content="2026-10-23.20">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1115,6 +1115,11 @@
         { id: "casavilmar", name: "Casa Vilmar Getsemaní", where: "Getsemaní, carrera 10C", score: "8,6", rc: 105, rate: { p2: 198900, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Wifi excelente para trabajar.", url: "https://www.booking.com/hotel/co/casa-vilmar-getsemani.es.html", img: ["682139946?k=8d45563df3b7ab63916116c2f349a0782c86b2ddf020c32043e8f5b394666119"] },
         { id: "getsemanicentral", name: "Hotel Getsemaní Central", where: "Getsemaní", score: "8,8", rc: 135, rate: { p2: 265000, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/getsemani-central.es.html", img: ["928354759?k=f064bdd3fc86d62cd0c0946cf760e2e28dc0d5fc30702ca6d85946699472375a"] },
         { id: "altisimo", name: "Hostal El Altísimo", where: "Getsemaní", score: "8,3", rate: { p2: 144000, p16: 144000 }, ver: "22 oct", info: "Cuarto privado con baño y aire. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostal-el-altisimo.es.html" },
+        { id: "castillomar", name: "Hotel CastilloMar", where: "Castillogrande, pegado a Bocagrande", score: "8,0", rc: 1040, rate: { p2: 113800, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. $113.800 la noche con el descuento Genius de tu otra cuenta (sin descuento, $153.600). Wifi bueno para trabajar.", url: "https://www.booking.com/hotel/co/castillomar-hostel.es.html", img: ["708050997?k=41bba924bfb675619f766cb88fd30ec49862587b225aee0ff8ccbc09257e871a"] },
+        { id: "casasanjuan", name: "Casa San Juan", where: "Getsemaní", score: "7,3", rc: 853, rate: { p2: 140000, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Nota baja en Booking: revisar reseñas. Revisa si tu otra cuenta tiene descuento.", url: "https://www.booking.com/hotel/co/casa-san-juan-cartagena-de-indias.es.html", img: ["287500431?k=91d053f59b344d82f09b28f0d70dd2a3b1813bed261829a8631abe7295352073"] },
+        { id: "mamawaldy", name: "Casa Mamá Waldy", where: "Getsemaní", score: "8,2", rc: 1129, rate: { p2: 184200, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Se anuncia como hostal. Revisa si tu otra cuenta tiene descuento.", url: "https://www.booking.com/hotel/co/casa-mama-waldy-new.es.html", img: ["287270256?k=73a97211bc127547896f04ffe8975a49a520097244069f224e90432c269bb7ba"] },
+        { id: "almadelmar", name: "Alma Del Mar", where: "Bocagrande", score: "8,3", rc: 387, rate: { p2: 187000, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Revisa si tu otra cuenta tiene descuento.", url: "https://www.booking.com/hotel/co/alma-del-mar.es.html", img: ["735200008?k=bbd13bec6fad10d0f86ad0380b6098bbe59c632722fb8015bdbd846acd353c8b"] },
+        { id: "la10b", name: "La 10B", where: "Getsemaní", score: "8,6", rc: 355, rate: { p2: 190000, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Revisa si tu otra cuenta tiene descuento.", url: "https://www.booking.com/hotel/co/la-10b.es.html", img: ["303810719?k=32879cb5b0ff65c1a19151569c822f0a1457bfd5c5008253eba9cc7af493045b"] },
         { id: "dakema", name: "Posada Dakema", where: "Canapote, lejos del centro", score: "8,4", rate: { p2: 71820, p16: 72000 }, ver: "22 oct", info: "Habitación familiar (1 doble y 1 litera), aire. Hay que moverse en taxi.", url: "https://www.booking.com/hotel/co/posada-dakema-cartagena.es.html" }
       ] }
   ];
@@ -1160,6 +1165,7 @@
   const DNAME_SHORT = { golfo: "Tolú", rincon: "Rincón", ctg: "Cartagena", islas: "Islas" };
   const PAS = { hi: 140000, lo: 100000, rincon: 70000, park: 11000, islote: 10000 };
   const BAG = 90000, LOWCOST = ["JetSMART", "Wingo"], LUNCH = 0.35, CAP = 150000, AVG = 120000;
+  const CAPD = { ctg: 180000 }, capOf = id => CAPD[id] || CAP; // en Cartagena Julio revisa descuentos Genius en su otra cuenta
   const CASH_FOOD = { golfo: 0.5, rincon: 1, ctg: 0 };
 
   /* ---------- Rutas: cada una es un plan aparte, con sus propias noches, hoteles y planes ---------- */
@@ -1261,13 +1267,13 @@
     sanfelipe: [10.42405, -75.54016], altisimo: [10.42294, -75.54546], dakema: [10.43759, -75.52615], marie: [10.42531, -75.54718], stil: [10.42524, -75.54529], viajero: [10.42468, -75.54958],
     casablanca: [11.14252, -74.11601], btc: [11.14329, -74.11769], cabanita: [11.14531, -74.11724], tibiki: [11.14289, -74.11911], dunarinka: [11.14453, -74.12267], tribu: [11.13994, -74.12143], refugio: [11.14502, -74.11707], altomontana: [11.14259, -74.10684], mariposas: [11.14488, -74.11608], rioelemento: [11.14537, -74.1149], coffee: [11.14093, -74.11649],
     antillas: [9.52673, -75.58374], playadivina: [9.42284, -75.63978], madriguena: [9.76763, -75.64206], campomar: [9.53002, -75.58284], gloria: [9.77305, -75.64516], mango: [9.77133, -75.63731], puntacoral: [9.77157, -75.64512], satva: [9.77203, -75.64527], kevins: [9.52887, -75.58219], laguna: [9.55867, -75.57479], marazul: [9.40222, -75.68021],
-    puerto: [9.52124, -75.58529], casacielo: [10.42355, -75.54406], casavilmar: [10.41855, -75.54516], getsemanicentral: [10.42327, -75.54562], beachhouse: [9.76548, -75.64111], cienagahouse: [9.77079, -75.64277], canadian: [9.51933, -75.58423], aquamarina: [9.51871, -75.58228], mithival: [9.76634, -75.6415], aguasol: [9.77067, -75.64285] };
+    puerto: [9.52124, -75.58529], castillomar: [10.39695, -75.55572], casasanjuan: [10.42012, -75.54651], mamawaldy: [10.42123, -75.54654], almadelmar: [10.40265, -75.55587], la10b: [10.41916, -75.5458], casacielo: [10.42355, -75.54406], casavilmar: [10.41855, -75.54516], getsemanicentral: [10.42327, -75.54562], beachhouse: [9.76548, -75.64111], cienagahouse: [9.77079, -75.64277], canadian: [9.51933, -75.58423], aquamarina: [9.51871, -75.58228], mithival: [9.76634, -75.6415], aguasol: [9.77067, -75.64285] };
   DESTS_GOLFO.concat(DESTS_SIERRA).forEach(d => d.hotels.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
   Object.values(HOTEL_YT).forEach(l => l.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
   /* Trabajo remoto: nota que los huéspedes de Booking le dan al wifi y velocidad medida (22 oct 2026). Planta eléctrica: según Booking o videos */
   const WIFI = { hostaldelmar: ["9,4"], monkey: ["9,4"], oasis: ["8,8"], opera: ["8,5"], danubio: ["8,0"], playadivina: ["7,2"], antillas: ["7,8"],
     nugeku: ["8,3"], mucura: ["8,1"], cangrejo: ["8,0", 0, true], milimar: ["7,4"], dakema: ["9,1"], altisimo: ["7,0"],
-    altomontana: ["9,6", 264], refugio: ["9,1", 190], cabanita: ["9,5", 15], dunarinka: ["9,1"], mariposas: ["9,1"], btc: ["8,4"], coffee: ["6,5"], campomar: [null, 0, true], puerto: ["8,0"], sanfelipe: ["10,0"], casacielo: ["9,0"], casavilmar: ["10,0"], getsemanicentral: ["9,0"], mithival: ["8,0"], cienagahouse: ["9,5"] };
+    altomontana: ["9,6", 264], refugio: ["9,1", 190], cabanita: ["9,5", 15], dunarinka: ["9,1"], mariposas: ["9,1"], btc: ["8,4"], coffee: ["6,5"], campomar: [null, 0, true], puerto: ["8,0"], castillomar: ["8,9"], casasanjuan: ["8,6"], mamawaldy: ["7,9"], almadelmar: ["7,5"], la10b: ["7,6"], sanfelipe: ["10,0"], casacielo: ["9,0"], casavilmar: ["10,0"], getsemanicentral: ["9,0"], mithival: ["8,0"], cienagahouse: ["9,5"] };
   /* Lo que dicen las reseñas de Google Maps sobre wifi y luz (22 oct 2026): 1 bueno, -1 malo */
   const GWIFI = { opera: [1, "En Google dicen que el wifi es rápido y que sirve para trabajo remoto. Una pareja tuvo un cuarto sin internet y la cambiaron: pedir cuarto con buena señal."],
     campomar: [1, "En Google dicen que el wifi es bueno. Tiene planta eléctrica: un día se fue la luz en todo el pueblo y el hotel siguió con energía."],
@@ -1597,7 +1603,7 @@
   function warnings(C) {
     const W = [], p = P(), out = p.out[S.out], back = p.back[S.back], TN = totalNights(), SN = sumNights(), diff = TN - SN;
     if (diff) W.push({ bad: true, icon: "ph-bed", txt: diff > 0 ? `Falta repartir ${noches(diff)}: van ${SN} de ${TN}.` : `Sobran ${noches(-diff)}: van ${SN} de ${TN}.`, btn: `<button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button>` });
-    DESTS.forEach(d => { if (!S.n[d.id]) return; const h = hotelOf(d), r = rateOf(h); if (r > CAP) W.push({ bad: true, icon: "ph-warning", txt: `${h.name} cuesta ${fmt(r)} la noche: pasa el tope de ${fmt(CAP)}.` }); });
+    DESTS.forEach(d => { if (!S.n[d.id]) return; const h = hotelOf(d), r = rateOf(h); if (r > capOf(d.id)) W.push({ bad: true, icon: "ph-warning", txt: `${h.name} cuesta ${fmt(r)} la noche: pasa el tope de ${fmt(capOf(d.id))}.` }); });
     const avg = C.lodging / Math.max(1, SN); if (avg > AVG) W.push({ bad: true, icon: "ph-warning", txt: `La noche promedio es ${fmt(avg)}: pasa el promedio de ${fmt(AVG)}.` });
     if (lateArrival(out)) W.push({ bad: true, icon: "ph-moon", txt: `El vuelo de ida llega a ${R.airport} a las ${hmStr(arrOf(out))}. ${R.lateTxt}` });
     if (earlyBack(back)) {
@@ -1722,7 +1728,7 @@
       return `<div class="dest c-${d.id} ${n ? "" : "off"}">
         <div class="dest-head"><span class="dest-ic"><i class="ph ${d.icon}" aria-hidden="true"></i></span><div class="dest-name"><b>${d.name}</b><small>${d.blurb}</small></div>
           ${L ? `<span class="locked"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>${noches(n)} · reservado</span>` : `<div class="stepper" role="group" aria-label="Noches en ${d.name}"><button type="button" data-step="${d.id}" data-d="-1" aria-label="Quitar una noche en ${d.name}" ${n <= d.min ? "disabled" : ""}>&minus;</button><output>${noches(n)}</output><button type="button" data-step="${d.id}" data-d="1" aria-label="Agregar una noche en ${d.name}">+</button></div>`}</div>
-        ${n ? `<div class="hotel-sel"><div class="hs-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span><span class="tags">${tag(key)}${r > CAP ? `<span class="tag bad">Pasa el tope</span>` : ""}${/solo efectivo/i.test(h.info) ? `<span class="tag cash">Solo efectivo</span>` : ""}</span></div>
+        ${n ? `<div class="hotel-sel"><div class="hs-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span><span class="tags">${tag(key)}${r > capOf(d.id) ? `<span class="tag bad">Pasa el tope</span>` : ""}${/solo efectivo/i.test(h.info) ? `<span class="tag cash">Solo efectivo</span>` : ""}</span></div>
           <div class="hs-price"><b class="num">${fmt(r)}</b><span>la noche</span><span class="num">${noches(n)}: ${fmt(r * n)}</span></div>
           <div class="hs-act">${L ? "" : `<button type="button" class="mini" data-hsheet="${d.id}"><i class="ph ph-swap" aria-hidden="true"></i>Cambiar</button>`}<button type="button" class="mini" data-hview="${d.id}"><i class="ph ph-images" aria-hidden="true"></i>Fotos</button><a class="mini" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a></div></div>`
         : `<p class="small muted" style="margin-top:8px">Sin noches aquí. Toca + para incluir ${d.name}.</p>`}
@@ -2070,7 +2076,7 @@
     if (/solo efectivo/i.test(h.info || "")) tags.push(`<span class="bad">Solo efectivo</span>`);
     if (/sin reembolso/i.test(h.info || "")) tags.push(`<span class="bad">Sin reembolso</span>`);
     if (/hostal/i.test(h.info || "") || /hostal/i.test(h.name)) tags.push(`<span>Se anuncia como hostal</span>`);
-    if ((r && r > CAP) || h.over) tags.push(`<span class="bad">Pasa el tope de ${fmt(CAP)}</span>`);
+    if ((r && r > capOf(d.id)) || h.over) tags.push(`<span class="bad">Pasa el tope de ${fmt(capOf(d.id))}</span>`);
     if (!avail) tags.push(`<span class="bad">Sin cupo en este puente</span>`);
     const price = extra ? `<small>${esc(h.priceTxt)}</small>` : avail ? `<b class="num">${fmt(r)}</b><small>la noche${n ? ` · ${noches(n)}: ${fmt(r * n)}` : ""}</small>` : `<small>No hay precio para este puente</small>`;
     return `<article class="hc ${on ? "on" : ""} ${avail ? "" : "dim"}">
@@ -2111,7 +2117,7 @@
     return sc;
   }
   function top3(d) {
-    const cur = hotelOf(d), av = d.hotels.filter(h => h.id !== cur.id && h.rate[S.pu] && rateOf(h) <= CAP);
+    const cur = hotelOf(d), av = d.hotels.filter(h => h.id !== cur.id && h.rate[S.pu] && rateOf(h) <= capOf(d.id));
     return [cur].concat(av.sort((a, b) => hotelRank(b) - hotelRank(a) || rateOf(a) - rateOf(b))).slice(0, 3);
   }
   function hotelMini(h, d) {
@@ -2218,7 +2224,7 @@
     const list = LK ? [hotelOf(d)] : d.hotels.filter(keep).sort((a, b) => (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || cmp(a, b));
     const yt = LK ? [] : (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
     const sb = (v, l, i) => `<button type="button" class="hl-sort" aria-pressed="${HSORT === v}" data-hsort="${v}"><i class="ph ${i}" aria-hidden="true"></i>${l}</button>`;
-    box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · todos con aire, baño privado y céntricos, máximo ${fmt(CAP)} la noche · precios con impuestos</p>`
+    box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · todos con aire, baño privado y céntricos, máximo ${fmt(capOf(d.id))} la noche · precios con impuestos</p>`
       + (LK ? "" : `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
       + `<label class="hl-work"><input type="checkbox" data-hwork ${HWORK ? "checked" : ""}><span>Solo buenos para trabajar (teletrabajo 8 o más)</span></label>`)
       + (!LK && (HSORT === "trabajo" || HWORK) ? `<p class="hl-head">La nota de teletrabajo sale de lo que los huéspedes de Booking le ponen al wifi, la velocidad medida, si hay planta eléctrica y lo que dicen en Google Maps. Sin datos de wifi quedan al final.</p>` : "")
@@ -2231,7 +2237,7 @@
     return `<header class="sh-head c-${id}"><span class="dest-ic"><i class="ph ${d.icon}" aria-hidden="true"></i></span><div><h2>Hotel en ${d.name}</h2><p>${P().label} · ${noches(n)}</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
       <div class="sh-list" role="radiogroup" aria-label="Hoteles en ${d.name}">${avail.map(h => { const r = rateOf(h), key = `h.${S.pu}.${h.id}`, on = S.h[id] === h.id;
         return `<div class="hopt ${on ? "on" : ""}"><button type="button" class="hopt-pick" role="radio" aria-checked="${on}" data-hotel="${id}" data-v="${h.id}"><span class="radio" aria-hidden="true"></span><span class="hopt-txt"><b>${h.name} · ${h.score}</b><span>${h.where}. ${h.info}</span></span><span class="hopt-price"><b class="num">${fmt(r)}</b><span>la noche</span>${n ? `<span class="num">${noches(n)}: ${fmt(r * n)}</span>` : ""}</span></button>
-          <div class="hopt-tools">${tag(key)}${r > CAP ? `<span class="tag bad">Pasa el tope</span>` : ""}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button><a class="link-btn" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a><a class="link-btn" href="${h.url}" target="_blank" rel="noopener">${h.src || "Booking"}</a></div></div>`; }).join("")}</div>
+          <div class="hopt-tools">${tag(key)}${r > capOf(id) ? `<span class="tag bad">Pasa el tope</span>` : ""}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button><a class="link-btn" href="${mapsURL(h, d)}" target="_blank" rel="noopener"><i class="ph ph-map-pin" aria-hidden="true"></i>Mapa</a><a class="link-btn" href="${h.url}" target="_blank" rel="noopener">${h.src || "Booking"}</a></div></div>`; }).join("")}</div>
       ${none.length ? `<p class="nocupo"><i class="ph ph-prohibit" aria-hidden="true"></i><span>Sin cupo para este puente: ${none.map(h => h.name).join(", ")}.</span></p>` : ""}`;
   }
   function priceSheetHTML(key) {
