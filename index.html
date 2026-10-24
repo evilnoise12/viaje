@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.17">
+<meta name="app-version" content="2026-10-23.18">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1110,7 +1110,10 @@
     { id: "ctg", name: "Cartagena", icon: "ph-castle-turret", min: 1,
       blurb: "Caminar Getsemaní y la Ciudad Amurallada y comer bien. Sin lanchas.",
       hotels: [
-        { id: "sanfelipe", name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,4", rate: { p2: null, p16: 99960 }, info: "Solo adultos, aire. Sin cupo para el puente del 2 (revisado el 22 oct).", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html" },
+        { id: "sanfelipe", rec: true, name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,4", rc: 110, rate: { p2: 122960, p16: 99960 }, ver: "23 oct", info: "Doble grande con baño privado y aire. Solo adultos. El mejor wifi para trabajar (10 en Booking).", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html", img: ["503386779?k=753a105e90db5ac0181738519df1c44ea55dbaae2ab573b053b124d498c9474e"] },
+        { id: "casacielo", name: "Casa Cielo Cartagena", where: "Getsemaní, calle Concolón", score: "8,4", rc: 962, rate: { p2: 195100, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/casa-cielo-cartagena-cartagena-de-indias.es.html", img: ["502510764?k=cd91a84a9d36ede9f18b5997d6facd237b2310dcf22a57fcf4f5234895c7bbf5"] },
+        { id: "casavilmar", name: "Casa Vilmar Getsemaní", where: "Getsemaní, carrera 10C", score: "8,6", rc: 105, rate: { p2: 198900, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Wifi excelente para trabajar.", url: "https://www.booking.com/hotel/co/casa-vilmar-getsemani.es.html", img: ["682139946?k=8d45563df3b7ab63916116c2f349a0782c86b2ddf020c32043e8f5b394666119"] },
+        { id: "getsemanicentral", name: "Hotel Getsemaní Central", where: "Getsemaní", score: "8,8", rc: 135, rate: { p2: 265000, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/getsemani-central.es.html", img: ["928354759?k=f064bdd3fc86d62cd0c0946cf760e2e28dc0d5fc30702ca6d85946699472375a"] },
         { id: "altisimo", name: "Hostal El Altísimo", where: "Getsemaní", score: "8,3", rate: { p2: 144000, p16: 144000 }, ver: "22 oct", info: "Cuarto privado con baño y aire. Sin reembolso.", url: "https://www.booking.com/hotel/co/hostal-el-altisimo.es.html" },
         { id: "dakema", name: "Posada Dakema", where: "Canapote, lejos del centro", score: "8,4", rate: { p2: 71820, p16: 72000 }, ver: "22 oct", info: "Habitación familiar (1 doble y 1 litera), aire. Hay que moverse en taxi.", url: "https://www.booking.com/hotel/co/posada-dakema-cartagena.es.html" }
       ] }
@@ -1258,13 +1261,13 @@
     sanfelipe: [10.42405, -75.54016], altisimo: [10.42294, -75.54546], dakema: [10.43759, -75.52615], marie: [10.42531, -75.54718], stil: [10.42524, -75.54529], viajero: [10.42468, -75.54958],
     casablanca: [11.14252, -74.11601], btc: [11.14329, -74.11769], cabanita: [11.14531, -74.11724], tibiki: [11.14289, -74.11911], dunarinka: [11.14453, -74.12267], tribu: [11.13994, -74.12143], refugio: [11.14502, -74.11707], altomontana: [11.14259, -74.10684], mariposas: [11.14488, -74.11608], rioelemento: [11.14537, -74.1149], coffee: [11.14093, -74.11649],
     antillas: [9.52673, -75.58374], playadivina: [9.42284, -75.63978], madriguena: [9.76763, -75.64206], campomar: [9.53002, -75.58284], gloria: [9.77305, -75.64516], mango: [9.77133, -75.63731], puntacoral: [9.77157, -75.64512], satva: [9.77203, -75.64527], kevins: [9.52887, -75.58219], laguna: [9.55867, -75.57479], marazul: [9.40222, -75.68021],
-    puerto: [9.52124, -75.58529], beachhouse: [9.76548, -75.64111], cienagahouse: [9.77079, -75.64277], canadian: [9.51933, -75.58423], aquamarina: [9.51871, -75.58228], mithival: [9.76634, -75.6415], aguasol: [9.77067, -75.64285] };
+    puerto: [9.52124, -75.58529], casacielo: [10.42355, -75.54406], casavilmar: [10.41855, -75.54516], getsemanicentral: [10.42327, -75.54562], beachhouse: [9.76548, -75.64111], cienagahouse: [9.77079, -75.64277], canadian: [9.51933, -75.58423], aquamarina: [9.51871, -75.58228], mithival: [9.76634, -75.6415], aguasol: [9.77067, -75.64285] };
   DESTS_GOLFO.concat(DESTS_SIERRA).forEach(d => d.hotels.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
   Object.values(HOTEL_YT).forEach(l => l.forEach(h => { if (HOTEL_LL[h.id]) h.ll = HOTEL_LL[h.id]; }));
   /* Trabajo remoto: nota que los huéspedes de Booking le dan al wifi y velocidad medida (22 oct 2026). Planta eléctrica: según Booking o videos */
   const WIFI = { hostaldelmar: ["9,4"], monkey: ["9,4"], oasis: ["8,8"], opera: ["8,5"], danubio: ["8,0"], playadivina: ["7,2"], antillas: ["7,8"],
     nugeku: ["8,3"], mucura: ["8,1"], cangrejo: ["8,0", 0, true], milimar: ["7,4"], dakema: ["9,1"], altisimo: ["7,0"],
-    altomontana: ["9,6", 264], refugio: ["9,1", 190], cabanita: ["9,5", 15], dunarinka: ["9,1"], mariposas: ["9,1"], btc: ["8,4"], coffee: ["6,5"], campomar: [null, 0, true], puerto: ["8,0"], mithival: ["8,0"], cienagahouse: ["9,5"] };
+    altomontana: ["9,6", 264], refugio: ["9,1", 190], cabanita: ["9,5", 15], dunarinka: ["9,1"], mariposas: ["9,1"], btc: ["8,4"], coffee: ["6,5"], campomar: [null, 0, true], puerto: ["8,0"], sanfelipe: ["10,0"], casacielo: ["9,0"], casavilmar: ["10,0"], getsemanicentral: ["9,0"], mithival: ["8,0"], cienagahouse: ["9,5"] };
   /* Lo que dicen las reseñas de Google Maps sobre wifi y luz (22 oct 2026): 1 bueno, -1 malo */
   const GWIFI = { opera: [1, "En Google dicen que el wifi es rápido y que sirve para trabajo remoto. Una pareja tuvo un cuarto sin internet y la cambiaron: pedir cuarto con buena señal."],
     campomar: [1, "En Google dicen que el wifi es bueno. Tiene planta eléctrica: un día se fue la luz en todo el pueblo y el hotel siguió con energía."],
