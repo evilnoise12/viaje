@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-23.18">
+<meta name="app-version" content="2026-10-23.19">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1110,7 +1110,7 @@
     { id: "ctg", name: "Cartagena", icon: "ph-castle-turret", min: 1,
       blurb: "Caminar Getsemaní y la Ciudad Amurallada y comer bien. Sin lanchas.",
       hotels: [
-        { id: "sanfelipe", rec: true, name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,4", rc: 110, rate: { p2: 122960, p16: 99960 }, ver: "23 oct", info: "Doble grande con baño privado y aire. Solo adultos. El mejor wifi para trabajar (10 en Booking).", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html", img: ["503386779?k=753a105e90db5ac0181738519df1c44ea55dbaae2ab573b053b124d498c9474e"] },
+        { id: "sanfelipe", name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", score: "9,4", rc: 110, rate: { p2: 122960, p16: 99960 }, ver: "23 oct", info: "Doble grande con baño privado y aire. Solo adultos. El mejor wifi para trabajar (10 en Booking).", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html", img: ["503386779?k=753a105e90db5ac0181738519df1c44ea55dbaae2ab573b053b124d498c9474e"] },
         { id: "casacielo", name: "Casa Cielo Cartagena", where: "Getsemaní, calle Concolón", score: "8,4", rc: 962, rate: { p2: 195100, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/casa-cielo-cartagena-cartagena-de-indias.es.html", img: ["502510764?k=cd91a84a9d36ede9f18b5997d6facd237b2310dcf22a57fcf4f5234895c7bbf5"] },
         { id: "casavilmar", name: "Casa Vilmar Getsemaní", where: "Getsemaní, carrera 10C", score: "8,6", rc: 105, rate: { p2: 198900, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Wifi excelente para trabajar.", url: "https://www.booking.com/hotel/co/casa-vilmar-getsemani.es.html", img: ["682139946?k=8d45563df3b7ab63916116c2f349a0782c86b2ddf020c32043e8f5b394666119"] },
         { id: "getsemanicentral", name: "Hotel Getsemaní Central", where: "Getsemaní", score: "8,8", rc: 135, rate: { p2: 265000, p16: null }, ver: "23 oct", info: "Doble con baño privado y aire. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/getsemani-central.es.html", img: ["928354759?k=f064bdd3fc86d62cd0c0946cf760e2e28dc0d5fc30702ca6d85946699472375a"] },
@@ -1280,7 +1280,7 @@
     mucura: "No tiene aire: en Booking sus cuartos no lo traen", nugeku: "No tiene aire: en Booking sus cuartos no lo traen", dakema: "Queda en Canapote, lejos del centro de Cartagena",
     laguna: "Queda en El Francés, fuera de Tolú", playadivina: "Queda en Coveñas, lejos del centro de Tolú", marazul: "Queda en Coveñas, lejos del centro de Tolú", artista: "Queda en Coveñas y no está confirmado que tenga aire",
     loa: "Queda en la vía Tolú–Coveñas, lejos de todo", ninosanfelipe: "Queda en Coveñas y tiene malas reseñas", mediterraneo: "Queda en Coveñas y tiene malas reseñas",
-    beachhouse: "Es cama en dormitorio compartido, no habitación privada", cienagahouse: "En Booking el cuarto privado cuesta $179.600 y no confirma aire; el precio de Google Hoteles no es de cuarto privado", gloria: "No está confirmado que tenga aire (preguntar por WhatsApp si interesa)", mango: "Queda en el bosque, a 1,4 km del pueblo, y no está confirmado que tenga aire", satva: "No tiene aire" };
+    beachhouse: "Es cama en dormitorio compartido, no habitación privada", sanfelipe: "Queda en Pie del Cerro, fuera de Getsemaní, el Centro y Bocagrande", cienagahouse: "En Booking el cuarto privado cuesta $179.600 y no confirma aire; el precio de Google Hoteles no es de cuarto privado", gloria: "No está confirmado que tenga aire (preguntar por WhatsApp si interesa)", mango: "Queda en el bosque, a 1,4 km del pueblo, y no está confirmado que tenga aire", satva: "No tiene aire" };
   const DESCARTADOS = {};
   const keepH = dest => h => { if (!DESCARTE[h.id]) return true; (DESCARTADOS[dest] = DESCARTADOS[dest] || []).push({ name: h.name, why: DESCARTE[h.id] }); return false; };
   DESTS_GOLFO.forEach(d => { d.hotels = d.hotels.filter(keepH(d.id)); });
