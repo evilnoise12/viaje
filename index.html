@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-26.1">
+<meta name="app-version" content="2026-10-26.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -2348,10 +2348,13 @@
       return `<section class="v-stage c-${g.loc}"><div class="v-sh"><b>${esc(d.name.replace(" o Coveñas", ""))}</b><span>${noches(S.n[g.loc])} · ${esc(h.name)} · ${h.booked ? `<span class="ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>reservado</span>` : `<span class="todo">por reservar</span>`}</span></div>${strip}<div class="v-days">${rows}</div></section>`;
     }).join("");
   }
+  // Google Flights Cartagena → Bogotá, solo directos y salida de 12 m a 12 am (filtros codificados en tfs)
+  const GF_TFS = "CBwQAhooEgoyMDI2LTExLTEwKABADEgXUABYD2oHCAESA0NUR3IHCAESA0JPR0ABSAFwAYIBCwj___________8BmAEC";
+  const gfURL = date => "https://www.google.com/travel/flights/search?tfs=" + btoa(atob(GF_TFS.replace(/-/g, "+").replace(/_/g, "/")).replace("2026-11-10", date)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") + "&hl=es-419&gl=co&curr=COP";
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     const items = o.bought
-      ? [[`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada.`],
+      ? [[`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
          ["checkin-ida", "Check-in de la ida en JetSMART", `Desde el jueves 29 de octubre, con el código de reserva que llegó al correo. Ahí asignan los asientos gratis; guarda la tarjeta de embarque en el celular (imprimirla en el aeropuerto cuesta desde $24.000).`]]
       : [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
     let d0 = D(o.date);
