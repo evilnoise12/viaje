@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-29.3">
+<meta name="app-version" content="2026-10-29.4">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -140,6 +140,8 @@
   .hl-sort { transition: transform 100ms ease-out, background 100ms; } .hl-sort:active { transform: scale(.97); }
   details.g-card > summary:active { opacity: .7; }
   .hl-sort[aria-pressed="true"] { background: #1d4f8a; border-color: #1d4f8a; color: #fff; }
+  .hl-n { font-size: 11px; font-variant-numeric: tabular-nums; opacity: .65; margin-left: 2px; }
+  .hl-lbl { display: inline-flex; align-items: center; gap: 4px; margin-right: 2px; }
   .hl-work { display: flex; align-items: center; gap: 8px; margin: 0 2px 10px; font-size: 14px; cursor: pointer; } .hl-work input { width: 18px; height: 18px; accent-color: #1d4f8a; }
   .hl-sub { font-size: 15px; font-weight: 700; margin: 18px 2px 8px; display: flex; align-items: center; gap: 6px; } .hl-sub i { color: #c4302b; font-size: 18px; }
   .hc { display: grid; grid-template-columns: 118px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; margin-bottom: 10px; }
@@ -2052,7 +2054,9 @@
       </div>`;
   }
   /* ---------- Hoteles con fotos ---------- */
-  let HTAB = null, HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false);
+  let HTAB = null, HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false), HZONE = store.get("caribe-hzone", "todas");
+  const ZONES = [["todas", "Todas"], ["amurallada", "Amurallada"], ["getsemani", "Getsemaní"], ["bocagrande", "Bocagrande"]];
+  const zoneOf = h => { const w = h.where || ""; return /Pie del Cerro|Manga|Torices|Crespo/.test(w) ? "otra" : /^Getsemaní/.test(w) ? "getsemani" : /Bocagrande|Castillogrande/.test(w) ? "bocagrande" : /San Diego|Centro|Amurallada|Matuna/.test(w) ? "amurallada" : "otra"; };
   const picURL = (h, i = 0, size = "max500") => h.img && h.img[i] ? /^https?:/.test(h.img[i]) ? h.img[i] : `https://cf.bstatic.com/xdata/images/hotel/${size}/${h.img[i].replace("?k=", ".jpg?k=")}&o=` : null;
   const scoreLabel = sc => { const v = parseFloat(String(sc).replace(",", ".")); return isNaN(v) ? "Sin nota en Booking" : v >= 9 ? "Fantástico" : v >= 8.6 ? "Fabuloso" : v >= 8 ? "Muy bien" : v >= 7 ? "Bien" : "Aceptable"; };
   const CITY = { golfo: "Tolú Coveñas Sucre", rincon: "Rincón del Mar Sucre", ctg: "Cartagena", minca: "Minca Santa Marta" };
@@ -2220,7 +2224,7 @@
     if (!DESTS.some(d => d.id === HTAB)) HTAB = (DESTS.find(d => S.n[d.id] && !lockedN(d)) || DESTS.find(d => S.n[d.id]) || DESTS[0]).id;
     tabs.innerHTML = DESTS.map(d => `<button type="button" role="tab" class="g-tab c-${d.id}" aria-selected="${d.id === HTAB}" data-htab="${d.id}"><i class="ph ${d.icon}" aria-hidden="true"></i>${d.name}</button>`).join("");
     const d = DESTS.find(x => x.id === HTAB), n = S.n[d.id], [ci, co] = stayOf(d.id);
-    const ws = h => workScore(h) == null ? -1 : workScore(h), keep = h => !HWORK || ws(h) >= 8;
+    const ZN = d.id === "ctg" && !lockedN(d), ws = h => workScore(h) == null ? -1 : workScore(h), inZone = h => !ZN || HZONE === "todas" || zoneOf(h) === HZONE, keep = h => (!HWORK || ws(h) >= 8) && inZone(h);
     const cmp = HSORT === "trabajo" ? (a, b) => ws(b) - ws(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : HSORT === "nota" ? (a, b) => hotelRank(b) - hotelRank(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : (a, b) => (S.h[d.id] === b.id) - (S.h[d.id] === a.id) || (rateOf(a) || 0) - (rateOf(b) || 0);
@@ -2228,11 +2232,13 @@
     const list = LK ? [hotelOf(d)] : d.hotels.filter(keep).sort((a, b) => (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || cmp(a, b));
     const yt = LK ? (HOTEL_YT[d.id] || []).filter(h => h.alt) : (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
     const sb = (v, l, i) => `<button type="button" class="hl-sort" aria-pressed="${HSORT === v}" data-hsort="${v}"><i class="ph ${i}" aria-hidden="true"></i>${l}</button>`;
+    const zb = ([v, l]) => { const all = d.hotels.concat(HOTEL_YT[d.id] || []), c = v === "todas" ? all.length : all.filter(h => zoneOf(h) === v).length; return `<button type="button" class="hl-sort" aria-pressed="${HZONE === v}" data-hzone="${v}">${l}<span class="hl-n">${c}</span></button>`; };
     box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · todos con aire, baño privado y céntricos, máximo ${fmt(capOf(d.id))} la noche · precios con impuestos</p>`
       + (LK ? "" : `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
+      + (ZN ? `<div class="hl-tools" role="group" aria-label="Filtrar por zona"><span class="hl-lbl"><i class="ph ph-map-pin" aria-hidden="true"></i>Zona</span>${ZONES.map(zb).join("")}</div>` : "")
       + `<label class="hl-work"><input type="checkbox" data-hwork ${HWORK ? "checked" : ""}><span>Solo buenos para trabajar (teletrabajo 8 o más)</span></label>`)
       + (!LK && (HSORT === "trabajo" || HWORK) ? `<p class="hl-head">La nota de teletrabajo sale de lo que los huéspedes de Booking le ponen al wifi, la velocidad medida, si hay planta eléctrica y lo que dicen en Google Maps. Sin datos de wifi quedan al final.</p>` : "")
-      + (list.length ? list.map(h => hotelCard(h, d, false)).join("") : `<p class="hl-head">Ningún hotel con cupo tiene buena nota de teletrabajo aquí.</p>`)
+      + (list.length ? list.map(h => hotelCard(h, d, false)).join("") : `<p class="hl-head">${ZN && HZONE !== "todas" && !HWORK ? "No hay hoteles en esta zona." : "Ningún hotel con cupo tiene buena nota de teletrabajo aquí."}</p>`)
       + (yt.length ? (LK ? `<h3 class="hl-sub"><i class="ph-fill ph-waves" aria-hidden="true"></i>Alternativa frente al mar</h3><p class="hl-head">Si cambias de hotel, cancela el reservado antes de que se venza la cancelación gratis.</p>` : `<h3 class="hl-sub"><i class="ph-fill ph-youtube-logo" aria-hidden="true"></i>Otros que recomiendan los viajeros</h3><p class="hl-head">Salen en sus videos, pero su precio para estas fechas no está verificado. Confirmar en Booking.</p>`) + yt.map(h => hotelCard(h, d, true)).join("") : "")
       + (!LK && (DESCARTADOS[d.id] || []).length ? `<details class="hl-desc"><summary>Descartados por no tener aire o quedar lejos (${DESCARTADOS[d.id].length})</summary><ul>${DESCARTADOS[d.id].map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.why)}.</li>`).join("")}</ul></details>` : "");
   }
@@ -2456,6 +2462,7 @@
     if (ds.hview) { HTAB = ds.hview; renderHotels(); showView("hoteles"); return; }
     if (ds.htab) { HTAB = ds.htab; renderHotels(); return; }
     if (ds.hsort) { HSORT = ds.hsort; store.set("caribe-hsort", HSORT); renderHotels(); return; }
+    if (ds.hzone) { HZONE = ds.hzone; store.set("caribe-hzone", HZONE); renderHotels(); return; }
     if (ds.apage) { const k = ds.apage; openSheet(sheet, () => actPageHTML(k)); sheet.classList.add("full"); sheet._static = true; apGal(); return; }
     if (ds.hsheet) { const id = ds.hsheet; openSheet(sheet, () => hotelSheetHTML(id)); return; }
     if (ds.edit) { const key = ds.edit; openSheet(sheet2, () => priceSheetHTML(key)); sheet2._static = true; const inp = sheet2.querySelector("[data-price-input]"); if (inp) { inp.focus(); inp.select(); } return; }
