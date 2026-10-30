@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.14">
+<meta name="app-version" content="2026-10-30.15">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1752,6 +1752,7 @@
     // Noches
     $("[data-sum=noches]").innerHTML = `${DESTS.filter(d => S.n[d.id]).map(d => `${DNAME_SHORT[d.id]} ${S.n[d.id]}`).join(" · ")} · <span class="cnt ${diff ? "bad" : ""}">${SN} de ${noches(TN)}</span>`;
     const allBooked = DESTS.filter(d => S.n[d.id]).every(d => lockedN(d)); $("[data-nights-note]").hidden = allBooked;
+    $("[data-acc=noches]").hidden = allBooked && diff === 0; // con todos los hoteles reservados ya no hay nada que cambiar aquí
     $("[data-nights-alert]").innerHTML = diff === 0 && allBooked ? "" : diff === 0 ? `<div class="alert"><i class="ph ph-check-circle" aria-hidden="true"></i><div>Las ${TN} noches están repartidas.</div></div>`
       : `<div class="alert bad"><i class="ph ph-warning" aria-hidden="true"></i><div>${diff > 0 ? `Falta repartir ${noches(diff)}.` : `Sobran ${noches(-diff)}: quita en algún destino.`} Van ${SN} de ${TN}.<div><button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button></div></div></div>`;
     $("[data-dests]").innerHTML = DESTS.map(d => {
