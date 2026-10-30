@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.13">
+<meta name="app-version" content="2026-10-30.14">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1746,6 +1746,7 @@
     $("[data-price-out]").innerHTML = pl("out", S.out, "Ida elegida");
     $("[data-price-back]").innerHTML = pl("back", S.back, "Regreso elegido");
     const bothBought = out.bought && back.bought;
+    $("[data-acc=fechas]").hidden = bothBought; // con los dos vuelos comprados no hay nada que cambiar aquí
     $("[data-bag]").innerHTML = C.bagLegs && !bothBought ? `<label class="switch-row"><input type="checkbox" role="switch" data-bag-toggle ${S.bag ? "checked" : ""}><span class="sw" aria-hidden="true"></span><span class="txt"><b>Llevar maleta de mano</b><span>${[out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air).join(" y ")} solo incluye un bolso pequeño. ${fmt(C.bagV)} por trayecto por persona: ${fmt(C.bagLegs * 2 * C.bagV)} en total.</span></span></label><div class="price-line">${tag("bag")}<button type="button" class="link-btn" data-edit="bag"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio de la maleta</button></div>` : "";
     $("[data-tripinfo]").innerHTML = `<span class="chip"><i class="ph ph-calendar" aria-hidden="true"></i>${TN + 1} días, ${noches(TN)}</span><span class="chip"><i class="ph ph-briefcase" aria-hidden="true"></i>${workdays()} días laborales</span><span class="chip warn"><i class="ph ph-cloud-rain" aria-hidden="true"></i>${p.weather}</span>`;
     // Noches
