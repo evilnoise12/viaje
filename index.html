@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.10">
+<meta name="app-version" content="2026-10-30.11">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -83,6 +83,10 @@
   .h3c .hc-btns { margin-top: 6px; }
   @media (min-width: 700px) { .h3-list { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); overflow: visible; } }
   .hl-head { font-size: 13px; color: var(--muted); margin: 4px 2px 10px; }
+  /* Hoteles en una sola lista, por orden del viaje */
+  .hl-sec + .hl-sec { margin-top: 28px; }
+  .hl-dest { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 2px 2px; scroll-margin-top: 80px; }
+  .hl-dest i { color: var(--dc); font-size: 22px; } .hl-dest .hl-step { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); }
   .hl-desc { margin: 16px 2px 8px; font-size: 13px; color: var(--muted); } .hl-desc summary { cursor: pointer; font-weight: 600; min-height: 36px; display: flex; align-items: center; } .hl-desc ul { margin: 6px 0 0; padding-left: 18px; } .hl-desc li { margin: 4px 0; }
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; } .split > div { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 2px; } .split span { font-size: 13px; color: var(--muted); } .split b { font-size: 18px; } .split small { font-size: 12px; color: var(--muted); line-height: 1.3; }
   .lines .pp { color: var(--muted); font-size: 12px; }
@@ -1040,7 +1044,6 @@
 
     <section class="view" data-view="hoteles" hidden>
       <div class="view-head"><div><h1>Hoteles</h1></div></div>
-      <div class="g-tabs" role="tablist" data-htabs></div>
       <div data-hlist></div>
     </section>
 
@@ -2076,7 +2079,7 @@
       </div>`;
   }
   /* ---------- Hoteles con fotos ---------- */
-  let HTAB = null, HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false), HZONE = store.get("caribe-hzone", "todas");
+  let HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false), HZONE = store.get("caribe-hzone", "todas");
   const ZONES = [["todas", "Todas"], ["amurallada", "Amurallada"], ["getsemani", "Getsemaní"], ["bocagrande", "Bocagrande"]];
   const zoneOf = h => { const w = h.where || ""; return /Pie del Cerro|Manga|Torices|Crespo/.test(w) ? "otra" : /^Getsemaní/.test(w) ? "getsemani" : /Bocagrande|Castillogrande/.test(w) ? "bocagrande" : /San Diego|Centro|Amurallada|Matuna/.test(w) ? "amurallada" : "otra"; };
   const picURL = (h, i = 0, size = "max500") => h.img && h.img[i] ? /^https?:/.test(h.img[i]) ? h.img[i] : `https://cf.bstatic.com/xdata/images/hotel/${size}/${h.img[i].replace("?k=", ".jpg?k=")}&o=` : null;
@@ -2248,10 +2251,12 @@
     return air0 && air1 ? `https://www.google.com/maps/dir/?api=1&origin=${air0.ll.join(",")}&destination=${air1.ll.join(",")}&waypoints=${encodeURIComponent(wp.join("|"))}&travelmode=driving` : "#";
   }
   function renderHotels() {
-    const tabs = $("[data-htabs]"), box = $("[data-hlist]"); if (!tabs || !box) return;
-    if (!DESTS.some(d => d.id === HTAB)) HTAB = (DESTS.find(d => S.n[d.id] && !lockedN(d)) || DESTS.find(d => S.n[d.id]) || DESTS[0]).id;
-    tabs.innerHTML = DESTS.map(d => `<button type="button" role="tab" class="g-tab c-${d.id}" aria-selected="${d.id === HTAB}" data-htab="${d.id}"><i class="ph ${d.icon}" aria-hidden="true"></i>${d.name}</button>`).join("");
-    const d = DESTS.find(x => x.id === HTAB), n = S.n[d.id], [ci, co] = stayOf(d.id);
+    const box = $("[data-hlist]"); if (!box) return;
+    const ds = DESTS.filter(d => S.n[d.id]), show = ds.length ? ds : DESTS;
+    box.innerHTML = show.map((d, i) => `<section class="hl-sec c-${d.id}" data-hsec="${d.id}"><h2 class="hl-dest"><i class="ph-fill ${d.icon}" aria-hidden="true"></i>${d.name}<span class="hl-step">${i + 1} de ${show.length}</span></h2>${hotelSection(d)}</section>`).join("");
+  }
+  function hotelSection(d) {
+    const n = S.n[d.id], [ci, co] = stayOf(d.id);
     const ZN = d.id === "ctg" && !lockedN(d), ws = h => workScore(h) == null ? -1 : workScore(h), inZone = h => !ZN || HZONE === "todas" || zoneOf(h) === HZONE, keep = h => (!HWORK || ws(h) >= 8) && inZone(h);
     const cmp = HSORT === "trabajo" ? (a, b) => ws(b) - ws(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : HSORT === "nota" ? (a, b) => hotelRank(b) - hotelRank(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
@@ -2261,7 +2266,7 @@
     const yt = LK ? (HOTEL_YT[d.id] || []).filter(h => h.alt) : (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
     const sb = (v, l, i) => `<button type="button" class="hl-sort" aria-pressed="${HSORT === v}" data-hsort="${v}"><i class="ph ${i}" aria-hidden="true"></i>${l}</button>`;
     const zb = ([v, l]) => { const all = d.hotels.concat(HOTEL_YT[d.id] || []), c = v === "todas" ? all.length : all.filter(h => zoneOf(h) === v).length; return `<button type="button" class="hl-sort" aria-pressed="${HZONE === v}" data-hzone="${v}">${l}<span class="hl-n">${c}</span></button>`; };
-    box.innerHTML = `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`} · todos con aire, baño privado y céntricos, máximo ${fmt(capOf(d.id))} la noche · precios con impuestos</p>`
+    return `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`}${LK ? "" : ` · todos con aire, baño privado y céntricos, máximo ${fmt(capOf(d.id))} la noche · precios con impuestos`}</p>`
       + (LK ? "" : `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
       + (ZN ? `<div class="hl-tools" role="group" aria-label="Filtrar por zona"><span class="hl-lbl"><i class="ph ph-map-pin" aria-hidden="true"></i>Zona</span>${ZONES.map(zb).join("")}</div>` : "")
       + `<label class="hl-work"><input type="checkbox" data-hwork ${HWORK ? "checked" : ""}><span>Solo buenos para trabajar (teletrabajo 8 o más)</span></label>`)
@@ -2527,8 +2532,7 @@
     }
     if (ds.set) { S[ds.set] = ds.v; if (ds.set === "pu") { const p = P(); if (!p.out[S.out]) S.out = Object.keys(p.out)[0]; if (!p.back[S.back]) S.back = Object.keys(p.back)[0]; } if (ds.set !== "food") balance(); render(); return; }
     if (ds.hotel) { S.h[ds.hotel] = ds.v; closeSheet(sheet); render(); toast("Hotel cambiado."); return; }
-    if (ds.hview) { HTAB = ds.hview; renderHotels(); showView("hoteles"); return; }
-    if (ds.htab) { HTAB = ds.htab; renderHotels(); return; }
+    if (ds.hview) { const id = ds.hview; renderHotels(); showView("hoteles"); const sec = $(`[data-hsec="${id}"] .hl-dest`); if (sec) sec.scrollIntoView({ block: "start" }); return; }
     if (ds.hsort) { HSORT = ds.hsort; store.set("caribe-hsort", HSORT); renderHotels(); return; }
     if (ds.hzone) { HZONE = ds.hzone; store.set("caribe-hzone", HZONE); renderHotels(); return; }
     if (ds.pase) { const k = ds.pase; e.preventDefault(); openSheet(sheet, () => paseHTML(k)); sheet._static = true;
