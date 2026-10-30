@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.6">
+<meta name="app-version" content="2026-10-30.7">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -592,6 +592,8 @@
   .lines > div.lh + div { display: none; }
   .lines > div.lc { color: var(--text); font-weight: 600; } .lines > div.lc i { color: var(--accent); margin-right: 6px; vertical-align: -2px; }
   .lines > div.lc small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin: 2px 0 0 22px; }
+  .lines > div.ls { padding: 8px 0 4px 22px; font-size: 13px; font-weight: 600; color: var(--text); border-bottom-style: dashed; } .lines > div.ls.num { padding-left: 0; }
+  .lines > div.li.sub { padding-left: 34px; } .lines > div.li.sub.num { padding-left: 0; }
   .lines > div.li { padding: 5px 0 5px 22px; font-size: 13px; border-bottom-style: dashed; } .lines > div.li.num { padding-left: 0; font-weight: 400; color: var(--muted); }
   .desg { display: grid; gap: 12px; align-content: start; }
   .desg-h { margin-bottom: 6px; }
@@ -1792,18 +1794,20 @@
     $("[data-total]").textContent = fmt(C.total);
     /* Julio paga hoteles y comida; el resto (vuelos, traslados, planes, imprevistos) se divide por mitades */
     /* Julio paga hoteles, comida y todos los transportes internos; vuelos, planes e imprevistos van por mitades */
-    const mine = C.cats.hospedaje + C.cats.comida + C.cats.traslados + C.local, half = (C.total - mine) / 2;
-    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles, comida, transportes, su vuelo y sus planes</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Su vuelo y sus planes${S.cont ? ", e imprevistos" : ""}</small></div>`;
+    const mine = C.cats.hospedaje + C.cats.comida + C.local, half = (C.total - mine) / 2; // el transporte entre pueblos se divide
+    $("[data-split]").innerHTML = `<div><span>Julio</span><b class="num">${fmt(mine + half)}</b><small>Hoteles, comida, transporte local, su vuelo, sus planes y la mitad del transporte entre pueblos</small></div><div><span>Alejandra</span><b class="num">${fmt(half)}</b><small>Su vuelo, sus planes y la mitad del transporte entre pueblos${S.cont ? ", e imprevistos" : ""}</small></div>`;
     $("[data-pd]").textContent = fmt(C.total / C.days);
-    /* Desglose por persona: Julio paga hoteles, comida y transportes; cada uno su vuelo, sus planes y sus imprevistos */
-    const J = [], A = [], shared = r => r.cat === "vuelos" || r.cat === "planes" || /^Imprevistos/.test(r.t);
+    /* Desglose por persona: Julio paga hoteles, comida y transporte local; vuelos, planes, transporte entre pueblos e imprevistos van por mitades */
+    const J = [], A = [], shared = r => r.cat === "vuelos" || r.cat === "planes" || r.cat === "traslados" || /^Imprevistos/.test(r.t);
     const lbl = r => r.cat === "vuelos" ? r.t.replace(/, \d+ trayectos? por 2$/, "") : r.cat === "planes" ? r.t.replace("Planes en el itinerario", "Planes") : r.t;
-    const catOf = r => r.cat === "vuelos" ? "Vuelos" : r.cat === "hospedaje" ? "Hoteles" : r.cat === "traslados" ? "Transporte intermunicipal" : r.local ? "Otros transportes" : r.cat === "comida" ? "Comida" : r.cat === "planes" ? "Planes" : "Imprevistos";
-    const CATS = ["Vuelos", "Hoteles", "Transporte intermunicipal", "Otros transportes", "Comida", "Planes", "Imprevistos"], CI = { Vuelos: "ph-airplane-tilt", Hoteles: "ph-bed", "Transporte intermunicipal": "ph-bus", "Otros transportes": "ph-taxi", Comida: "ph-fork-knife", Planes: "ph-compass", Imprevistos: "ph-umbrella" };
-    C.rows.forEach(r => { if (!r.v) return; const c = catOf(r); if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); A.push({ t: lbl(r), v: r.v / 2, est: r.est, c }); } else J.push({ t: r.t, v: r.v, est: r.est, c }); });
-    const it = r => `${r.t}${/transporte/i.test(r.c) ? ` · ${fmt(r.v / 2)} × 2` : ""}${r.est ? ` <span class="tag est">estimado</span>` : ""}`;
+    const catOf = r => r.cat === "vuelos" ? "Vuelos" : r.cat === "hospedaje" ? "Hoteles" : r.cat === "traslados" || r.local ? "Transporte" : r.cat === "comida" ? "Comida" : r.cat === "planes" ? "Planes" : "Imprevistos";
+    const CATS = ["Vuelos", "Hoteles", "Transporte", "Comida", "Planes", "Imprevistos"], CI = { Vuelos: "ph-airplane-tilt", Hoteles: "ph-bed", Transporte: "ph-bus", Comida: "ph-fork-knife", Planes: "ph-compass", Imprevistos: "ph-umbrella" };
+    const subOf = r => r.cat === "traslados" ? "Entre pueblos (intermunicipal)" : r.local ? "Otros" : "";
+    C.rows.forEach(r => { if (!r.v) return; const c = catOf(r), sub = subOf(r); if (shared(r)) { J.push({ t: lbl(r), v: r.v / 2, est: r.est, c, sub, half: r.cat === "traslados" }); A.push({ t: lbl(r), v: r.v / 2, est: r.est, c, sub, half: r.cat === "traslados" }); } else J.push({ t: r.t, v: r.v, est: r.est, c, sub }); });
+    const it = r => `${r.t}${r.half ? " · la mitad" : r.c === "Transporte" ? ` · ${fmt(r.v / 2)} × 2` : ""}${r.est ? ` <span class="tag est">estimado</span>` : ""}`;
     const block = (who, list) => `<div class="card"><h2 class="desg-h"><i class="ph ph-receipt" aria-hidden="true"></i>Desglose de ${who}</h2><div class="lines">` + CATS.map(c => { const l = list.filter(r => r.c === c); if (!l.length) return ""; const sum = l.reduce((s, r) => s + r.v, 0);
-      return `<div class="lc"><i class="ph ${CI[c]}" aria-hidden="true"></i>${c}${l.length === 1 ? `<small>${it(l[0])}</small>` : ""}</div><div class="num lc">${fmtV(sum)}</div>` + (l.length > 1 ? l.map(r => `<div class="li">${it(r)}</div><div class="num li ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join("") : "");
+      return `<div class="lc"><i class="ph ${CI[c]}" aria-hidden="true"></i>${c}${l.length === 1 ? `<small>${it(l[0])}</small>` : ""}</div><div class="num lc">${fmtV(sum)}</div>` + (l.length > 1 ? [...new Set(l.map(r => r.sub))].map(sb => { const ls = l.filter(r => r.sub === sb), cl = sb ? "li sub" : "li";
+        return (sb ? `<div class="ls">${sb}</div><div class="num ls">${fmtV(ls.reduce((s, r) => s + r.v, 0))}</div>` : "") + ls.map(r => `<div class="${cl}">${it(r)}</div><div class="num ${cl} ${r.v < 0 ? "neg" : ""}">${fmtV(r.v)}</div>`).join(""); }).join("") : "");
     }).join("") + `<div class="totl">Total ${who}</div><div class="num totl">${fmt(list.reduce((s, r) => s + r.v, 0))}</div></div></div>`;
     $("[data-lines]").innerHTML = block("Alejandra", A) + block("Julio", J) + `<div class="card desg-t"><span>Total del viaje</span><b class="num">${fmt(C.total)}</b></div>`;
     const g = $("[data-goal]"); if (document.activeElement !== g) g.value = fmt(S.goal);
