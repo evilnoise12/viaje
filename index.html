@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.15">
+<meta name="app-version" content="2026-10-30.16">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -842,7 +842,7 @@
       <div class="wx-strip" data-wx-strip></div>
       <div data-v-stages></div>
       <div class="v-edit"><button type="button" class="mini primary" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Cambiar plan</button><button type="button" class="mini" data-view-btn="dias"><i class="ph ph-map-trifold" aria-hidden="true"></i>Mapa y detalle</button></div>
-      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="calendario">Calendario</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
+      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="pendientes">Pendientes</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
       <p class="v-credit">Fotos de actividades: Wikimedia Commons</p>
     </section>
 
@@ -1072,7 +1072,7 @@
 <nav class="bottom" aria-label="Navegación">
   <button data-view-btn="viaje"><i class="ph ph-calendar-check" aria-hidden="true"></i>Viaje</button>
   <button data-view-btn="hoteles"><i class="ph ph-bed" aria-hidden="true"></i>Hoteles</button>
-  <button data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
+  <button data-view-btn="calendario"><i class="ph ph-calendar-blank" aria-hidden="true"></i>Calendario</button>
   <button data-view-btn="guia"><i class="ph ph-book-open-text" aria-hidden="true"></i>Guía</button>
   <button data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
   <button data-view-btn="asistente" class="nav-ai"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente</button>
@@ -2923,7 +2923,7 @@
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     if (v === "dias") setTimeout(initMaps, 30); else killMaps();
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = ["armar", "dias", "calendario", "comparar", "info"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
+      const inMas = ["armar", "dias", "pendientes", "comparar", "info"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
