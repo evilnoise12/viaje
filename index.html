@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.8">
+<meta name="app-version" content="2026-10-30.9">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1169,7 +1169,7 @@
     { id: "pasadia", dest: "islas", t: "Pasadía a Tintipán o Múcura", d: "Parada en Santa Cruz del Islote y día de playa. Desde Tolú o Coveñas incluye almuerzo isleño. Desde Rincón es más cerca y cuesta 70.000 p/p solo la lancha (8:30 a 15:30): el almuerzo va aparte (mojarra unos 35.000) y se puede llevar comida.", lvl: "must", cost: 242000 },
     { id: "biolum", dest: "rincon", t: "Bioluminiscencia en Rincón del Mar", d: "Con Isla de los Pájaros al atardecer. Se ve mejor sin luna: del 3 al 6 de noviembre las primeras horas de la noche están oscuras. En lancha grande y en buen estado. Precio por confirmar con JJ Tour del Mar.", lvl: "must", cost: 90000, night: true },
     { id: "manglar", dest: "rincon", t: "Manglar con Mundo Verde", d: "Recorrido con guías locales; a veces se ven perezosos.", lvl: "opt", cost: 50000 },
-    { id: "tolu", dest: "golfo", t: "Malecón de Tolú en bicitaxi", d: "Atardecer y comida callejera. Plan suave.", lvl: "good", cost: 30000, light: true },
+    { id: "tolu", dest: "golfo", t: "Malecón de Tolú en bicitaxi", d: "Atardecer y comida callejera. Plan suave.", lvl: "opt", cost: 30000, light: true },
     { id: "centro", dest: "ctg", t: "Ciudad Amurallada a pie", d: "Centro y San Diego temprano, Las Bóvedas y Museo del Oro (gratis). Atardecer en la muralla.", lvl: "must", cost: 0 },
     { id: "careteo", dest: "islas", t: "Careteo en Múcura", d: "30 minutos con chaleco y guía, durante la pasadía.", lvl: "opt", cost: 70000, addon: "pasadia" },
     { id: "anteros", dest: "golfo", t: "Bahía de Cispatá y Playa Blanca de San Antero", d: "Van desde la vía a Lorica (4.000 p/p) y moto a la playa (10.000). Tour de 2 horas por la bahía con caimanes, túnel de manglar y ostras (30.000 a 40.000 p/p). Medio día. El volcán de lodo ya colapsó.", lvl: "opt", cost: 100000 },
@@ -1395,6 +1395,7 @@
     });
     if (FOOD.some(f => f.id === o.food)) s.food = o.food;
     if (isObj(o.acts)) for (const k in o.acts) s.acts[k] = !!o.acts[k];
+    if (!store.get("caribe-sin-malecon", false)) { s.acts.tolu = false; store.set("caribe-sin-malecon", true); } // Julio lo quitó el 30 oct
     const g = Number(o.goal); if (Number.isFinite(g) && g >= 500000 && g <= 50000000) s.goal = Math.round(g);
     s.bag = !!o.bag;
     if (typeof o.cont === "number" && Number.isFinite(o.cont)) s.cont = Math.min(20, Math.max(0, Math.round(o.cont)));
