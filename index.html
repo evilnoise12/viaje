@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.12">
+<meta name="app-version" content="2026-10-30.13">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -873,7 +873,7 @@
         <div class="acc-body">
           <div data-nights-alert></div>
           <div data-dests></div>
-          <p class="small muted" style="margin-top:10px">Tope de $150.000 la noche y promedio de $120.000, siempre con baño privado.</p>
+          <p class="small muted" style="margin-top:10px" data-nights-note>Tope de $200.000 la noche, siempre con baño privado y aire.</p>
         </div>
       </details>
 
@@ -1099,8 +1099,8 @@
   const PUENTES = {
     p2: { label: "Puente del 2", sub: "dom 1 al mar 10 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
-      out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "Comprado, vuelo JA 5380. Tarifa Basic: solo mochila bajo el asiento. Check-in hecho: asientos 10D y 9D (separados). Embarque 10:20 am, zona 3" } },
-      back: { mar: { date: "2026-11-10", air: "Wingo", time: "13:26 → 14:55", price: 199135, ver: "30 oct", bought: true, note: "Comprado, vuelo P5 7229. Tarifa Go Basic: solo morral de 40×35×25 cm. Pagado $398.270 los dos. Check-in en línea; en el aeropuerto cuesta $23.800 por persona" },
+      out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "JA 5380 · solo mochila · asientos 10D y 9D · embarque 10:20 am, zona 3" } },
+      back: { mar: { date: "2026-11-10", air: "Wingo", time: "13:26 → 14:55", price: 199135, ver: "30 oct", bought: true, note: "P5 7229 · solo morral de 40×35×25 cm · check-in en línea (en el aeropuerto $23.800 p/p)" },
               mie: { date: "2026-11-11", air: "Wingo", time: "13:01 → 14:30", price: 178805, ver: "29 oct", note: "Una noche más en Cartagena. LATAM 1:35 pm a $188.560" },
               jue: { date: "2026-11-12", air: "Wingo", time: "20:11 → 21:40", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida. De noche" } } }
   };
@@ -1648,7 +1648,7 @@
       if (d.fest) W.push({ bad: true, icon: "ph-users-three", txt: `La pasadía cae en el festivo (${dlong(d.date)}): todo lleno y precio alto.` });
       else if (d.wkend) W.push({ bad: false, icon: "ph-island", txt: `La pasadía cae en ${WD[d.date.getDay()]}, que es puente o fin de semana: precio alto (${fmt(ov("pas.hi", PAS.hi))} p/p). Entre semana cuesta ${fmt(ov("pas.lo", PAS.lo))} p/p.` });
     }
-    if (!S.bag && C.bagLegs) W.push({ bad: false, icon: "ph-suitcase-rolling", txt: `${[...new Set([out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air))].join(" y ")} solo incluye un bolso pequeño. Si llevan maleta de mano, activa "Llevar maleta de mano" en Fechas y vuelos.` });
+    if (!S.bag && C.bagLegs && !(out.bought && back.bought)) W.push({ bad: false, icon: "ph-suitcase-rolling", txt: `${[...new Set([out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air))].join(" y ")} solo incluye un bolso pequeño. Si llevan maleta de mano, activa "Llevar maleta de mano" en Fechas y vuelos.` });
     if (S.n.ctg && S.h.ctg === "dakema") W.push({ bad: false, icon: "ph-map-pin", txt: "Posada Dakema queda en Canapote, lejos del centro: cada día suma transporte." });
     W.push(...wxWarnings(C));
     const gap = S.goal - C.total; if (gap < 0) W.push({ bad: true, icon: "ph-wallet", txt: `El total se pasa de la meta por ${fmt(-gap)}.` });
@@ -1738,17 +1738,20 @@
     $("[data-sum=fechas]").textContent = `${cap(dlabel(out.date))} a ${dlabel(back.date)} · ${fmt(C.flights)}`;
     const onePu = Object.keys(PUENTES).length < 2; $("[data-puente]").hidden = onePu; $("#lb-pu").hidden = onePu;
     $("[data-puente]").innerHTML = Object.entries(PUENTES).map(([k, v]) => pickBtn(S.pu === k, `<b>${v.label}</b><span>${v.sub}</span>`, `data-set="pu" data-v="${k}"`)).join("");
-    const fl = side => Object.entries(p[side]).map(([k, v]) => { const key = `f.${S.pu}.${side}.${k}`, pr = ov(key, v.price);
-      return pickBtn(S[side] === k, `<b class="fl-h"><i class="ph-fill ${side === "out" ? "ph-airplane-takeoff" : "ph-airplane-landing"}" aria-hidden="true"></i>${DAYNAME[k]} ${+v.date.slice(8)} ${MO[+v.date.slice(5, 7) - 1]}</b><span>${v.air} ${v.time}</span><span class="num">${fmt(pr)}${isEdited(key) ? " · editado" : ""}</span>${v.warn ? `<span class="warn-t">${v.warn}</span>` : ""}${v.note ? `<span>${v.note}</span>` : ""}`, `data-set="${side}" data-v="${k}"`); }).join("");
+    // Si el vuelo elegido ya está comprado, solo se muestra ese (las otras fechas ya no aplican)
+    const fl = side => Object.entries(p[side]).filter(([k]) => !p[side][S[side]].bought || k === S[side]).map(([k, v]) => { const key = `f.${S.pu}.${side}.${k}`, pr = ov(key, v.price);
+      return pickBtn(S[side] === k, `<b class="fl-h"><i class="ph-fill ${side === "out" ? "ph-airplane-takeoff" : "ph-airplane-landing"}" aria-hidden="true"></i>${DAYNAME[k]} ${+v.date.slice(8)} ${MO[+v.date.slice(5, 7) - 1]}</b><span>${v.air} ${v.time}</span>${v.bought ? "" : `<span class="num">${fmt(pr)}${isEdited(key) ? " · editado" : ""}</span>`}${v.warn ? `<span class="warn-t">${v.warn}</span>` : ""}${v.note ? `<span>${v.note}</span>` : ""}`, `data-set="${side}" data-v="${k}"`); }).join("");
     $("[data-out]").innerHTML = fl("out"); $("[data-back]").innerHTML = fl("back");
     const pl = (side, k, word) => { const key = `f.${S.pu}.${side}.${k}`, bt = P()[side][k].bought; if (bt) return `<span><b class="tag bought"><i class="ph-fill ph-check-circle" aria-hidden="true"></i> Comprado</b> <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>`; return `<span>${word}: <b class="num">${fmt(fPrice(side, k))}</b> p/p</span>${tag(key)}<button type="button" class="link-btn" data-edit="${key}"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio</button>`; };
     $("[data-price-out]").innerHTML = pl("out", S.out, "Ida elegida");
     $("[data-price-back]").innerHTML = pl("back", S.back, "Regreso elegido");
-    $("[data-bag]").innerHTML = C.bagLegs ? `<label class="switch-row"><input type="checkbox" role="switch" data-bag-toggle ${S.bag ? "checked" : ""}><span class="sw" aria-hidden="true"></span><span class="txt"><b>Llevar maleta de mano</b><span>${[out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air).join(" y ")} solo incluye un bolso pequeño. ${fmt(C.bagV)} por trayecto por persona: ${fmt(C.bagLegs * 2 * C.bagV)} en total.</span></span></label><div class="price-line">${tag("bag")}<button type="button" class="link-btn" data-edit="bag"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio de la maleta</button></div>` : "";
+    const bothBought = out.bought && back.bought;
+    $("[data-bag]").innerHTML = C.bagLegs && !bothBought ? `<label class="switch-row"><input type="checkbox" role="switch" data-bag-toggle ${S.bag ? "checked" : ""}><span class="sw" aria-hidden="true"></span><span class="txt"><b>Llevar maleta de mano</b><span>${[out, back].filter(f => LOWCOST.includes(f.air)).map(f => f.air).join(" y ")} solo incluye un bolso pequeño. ${fmt(C.bagV)} por trayecto por persona: ${fmt(C.bagLegs * 2 * C.bagV)} en total.</span></span></label><div class="price-line">${tag("bag")}<button type="button" class="link-btn" data-edit="bag"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar precio de la maleta</button></div>` : "";
     $("[data-tripinfo]").innerHTML = `<span class="chip"><i class="ph ph-calendar" aria-hidden="true"></i>${TN + 1} días, ${noches(TN)}</span><span class="chip"><i class="ph ph-briefcase" aria-hidden="true"></i>${workdays()} días laborales</span><span class="chip warn"><i class="ph ph-cloud-rain" aria-hidden="true"></i>${p.weather}</span>`;
     // Noches
     $("[data-sum=noches]").innerHTML = `${DESTS.filter(d => S.n[d.id]).map(d => `${DNAME_SHORT[d.id]} ${S.n[d.id]}`).join(" · ")} · <span class="cnt ${diff ? "bad" : ""}">${SN} de ${noches(TN)}</span>`;
-    $("[data-nights-alert]").innerHTML = diff === 0 ? `<div class="alert"><i class="ph ph-check-circle" aria-hidden="true"></i><div>Las ${TN} noches están repartidas.</div></div>`
+    const allBooked = DESTS.filter(d => S.n[d.id]).every(d => lockedN(d)); $("[data-nights-note]").hidden = allBooked;
+    $("[data-nights-alert]").innerHTML = diff === 0 && allBooked ? "" : diff === 0 ? `<div class="alert"><i class="ph ph-check-circle" aria-hidden="true"></i><div>Las ${TN} noches están repartidas.</div></div>`
       : `<div class="alert bad"><i class="ph ph-warning" aria-hidden="true"></i><div>${diff > 0 ? `Falta repartir ${noches(diff)}.` : `Sobran ${noches(-diff)}: quita en algún destino.`} Van ${SN} de ${TN}.<div><button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button></div></div></div>`;
     $("[data-dests]").innerHTML = DESTS.map(d => {
       const n = S.n[d.id], h = hotelOf(d), r = rateOf(h), key = `h.${S.pu}.${h.id}`, L = lockedN(d);
