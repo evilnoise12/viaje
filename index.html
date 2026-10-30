@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.3">
+<meta name="app-version" content="2026-10-30.4">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1095,7 +1095,7 @@
     p2: { label: "Puente del 2", sub: "dom 1 al mar 10 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
       out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "Comprado, vuelo JA 5380. Tarifa Basic: solo mochila bajo el asiento. Check-in hecho: asientos 10D y 9D (separados). Embarque 10:20 am, zona 3" } },
-      back: { mar: { date: "2026-11-10", air: "LATAM", time: "12:30 → 14:05", price: 306850, ver: "29 oct", note: "El JetSMART de las 12:19 subió de $252.350 a $404.790" },
+      back: { mar: { date: "2026-11-10", air: "Wingo", time: "13:26 → 14:55", price: 199135, ver: "30 oct", bought: true, note: "Comprado, vuelo P5 7229. Tarifa Go Basic: solo morral de 40×35×25 cm. Pagado $398.270 los dos. Check-in en línea; en el aeropuerto cuesta $23.800 por persona" },
               mie: { date: "2026-11-11", air: "Wingo", time: "13:01 → 14:30", price: 178805, ver: "29 oct", note: "Una noche más en Cartagena. LATAM 1:35 pm a $188.560" },
               jue: { date: "2026-11-12", air: "Wingo", time: "20:11 → 21:40", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida. De noche" } } }
   };
@@ -2425,7 +2425,8 @@
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     const items = o.bought
-      ? [[`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
+      ? [b.bought ? ["checkin-regreso", "Check-in del regreso en Wingo", "Vuelo P5 7229, martes 10 a la 1:26 pm. Hacerlo en línea en wingo.com: en el aeropuerto cuesta $23.800 por persona. Solo morral de 40×35×25 cm; la maleta de cabina se puede agregar en Mi Reserva."]
+          : [`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
          ["checkin-ida", "Check-in de la ida en JetSMART", `Hecho: Julio 10D y Alejandra 9D. Embarque 10:20 am, zona 3; llegar a El Dorado a las 8:20 am. ${PASES.map(x => `<button type="button" class="v-more-btn" data-pase="${x.k}">Pasabordo ${x.who}</button>`).join(" ")}`]]
       : [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
     let d0 = D(o.date);
@@ -2720,7 +2721,7 @@
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
       hotel_tolu_reservado: "Hotel Pizzería Ópera, 1 al 4 nov (3 noches), $324.900 en Booking con Genius.",
-      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. El regreso aún no está comprado: el plan es LATAM mar 10 nov, CTG 12:30 a BOG 14:05, $306.850 p/p (29 oct); el JetSMART 12:19 subió a $404.790.",
+      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. Regreso comprado el 30 oct: Wingo P5 7229, mar 10 nov, CTG 13:26 a BOG 14:55, 2 pasajeros, tarifa Go Basic (solo morral 40x35x25), pagado $398.270. Check-in en línea (en aeropuerto $23.800 p/p).",
       quien_paga: "Julio paga hoteles, comida y todos los transportes internos (traslados y transporte local) de los dos; vuelos y planes se dividen por mitades con Alejandra.",
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
         planes_activos: Object.keys(it.placed), pasadia_fecha: it.placed.pasadia ? it.placed.pasadia.iso : null, total_pareja: Math.round(C.total), meta: S.goal,
@@ -2830,7 +2831,7 @@
   }
   /* ---------- Guía ---------- */
   const GUIDE = [
-    { id: "general", r: "golfo", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sum: ["Domingo 1 al martes 10 de noviembre: Tolú 3 noches (Ópera, ya reservado), Rincón 3 y Cartagena 3.", "Ida comprada: JetSMART el domingo 1 a las 11:05. Falta el regreso: LATAM martes 10 a las 12:30 pm.", "De Montería a Tolú: colectivo en la entrada 5 del aeropuerto (30.000 a 40.000 p/p). El taxi es caro.", "Llueve en la tarde: lanchas y playa en la mañana.", "Llevar efectivo, repelente, bolsa seca y careta propia."], sec: [
+    { id: "general", r: "golfo", name: "General", icon: "ph-compass", cls: "", intro: "Lo que repiten casi todos los viajeros, sin importar el destino.", sum: ["Domingo 1 al martes 10 de noviembre: Tolú 3 noches (Ópera, ya reservado), Rincón 3 y Cartagena 3.", "Vuelos comprados: ida JetSMART el domingo 1 a las 11:05 y regreso Wingo el martes 10 a la 1:26 pm.", "De Montería a Tolú: colectivo en la entrada 5 del aeropuerto (30.000 a 40.000 p/p). El taxi es caro.", "Llueve en la tarde: lanchas y playa en la mañana.", "Llevar efectivo, repelente, bolsa seca y careta propia."], sec: [
       { i: "ph-calendar-check", t: "Fechas elegidas", li: ["Domingo 1 al martes 10 de noviembre: Tolú 3 noches, Rincón 3 y Cartagena 3. La pasadía va desde Rincón: 30 minutos de lancha en vez de 1 h 30 desde Tolú.", "Ida comprada: JetSMART 11:05 a 12:35, $194.168 por persona, tarifa Basic (solo mochila). Regreso por comprar: LATAM martes 10 a las 12:30 pm por $306.850 (29 oct). El JetSMART de las 12:19 subió a $404.790. El miércoles 11 sale más barato: Wingo 1:01 pm a $178.805.", "Hoteles: en Tolú el sábado, el domingo y el lunes festivo cuestan igual; el martes 3 baja (Ópera pasa de $135.000 a $91.000). Saliendo el domingo cambias la noche del sábado por la del martes. En Rincón da igual.", "Con Ópera y El Cangrejo Azul, el promedio queda en unos $98.000 la noche, por debajo del promedio de $170.000.", "Llegando el domingo, la pasadía cae entre semana, que es más barata. El domingo y el lunes festivo son los días más llenos.", "Domingo y festivo los bancos cierran, pero los cajeros funcionan."] },
       { i: "ph-cloud-sun", t: "Cuándo ir", li: ["Agosto a noviembre es temporada de lluvias: aguaceros sobre todo en la tarde. Las mañanas sirven para las lanchas.", "Los puentes festivos llenan todo y suben lanchas y pasadías.", "La pasadía conviene entre semana."] },
       { i: "ph-bus", t: "Cómo moverse", li: ["Vuelo a Montería: el aeropuerto barato más cercano. A Tolú y Corozal solo vuela Satena, y es caro.", "Colectivo en la entrada 5 del aeropuerto, puerta a puerta (30.000 a 40.000 p/p, 1 h 40).", "Más barato: bus en la Troncal a 1 km del aeropuerto (25.000 a 28.000, el último hacia las 6 pm).", "Ojo: el taxi cobra 160.000 a 195.000 y en el aeropuerto suben el precio al llegar."] },
