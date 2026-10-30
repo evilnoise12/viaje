@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-30.4">
+<meta name="app-version" content="2026-10-30.5">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1136,7 +1136,7 @@
         { id: "sanfelipe", name: "Alojamiento San Felipe", where: "Pie del Cerro, 10 min a pie de Getsemaní", g: "5,0 (7)", score: "9,4", rc: 110, rate: { p2: 122960, p16: 99960 }, ver: "23 oct", info: "Doble grande con baño privado y aire. Solo adultos. El mejor wifi para trabajar (10 en Booking).", url: "https://www.booking.com/hotel/co/alojamiento-san-felipe.es.html", img: ["503386779?k=753a105e90db5ac0181738519df1c44ea55dbaae2ab573b053b124d498c9474e"] },
         { id: "casacielo", name: "Casa Cielo Cartagena", where: "Getsemaní, calle Concolón", g: "4,4 (74)", score: "8,4", rc: 962, rate: { p2: null, p16: null }, ver: "29 oct", info: "Agotado para 2 del 7 al 10 (solo quedan individuales). Antes: doble con baño privado y aire a $149.300.", url: "https://www.booking.com/hotel/co/casa-cielo-cartagena-cartagena-de-indias.es.html", img: ["502510764?k=cd91a84a9d36ede9f18b5997d6facd237b2310dcf22a57fcf4f5234895c7bbf5"] },
         { id: "casavilmar", name: "Casa Vilmar Getsemaní", where: "Getsemaní, carrera 10C", g: "sin ficha en Google Maps", score: "8,6", rc: 105, rate: { p2: null, p16: null }, ver: "29 oct", info: "Agotado del 7 al 10. Antes: doble con baño privado y aire a $143.840, wifi excelente para trabajar.", url: "https://www.booking.com/hotel/co/casa-vilmar-getsemani.es.html", img: ["682139946?k=8d45563df3b7ab63916116c2f349a0782c86b2ddf020c32043e8f5b394666119"] },
-        { id: "getsemanicentral", name: "Hotel Getsemaní Central", where: "Getsemaní", g: "4,8 (23)", score: "8,8", rc: 135, rate: { p2: 238500, p16: null }, ver: "29 oct", info: "Doble con baño privado y aire. Cancelación gratis. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/getsemani-central.es.html", img: ["928354759?k=f064bdd3fc86d62cd0c0946cf760e2e28dc0d5fc30702ca6d85946699472375a"] },
+        { id: "getsemanicentral", rec: true, booked: "3 noches, 7 al 10 nov, $643.960. Cancelación gratis", bookedN: 3, name: "Hotel Getsemaní Central", where: "Getsemaní", g: "4,8 (23)", score: "8,8", rc: 135, rate: { p2: 643960 / 3, p16: null }, ver: "30 oct", info: "Doble con baño privado y aire. Cancelación gratis. Buen wifi para trabajar.", url: "https://www.booking.com/hotel/co/getsemani-central.es.html", img: ["928354759?k=f064bdd3fc86d62cd0c0946cf760e2e28dc0d5fc30702ca6d85946699472375a"] },
         { id: "altisimo", name: "Hostal El Altísimo", where: "Getsemaní", g: "4,7 (16)", score: "8,3", rate: { p2: 129600, p16: 129600 }, ver: "29 oct", info: "Cuarto privado con baño y aire. Sin reembolso; con cancelación gratis, $158.400. Subió desde $110.160.", url: "https://www.booking.com/hotel/co/hostal-el-altisimo.es.html" },
         { id: "castillomar", name: "Hotel CastilloMar", where: "Castillogrande, pegado a Bocagrande", g: "4,0 (131)", score: "8,0", rc: 1040, rate: { p2: 121600, p16: null }, ver: "29 oct", info: "Doble con baño privado y aire. Sin reembolso; con cancelación gratis cuesta $140.800 la noche. Wifi bueno para trabajar.", url: "https://www.booking.com/hotel/co/castillomar-hostel.es.html", img: ["708050997?k=41bba924bfb675619f766cb88fd30ec49862587b225aee0ff8ccbc09257e871a"] },
         { id: "mamawaldy", name: "Casa Mamá Waldy", where: "Getsemaní", g: "4,0 (499)", score: "8,2", rc: 1129, rate: { p2: 160380, p16: null }, ver: "29 oct", info: "Doble con baño privado y aire. Se anuncia como hostal. Sin reembolso; con cancelación gratis, $170.000.", url: "https://www.booking.com/hotel/co/casa-mama-waldy-new.es.html", img: ["287270256?k=73a97211bc127547896f04ffe8975a49a520097244069f224e90432c269bb7ba"] },
@@ -1349,7 +1349,7 @@
       dests: DESTS_GOLFO, moves: MOVES_GOLFO, moveT: MOVE_T_GOLFO, moveMode: MOVE_MODE_GOLFO, acts: ACTS_GOLFO,
       out: { p2: PUENTES.p2.out }, airport: "Montería", lateAt: 18 * 60,
       lateTxt: "Llegas de noche y ya no hay colectivos: toca dormir en Montería (no está en el presupuesto) o pagar taxi privado, que cobra $190.000 o más.",
-      n: { golfo: 3, rincon: 3, ctg: 3 }, h: { golfo: "opera", rincon: "cangrejo", ctg: "altisimo" }, groups: ["golfo", "islas", "rincon", "ctg"],
+      n: { golfo: 3, rincon: 3, ctg: 3 }, h: { golfo: "opera", rincon: "cangrejo", ctg: "getsemanicentral" }, groups: ["golfo", "islas", "rincon", "ctg"],
       local: n => ((n.golfo || 0) + (n.rincon || 0) > 0 ? 40000 : 0) + (n.ctg ? 60000 : 0), cashLocal: (id, n) => id === "ctg" ? 60000 : (id === "golfo" || !n.golfo ? 40000 : 0),
       rest: "Playa, hamaca y nada más.", wxRef: [["golfo", "Tolú"], ["rincon", "Rincón"], ["islas", "Tintipán"], ["ctg", "Cartagena"]] },
     sierra: { name: "Minca", sub: "Montaña en la Sierra Nevada y Cartagena", icon: "ph-mountains", key: "caribe-sierra-v1",
@@ -1625,7 +1625,7 @@
   function warnings(C) {
     const W = [], p = P(), out = p.out[S.out], back = p.back[S.back], TN = totalNights(), SN = sumNights(), diff = TN - SN;
     if (diff) W.push({ bad: true, icon: "ph-bed", txt: diff > 0 ? `Falta repartir ${noches(diff)}: van ${SN} de ${TN}.` : `Sobran ${noches(-diff)}: van ${SN} de ${TN}.`, btn: `<button type="button" class="mini" data-balance><i class="ph ph-magic-wand" aria-hidden="true"></i>Repartir solo</button>` });
-    DESTS.forEach(d => { if (!S.n[d.id]) return; const h = hotelOf(d), r = rateOf(h); if (r > capOf(d.id)) W.push({ bad: true, icon: "ph-warning", txt: `${h.name} cuesta ${fmt(r)} la noche: pasa el tope de ${fmt(capOf(d.id))}.` }); });
+    DESTS.forEach(d => { if (!S.n[d.id]) return; const h = hotelOf(d), r = rateOf(h); if (!h.booked && r > capOf(d.id)) W.push({ bad: true, icon: "ph-warning", txt: `${h.name} cuesta ${fmt(r)} la noche: pasa el tope de ${fmt(capOf(d.id))}.` }); });
     const avg = C.lodging / Math.max(1, SN); if (avg > AVG) W.push({ bad: true, icon: "ph-warning", txt: `La noche promedio es ${fmt(avg)}: pasa el promedio de ${fmt(AVG)}.` });
     if (lateArrival(out)) W.push({ bad: true, icon: "ph-moon", txt: `El vuelo de ida llega a ${R.airport} a las ${hmStr(arrOf(out))}. ${R.lateTxt}` });
     if (earlyBack(back)) {
