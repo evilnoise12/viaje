@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-29.5">
+<meta name="app-version" content="2026-10-30.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -90,6 +90,14 @@
   .v-head p { color: var(--muted); font-size: 14px; margin-top: 4px; }
   .v-status { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 18px; }
   .vst { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-size: 13px; font-weight: 600; padding: 6px 11px; border-radius: 999px; border: 0; }
+  .vst.pase { background: #e6effb; color: #1d4f91; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; } .vst.pase:active { opacity: .7; }
+  .pase-body { padding: 8px 16px 0; }
+  .pase-lock label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .pase-lock div { display: flex; gap: 8px; } .pase-lock input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 10px 12px; border: 1px solid var(--line, #d9d9d9); border-radius: 10px; }
+  .pase-lock button { font: inherit; font-weight: 600; padding: 10px 16px; border: 0; border-radius: 10px; background: #1d4f91; color: #fff; touch-action: manipulation; } .pase-lock button:active { opacity: .8; }
+  .pase-err { color: var(--warn); font-size: 13px; min-height: 18px; margin-top: 6px; }
+  .pase-img { display: block; width: 100%; max-width: 420px; margin: 0 auto; border-radius: 12px; background: #fff; }
+  .pase-tip { color: var(--muted); font-size: 13px; margin-top: 12px; text-align: center; }
   .vst.ok { background: #e3f4ea; color: #1f6b3d; } .vst.todo { background: var(--warn-soft); color: var(--warn); cursor: pointer; } .vst.todo:active { opacity: .7; }
   .v-stage { margin-bottom: 22px; }
   .v-sh { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 0 2px 8px; }
@@ -1074,7 +1082,7 @@
   const PUENTES = {
     p2: { label: "Puente del 2", sub: "dom 1 al mar 10 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
-      out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "Comprado, vuelo JA 5380. Tarifa Basic: solo mochila bajo el asiento. Check-in desde el jueves 29 de octubre" } },
+      out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "Comprado, vuelo JA 5380. Tarifa Basic: solo mochila bajo el asiento. Check-in hecho: asientos 10D y 9D (separados). Embarque 10:20 am, zona 3" } },
       back: { mar: { date: "2026-11-10", air: "LATAM", time: "12:30 → 14:05", price: 306850, ver: "29 oct", note: "El JetSMART de las 12:19 subió de $252.350 a $404.790" },
               mie: { date: "2026-11-11", air: "Wingo", time: "13:01 → 14:30", price: 178805, ver: "29 oct", note: "Una noche más en Cartagena. LATAM 1:35 pm a $188.560" },
               jue: { date: "2026-11-12", air: "Wingo", time: "20:11 → 21:40", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida. De noche" } } }
@@ -2340,6 +2348,7 @@
     nd.forEach(d => { const h = hotelOf(d); (h.booked ? done : todo).push("Hotel en " + DNAME_SHORT[d.id]); });
     (back.bought ? done : todo).push("Vuelo de regreso");
     $("[data-v-status]").innerHTML = done.map(t => `<span class="vst ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>${t}</span>`).join("")
+      + (out.bought && out.date === PASE_DATE ? PASES.map(x => `<button type="button" class="vst pase" data-pase="${x.k}"><i class="ph ph-ticket" aria-hidden="true"></i>Pasabordo ${x.who}</button>`).join("") : "")
       + (todo.length ? `<button type="button" class="vst todo" data-view-btn="pendientes"><i class="ph ph-circle-dashed" aria-hidden="true"></i>Faltan ${todo.length}</button>` : "");
     // Días agrupados por dónde duermen; el día del regreso va con el último destino
     const groups = []; it.days.forEach(d => { const loc = d.loc || (groups.length ? groups[groups.length - 1].loc : d.stay); const g = groups[groups.length - 1]; if (g && g.loc === loc) g.days.push(d); else groups.push({ loc, days: [d] }); });
@@ -2368,11 +2377,45 @@
   // Google Flights Cartagena → Bogotá, solo directos y salida de 12 m a 12 am (filtros codificados en tfs)
   const GF_TFS = "CBwQAhooEgoyMDI2LTExLTEwKABADEgXUABYD2oHCAESA0NUR3IHCAESA0JPR0ABSAFwAYIBCwj___________8BmAEC";
   const gfURL = date => "https://www.google.com/travel/flights/search?tfs=" + btoa(atob(GF_TFS.replace(/-/g, "+").replace(/_/g, "/")).replace("2026-11-10", date)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") + "&hl=es-419&gl=co&curr=COP";
+  // Pasabordos de la ida (JA 5380), uno por pasajero
+  const PASE_DATE = "2026-11-01", PASES = [
+    { k: "julio", who: "Julio", seat: "10D", img: "pases/ja5380-julio-b24be76b.bin" },
+    { k: "alejandra", who: "Alejandra", seat: "9D", img: "pases/ja5380-alejandra-b24be76b.bin" }];
+  // Las imágenes van cifradas (AES-GCM, clave derivada de la contraseña); sin ella el archivo del repo no se puede leer
+  const PASE_SALT = "dfe6db1a67d848489f83a4f2c67b632c", paseURL = {};
+  const paseNorm = pw => pw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+  async function paseDecrypt(x, pw) {
+    if (paseURL[x.k]) return paseURL[x.k];
+    const salt = new Uint8Array(PASE_SALT.match(/../g).map(h => parseInt(h, 16)));
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(paseNorm(pw)), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 250000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    const buf = new Uint8Array(await (await fetch(x.img)).arrayBuffer());
+    const png = await crypto.subtle.decrypt({ name: "AES-GCM", iv: buf.slice(0, 12) }, key, buf.slice(12));
+    return (paseURL[x.k] = URL.createObjectURL(new Blob([png], { type: "image/png" })));
+  }
+  function paseHTML(k) {
+    const x = PASES.find(p => p.k === k); if (!x) return "";
+    return `<header class="sh-head"><div><h2>Pasabordo de ${x.who}</h2><p>JA 5380 · asiento ${x.seat} · embarque 10:20 am, zona 3</p></div><button type="button" class="icon-btn" data-close aria-label="Cerrar"><i class="ph ph-x" aria-hidden="true"></i></button></header>
+      <div class="pase-body"><form class="pase-lock" data-pase-form="${x.k}"><label for="pase-pw">Contraseña</label><div><input id="pase-pw" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" required><button type="submit">Abrir</button></div><p class="pase-err" data-pase-err aria-live="polite"></p></form>
+      <div data-pase-img hidden></div></div>`;
+  }
+  async function paseShow(k, pw, quiet) {
+    const x = PASES.find(p => p.k === k), box = sheet.querySelector("[data-pase-img]"), form = sheet.querySelector("[data-pase-form]"), err = sheet.querySelector("[data-pase-err]");
+    if (!x || !box) return;
+    if (err) err.textContent = quiet ? "" : "Abriendo…";
+    try {
+      const url = await paseDecrypt(x, pw); store.set("caribe-pase", pw);
+      if (form) form.hidden = true;
+      box.innerHTML = `<img class="pase-img" src="${url}" alt="Pasabordo de ${x.who}, vuelo JA 5380, asiento ${x.seat}">
+        <p class="pase-tip">Súbele el brillo al celular para que lean el código QR. <a href="${url}" download="pasabordo-${x.k}.png">Guardar la imagen</a></p>`;
+      box.hidden = false;
+    } catch (e) { if (err) err.textContent = quiet ? "" : "Contraseña incorrecta."; }
+  }
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     const items = o.bought
       ? [[`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
-         ["checkin-ida", "Check-in de la ida en JetSMART", `Desde el jueves 29 de octubre, con el código de reserva que llegó al correo. Ahí asignan los asientos gratis; guarda la tarjeta de embarque en el celular (imprimirla en el aeropuerto cuesta desde $24.000).`]]
+         ["checkin-ida", "Check-in de la ida en JetSMART", `Hecho: Julio 10D y Alejandra 9D. Embarque 10:20 am, zona 3; llegar a El Dorado a las 8:20 am. ${PASES.map(x => `<button type="button" class="v-more-btn" data-pase="${x.k}">Pasabordo ${x.who}</button>`).join(" ")}`]]
       : [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
     let d0 = D(o.date);
     DESTS.forEach(d => { const n = S.n[d.id]; if (!n) return; const h = hotelOf(d), ci = iso(d0), co = iso(addDays(d0, n)); d0 = addDays(d0, n);
@@ -2470,6 +2513,10 @@
     if (ds.htab) { HTAB = ds.htab; renderHotels(); return; }
     if (ds.hsort) { HSORT = ds.hsort; store.set("caribe-hsort", HSORT); renderHotels(); return; }
     if (ds.hzone) { HZONE = ds.hzone; store.set("caribe-hzone", HZONE); renderHotels(); return; }
+    if (ds.pase) { const k = ds.pase; e.preventDefault(); openSheet(sheet, () => paseHTML(k)); sheet._static = true;
+      const f = sheet.querySelector("[data-pase-form]"), pw = store.get("caribe-pase", "");
+      f.addEventListener("submit", ev => { ev.preventDefault(); paseShow(k, f.querySelector("input").value); });
+      if (pw) paseShow(k, pw, true); return; }
     if (ds.apage) { const k = ds.apage; openSheet(sheet, () => actPageHTML(k)); sheet.classList.add("full"); sheet._static = true; apGal(); return; }
     if (ds.hsheet) { const id = ds.hsheet; openSheet(sheet, () => hotelSheetHTML(id)); return; }
     if (ds.edit) { const key = ds.edit; openSheet(sheet2, () => priceSheetHTML(key)); sheet2._static = true; const inp = sheet2.querySelector("[data-price-input]"); if (inp) { inp.focus(); inp.select(); } return; }
