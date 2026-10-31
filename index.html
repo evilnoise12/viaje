@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-31.6">
+<meta name="app-version" content="2026-10-31.7">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -741,9 +741,9 @@
   .ck-row { display: flex; align-items: stretch; gap: 6px; } .ck-row .check { flex: 1; } .ck-del { align-self: center; flex: none; }
   .ck-add { display: flex; gap: 8px; } .ck-add input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 12px; border: 1px dashed var(--line); border-radius: 12px; background: var(--surface); color: var(--text); } .ck-add .mini { min-width: 48px; justify-content: center; }
   .ck-empty { color: var(--muted); font-size: 14px; margin: 2px 2px; }
-  .ck-sug { margin-top: 6px; } .ck-sug > span { display: block; font-size: 13px; color: var(--muted); margin: 0 2px 6px; } .ck-sug > div { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ck-sug { margin-top: 6px; } .ck-sug > span { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); margin: 0 2px 6px; } .ck-sug > div { display: flex; flex-wrap: wrap; gap: 6px; }
   .ck-chip { display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; font-size: 14px; touch-action: manipulation; user-select: none; -webkit-user-select: none; } .ck-chip i { color: var(--accent); font-size: 13px; } .ck-chip:active { background: var(--surface-2); transform: scale(.97); }
-  .ck-reset { justify-self: start; margin-top: 12px; }
+  .ck-reset { justify-self: start; margin-top: 12px; } .ck-all { font-size: 13px; min-height: 36px; }
   .ck-who { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin-bottom: 12px; border-radius: 14px; background: var(--surface-2); }
   .ck-who button { display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 52px; border: 0; border-radius: 11px; background: none; font: inherit; font-size: 16px; font-weight: 700; color: var(--muted); touch-action: manipulation; user-select: none; -webkit-user-select: none; transition: background 150ms ease-out, color 150ms ease-out; }
   .ck-who button small { font-size: 12px; font-weight: 500; }
@@ -2482,7 +2482,7 @@
     if (RUTA === "sierra") items.push(["noticias", "Revisar noticias de orden público", "Unos días antes de viajar: en septiembre de 2026 hubo un paro armado en la zona de Santa Marta."]);
     items.push(["efectivo", "Llevar efectivo", `Cerca de ${fmt(cash)} entre los dos.${RUTA === "sierra" ? " En Minca no hay cajeros: sácalo en Santa Marta." : ""} El detalle por destino está en Costos.`],
       ...(RUTA === "sierra" ? [["empacar-s", "Empacar impermeable y repelente", "Más sandalias o tenis que se puedan mojar, vestido de baño y manga larga para el atardecer."]] : []));
-    const lists = Object.fromEntries(CK_WHO.map(([p]) => [p, ckList(p)])), mine = lists[CKP], has = new Set(mine.map(x => x.t.toLowerCase())), sug = SUGS.filter(t => !has.has(t.toLowerCase()));
+    const lists = Object.fromEntries(CK_WHO.map(([p]) => [p, ckList(p)])), mine = lists[CKP], has = new Set(mine.map(x => x.t.toLowerCase())), sug = SUGS[CKP].filter(t => !has.has(t.toLowerCase()));
     const cnt = l => l.filter(x => done[x.k]).length, got = cnt(mine), tn = items.filter(([k]) => done[k]).length;
     const row = ([k, t, s]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${done[k] ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b>${s ? `<span>${s}</span>` : ""}</span></label>`;
     const item = x => `<div class="ck-row" data-ck-item="${esc(x.k)}"><button type="button" class="ck-drag" data-ck-drag="${esc(x.k)}" aria-label="Arrastrar ${esc(x.t)} a otra categoría"><i class="ph-bold ph-dots-six-vertical" aria-hidden="true"></i></button>${row([x.k, esc(x.t)])}<button type="button" class="icon-btn ck-del" data-ck-del="${esc(x.k)}" aria-label="Quitar ${esc(x.t)}"><i class="ph ph-x" aria-hidden="true"></i></button></div>`;
@@ -2492,7 +2492,7 @@
       ${mine.length ? "" : `<p class="ck-empty">Escribe lo que no se te puede olvidar o toca una idea. Cada cosa cae sola en su categoría; si no te gusta dónde quedó, arrástrala con <i class="ph-bold ph-dots-six-vertical" aria-hidden="true"></i>.</p>`}
       <div class="ck-cats">${CK_CATS.map(([c, n, ic]) => { const l = mine.filter(x => x.c === c);
         return `<section class="ck-cat${l.length ? "" : " ck-void"}" data-ck-cat="${c}"><h3 class="ck-h"><i class="ph-fill ${ic}" aria-hidden="true"></i>${n}${l.length ? `<span>${cnt(l)} de ${l.length}</span>` : ""}</h3>${l.map(item).join("") || `<p class="ck-drop">Suelta aquí</p>`}</section>`; }).join("")}</div>
-      ${sug.length ? `<div class="ck-sug"><span>Ideas: toca para agregar</span><div>${sug.map(t => `<button type="button" class="ck-chip" data-ck-sug="${esc(t)}"><i class="ph-bold ph-plus" aria-hidden="true"></i>${esc(t)}</button>`).join("")}</div></div>` : ""}
+      ${sug.length ? `<div class="ck-sug"><span>Ideas: toca para agregar${sug.length > 1 ? `<button type="button" class="link-btn ck-all" data-ck-all><i class="ph-bold ph-plus" aria-hidden="true"></i>Agregar todas (${sug.length})</button>` : ""}</span><div>${sug.map(t => `<button type="button" class="ck-chip" data-ck-sug="${esc(t)}"><i class="ph-bold ph-plus" aria-hidden="true"></i>${esc(t)}</button>`).join("")}</div></div>` : ""}
       ${got ? `<button type="button" class="mini ck-reset" data-ck-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Desmarcar la lista de ${who} para el regreso</button>` : ""}
       <section class="ck-grp ck-trip"><h2 class="ck-h"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i>Pendientes del viaje<span>${tn} de ${items.length}</span></h2>${items.map(row).join("")}</section>`;
     const all = CK_WHO.flatMap(([p]) => lists[p]), aN = cnt(all);
@@ -2507,10 +2507,10 @@
   const CK_RX = [["doc", /c[ée]dula|pasaporte|documento|licencia|tarjeta|pasabordo|efectivo|plata|billetera|cartera|carn[ée]/i],
     ["playa", /bolsa seca|toalla|bloqueador|protector solar|careta|snorkel|aletas|after ?sun|bronceador|flotador/i],
     ["salud", /repelente|pastilla|medicamento|medicina|botiqu[íi]n|acetaminof|ibuprofeno|curita|suero|sales de|vitamina|alergia|mareo|gotas/i],
-    ["gad", /cargador|port[áa]til|computador|laptop|celular|power ?bank|bater[íi]a|aud[íi]fono|cable|adaptador|c[áa]mara|kindle|tablet|ipad|mouse|parlante|airpods|reloj inteligente|smartwatch/i],
-    ["acc", /gafas|lentes|gorra|sombrero|reloj|aretes|collar|pulsera|anillo|cintur[óo]n|bolso|ri[ñn]onera|manilla|sombrilla|paraguas/i],
-    ["aseo", /cepillo|crema|pasta dental|desodorante|champ|jab[óo]n|acondicionador|peinilla|peine|afeitar|cuchilla|m[áa]quina de afeitar|perfume|colonia|toallitas|hilo dental|maquillaje|aseo|tampones|toallas higi|copa menstrual|cosmetiquera|labial/i],
-    ["ropa", /ropa|vestido|camis|pantal|short|bermuda|sandalia|tenis|zapato|chancla|pijama|medias|calcet|interior|brasier|chaqueta|buzo|blusa|falda|traje|sudadera|leggin|top/i]];
+    ["aseo", /cepillo|crema|pasta dental|desodorante|champ|jab[óo]n|acondicionador|peinilla|peine|afeitar|cuchilla|m[áa]quina de afeitar|perfume|colonia|toallitas|hilo dental|maquillaje|aseo|shampoo|rol[óo]n|cond[óo]n|preservativo|cortar pelo|patillera|tampones|toallas higi|copa menstrual|cosmetiquera|labial/i],
+    ["gad", /cargador|port[áa]til|computador|laptop|macbook|celular|iphone|power ?bank|bater[íi]a|aud[íi]fono|cable|adaptador|c[áa]mara|akaso|gopro|kindle|tablet|ipad|mouse|parlante|airpods|apple watch|reloj inteligente|smartwatch/i],
+    ["acc", /gafas|lentes|gorra|cachucha|sombrero|reloj|aretes|collar|pulsera|anillo|cintur[óo]n|bolso|ri[ñn]onera|kanguro|canguro|manilla|sombrilla|paraguas|cuello/i],
+    ["ropa", /ropa|vestido|camis|pantal|short|bermuda|buso|b[óo]xer|esqueleto|jogger|kanguro de|sandalia|tenis|zapato|chancla|pijama|medias|calcet|interior|brasier|chaqueta|buzo|blusa|falda|traje|sudadera|leggin|top/i]];
   const ckCat = t => (CK_RX.find(([, r]) => r.test(t)) || ["otros"])[0];
   function ckList(p) {
     if (p === "julio" && store.get("caribe-ck-julio", null) == null) { const old = store.get("caribe-mychecks", []); store.set("caribe-ck-julio", old.map(x => ({ ...x, c: ckCat(x.t) }))); }
@@ -2544,7 +2544,11 @@
     renderChecks(LAST);
   };
   document.addEventListener("pointerup", ckDrop); document.addEventListener("pointercancel", ckDrop);
-  const SUGS = ["Cédula", "Cepillo de dientes", "Crema dental", "Desodorante", "Cargador del celular", "Cargador del portátil", "Portátil", "Power bank", "Audífonos", "Gafas de sol", "Gorra", "Bloqueador", "Bolsa seca", "Toalla de playa", "Vestido de baño", "Sandalias", "Pijama", "Repelente", "Pastillas para el mareo", "Medicamentos"];
+  // Ideas por persona; las de Julio salen de su lista de viajes anteriores (sin lo de viajes internacionales)
+  const SUGS = {
+    julio: ["Cédula", "Efectivo", "Tarjetas", "Desodorante rolón", "Cepillo de dientes", "Crema dental", "Cepillo de pelo", "Shampoo", "Condones", "Máquina de cortar pelo y cable", "MacBook", "Cargador MacBook", "iPad", "Cargador iPad", "Cargador 20W", "Cargador 3 en 1", "Cargador Apple Watch", "AKASO", "Power bank", "Gafas de sol", "Gafas normales", "Gorra", "Kanguro", "Bolsa seca", "Bloqueador", "Pantaloneta de baño", "Buso de baño", "Pantalonetas", "Camisetas", "Esqueletos", "Bóxers", "Medias", "Jogger", "Tenis", "Sandalias", "Repelente", "Pastillas para el mareo"],
+    ale: ["Cédula", "Tarjetas", "Cepillo de dientes", "Crema dental", "Desodorante", "Shampoo", "Cargador del celular", "Power bank", "Audífonos", "Gafas de sol", "Gorra", "Bloqueador", "Bolsa seca", "Toalla de playa", "Vestido de baño", "Sandalias", "Pijama", "Repelente", "Pastillas para el mareo", "Medicamentos"]
+  };
   function renderInfo(C) { const msg = agencyMsg(C); $$("[data-wa-agency]").forEach(a => { a.href = `https://wa.me/${a.dataset.waAgency}?text=${encodeURIComponent(msg)}`; }); }
   function shareText(C) {
     const p = P(), o = p.out[S.out], b = p.back[S.back], list = allActs();
@@ -2604,6 +2608,7 @@
     if (ds.ckp) { CKP = ds.ckp; store.set("caribe-ckp", CKP); renderChecks(LAST); return; }
     if (ds.ckDel) { ckSave(ckList(CKP).filter(x => x.k !== ds.ckDel)); renderChecks(LAST); return; }
     if (ds.ckSug) { ckAdd(ds.ckSug); return; }
+    if (t.hasAttribute("data-ck-all")) { const l = ckList(CKP), has = new Set(l.map(x => x.t.toLowerCase())); SUGS[CKP].filter(x => !has.has(x.toLowerCase())).forEach((x, n) => l.push({ k: "m-" + Date.now().toString(36) + n + Math.random().toString(36).slice(2, 5), t: x, c: ckCat(x) })); ckSave(l); renderChecks(LAST); toast("Ideas agregadas. Quita con la × lo que no lleves."); return; }
     if (t.hasAttribute("data-ck-reset")) { const done = store.get("caribe-checks4", {}); ckList(CKP).forEach(x => { delete done[x.k]; }); store.set("caribe-checks4", done); renderChecks(LAST); toast("Maleta desmarcada."); return; }
     if (ds.sg != null) { applySugg(+ds.sg); return; }
     if (t.hasAttribute("data-ai-ask")) { aiAsk(); return; }
