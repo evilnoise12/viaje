@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-31.3">
+<meta name="app-version" content="2026-10-31.4">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -92,7 +92,7 @@
   .lines .pp { color: var(--muted); font-size: 12px; }
   .v-head h1 { font-size: 26px; line-height: 1.15; letter-spacing: -.01em; }
   .v-head p { color: var(--muted); font-size: 14px; margin-top: 4px; }
-  .v-status { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 18px; }
+  .v-status { display: block; }
   .vst { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-size: 13px; font-weight: 600; padding: 6px 11px; border-radius: 999px; border: 0; }
   /* Pasabordos como tarjetas de Wallet: apiladas, de las de atrás solo se ve el borde con el nombre */
   .wallet { margin: -6px 0 22px; }
@@ -735,6 +735,17 @@
   .check .txt span { color: var(--muted); font-size: 13px; }
   .check .txt a { display: inline-block; padding: 4px 0; }
   .progress { color: var(--muted); margin-bottom: 10px; }
+  /* Checklist: grupos, ítems propios y tarjeta de acceso en Viaje */
+  .ck-grp + .ck-grp { margin-top: 22px; } .ck-grp { display: grid; gap: 8px; }
+  .ck-h { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; margin: 0 2px 2px; } .ck-h i { color: var(--accent); font-size: 20px; } .ck-h span { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .ck-row { display: flex; align-items: stretch; gap: 6px; } .ck-row .check { flex: 1; } .ck-del { align-self: center; flex: none; }
+  .ck-add { display: flex; gap: 8px; } .ck-add input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 12px; border: 1px dashed var(--line); border-radius: 12px; background: var(--surface); color: var(--text); } .ck-add .mini { min-width: 48px; justify-content: center; }
+  .ck-card { display: flex; align-items: center; gap: 14px; width: 100%; margin: 14px 0 20px; padding: 14px 16px; border: 0; border-radius: 18px; font: inherit; text-align: left; color: #fff; background: linear-gradient(135deg, #ff9b54, #e4573a); box-shadow: 0 10px 24px -12px rgba(206, 77, 44, .8); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; -webkit-user-select: none; transition: transform 120ms ease-out, box-shadow 120ms ease-out; }
+  .ck-card:active { transform: scale(.98); box-shadow: 0 4px 12px -8px rgba(206, 77, 44, .8); }
+  .ck-ring { --p: 0; flex: none; display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: conic-gradient(#fff calc(var(--p) * 1turn), rgba(255, 255, 255, .22) 0); }
+  .ck-ring i { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #e2603d; font-size: 22px; color: #fff; }
+  .ck-txt { flex: 1; display: flex; flex-direction: column; gap: 2px; } .ck-txt b { font-size: 17px; font-weight: 700; letter-spacing: -.01em; } .ck-txt small { font-size: 13px; opacity: .85; }
+  .ck-go { font-size: 18px; opacity: .9; flex: none; }
   .agency { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; }
   .agency small { color: var(--muted); display: block; font-size: 12px; }
   .agency p { color: var(--muted); font-size: 13px; grid-column: 1 / -1; }
@@ -822,7 +833,7 @@
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
     <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
-    <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
+    <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-list-checks" aria-hidden="true"></i>Checklist</button>
     <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
     <p class="foot">Precios del 5 de octubre de 2026. Confirmar antes de reservar.</p>
   </aside>
@@ -842,7 +853,7 @@
       <div class="wx-strip" data-wx-strip></div>
       <div data-v-stages></div>
       <div class="v-edit"><button type="button" class="mini primary" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Cambiar plan</button><button type="button" class="mini" data-view-btn="dias"><i class="ph ph-map-trifold" aria-hidden="true"></i>Mapa y detalle</button></div>
-      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="pendientes">Pendientes</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
+      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="pendientes">Checklist</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
       <p class="v-credit">Fotos de actividades: Wikimedia Commons</p>
     </section>
 
@@ -948,7 +959,7 @@
     </section>
 
     <section class="view" data-view="pendientes" hidden>
-      <div class="view-head"><div><h1>Pendientes</h1></div></div>
+      <div class="view-head"><div><h1>Checklist</h1></div></div>
       <p class="progress" data-progress></p>
       <div class="checks" data-checks></div>
     </section>
@@ -1063,7 +1074,7 @@
       <div class="more-list">
         <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
-        <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-check-square" aria-hidden="true"></i>Pendientes</button>
+        <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-list-checks" aria-hidden="true"></i>Checklist</button>
         <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
       </div>
     </section>
@@ -2373,12 +2384,6 @@
     const names = nd.map(d => ({ golfo: "Tolú", rincon: "Rincón", ctg: "Cartagena" }[d.id] || d.name));
     $("[data-v-title]").textContent = names.length > 1 ? names.slice(0, -1).join(", ") + " y " + names.slice(-1) : names[0] || "Viaje";
     $("[data-v-meta]").textContent = `${cap(dlabel(out.date))} al ${dlabel(back.date)} · ${noches(totalNights())}`;
-    const done = [], todo = [];
-    (out.bought ? done : todo).push("Vuelo de ida");
-    nd.forEach(d => { const h = hotelOf(d); (h.booked ? done : todo).push("Hotel en " + DNAME_SHORT[d.id]); });
-    (back.bought ? done : todo).push("Vuelo de regreso");
-    $("[data-v-status]").innerHTML = done.map(t => `<span class="vst ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>${t}</span>`).join("")
-      + (todo.length ? `<button type="button" class="vst todo" data-view-btn="pendientes"><i class="ph ph-circle-dashed" aria-hidden="true"></i>Faltan ${todo.length}</button>` : "");
     const wal = $("[data-v-pases]"), showPases = out.bought && out.date === PASE_DATE;
     wal.hidden = !showPases;
     wal.innerHTML = showPases ? PASES.map((x, i) => `<button type="button" class="wcard${i % 2 ? " alt" : ""}" data-pase="${x.k}" aria-label="Abrir pasabordo de ${x.who}, asiento ${x.seat}">
@@ -2461,11 +2466,25 @@
     const cash = cashPlan(C).reduce((s, c) => s + c.total, 0);
     if (RUTA === "sierra") items.push(["noticias", "Revisar noticias de orden público", "Unos días antes de viajar: en septiembre de 2026 hubo un paro armado en la zona de Santa Marta."]);
     items.push(["efectivo", "Llevar efectivo", `Cerca de ${fmt(cash)} entre los dos.${RUTA === "sierra" ? " En Minca no hay cajeros: sácalo en Santa Marta." : ""} El detalle por destino está en Costos.`],
-      RUTA === "sierra" ? ["empacar-s", "Empacar impermeable y repelente", "Más sandalias o tenis que se puedan mojar, vestido de baño y manga larga para el atardecer."] : ["bolsa", "Empacar bolsa seca y repelente", "Y careta propia si tienen."]);
-    $("[data-checks]").innerHTML = items.map(([k, t, s]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${done[k] ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b><span>${s}</span></span></label>`).join("");
-    const n = items.filter(([k]) => done[k]).length;
-    $("[data-progress]").textContent = n === items.length ? "Todo listo. Solo falta empacar." : `${n} de ${items.length} listos. Se guardan en este navegador.`;
+      ...(RUTA === "sierra" ? [["empacar-s", "Empacar impermeable y repelente", "Más sandalias o tenis que se puedan mojar, vestido de baño y manga larga para el atardecer."]] : []));
+    const mine = store.get("caribe-mychecks", []), groups = [["ph-clipboard-text", "Antes de salir", items]].concat(RUTA === "sierra" ? [] : PACK).concat([["ph-plus-circle", "Mis cosas", mine.map(x => [x.k, esc(x.t), "", true])]]);
+    const all = groups.flatMap(g => g[2]), n = all.filter(([k]) => done[k]).length, packN = groups.slice(1).flatMap(g => g[2]).filter(([k]) => done[k]).length;
+    const row = ([k, t, s, del]) => `<div class="ck-row"><label class="check"><input type="checkbox" data-key="${esc(k)}" ${done[k] ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b>${s ? `<span>${s}</span>` : ""}</span></label>${del ? `<button type="button" class="icon-btn ck-del" data-ck-del="${esc(k)}" aria-label="Quitar ${t}"><i class="ph ph-x" aria-hidden="true"></i></button>` : ""}</div>`;
+    $("[data-checks]").innerHTML = groups.map(([ic, name, l]) => { const g = l.filter(([k]) => done[k]).length;
+      return `<section class="ck-grp"><h2 class="ck-h"><i class="ph-fill ${ic}" aria-hidden="true"></i>${name}${l.length ? `<span>${g} de ${l.length}</span>` : ""}</h2>${l.map(row).join("")}${name === "Mis cosas" ? `<form class="ck-add" data-ck-add><input type="text" name="t" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="Agregar algo más" aria-label="Agregar a la lista"><button type="submit" class="mini primary" aria-label="Agregar"><i class="ph-bold ph-plus" aria-hidden="true"></i></button></form>` : ""}</section>`; }).join("")
+      + (packN ? `<div class="actions"><button type="button" class="mini" data-ck-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Desmarcar la maleta para empacar el regreso</button></div>` : "");
+    $("[data-progress]").textContent = n === all.length ? "Todo listo. ¡Buen viaje!" : `${n} de ${all.length} listos. Se guarda en este celular.`;
+    const pct = all.length ? n / all.length : 0, left = all.length - n;
+    $("[data-v-status]").innerHTML = `<button type="button" class="ck-card" data-view-btn="pendientes"><span class="ck-ring" style="--p:${pct.toFixed(3)}"><i class="ph-fill ${left ? "ph-suitcase-rolling" : "ph-check-fat"}" aria-hidden="true"></i></span><span class="ck-txt"><b>${left ? "Checklist del viaje" : "Todo listo para viajar"}</b><small>${left ? `${n} de ${all.length} listos · faltan ${left}` : "Maleta y pendientes completos"}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
   }
+  const PACK = [
+    ["ph-identification-card", "Documentos y plata", [["p-cedulas", "Cédulas de los dos", "Las piden en el aeropuerto y en los hoteles."], ["p-tarjetas", "Tarjetas débito y crédito", ""], ["p-pases", "Pasabordos en el celular", "Están en la pantalla de Viaje; guárdalos también como foto por si no hay señal."]]],
+    ["ph-t-shirt", "Ropa", [["p-ropa", "Ropa fresca para 9 días", "Todo tiene que caber en el morral de 40×35×25 cm del regreso."], ["p-banio", "Vestidos de baño", "Dos por persona, para que uno se seque."], ["p-calzado", "Sandalias y tenis", ""], ["p-manga", "Una prenda de manga larga", "Para el sol en la lancha y los mosquitos del manglar."], ["p-pijama", "Pijama y ropa interior", ""]]],
+    ["ph-sun", "Playa y sol", [["bolsa", "Bolsa seca", "Para el celular y la plata en la lancha."], ["p-bloq", "Bloqueador", ""], ["p-gafas", "Gafas de sol y gorra", ""], ["p-toalla", "Toalla de playa liviana", ""], ["p-careta", "Careta, si tienen", ""]]],
+    ["ph-first-aid-kit", "Salud", [["p-repelente", "Repelente", "Indispensable en la ciénaga, el manglar y la bioluminiscencia."], ["p-mareo", "Pastillas para el mareo", "Tomarla 30 minutos antes de la lancha."], ["p-botiquin", "Botiquín pequeño", "Acetaminofén, sales de rehidratación, curitas y algo para el estómago."], ["p-meds", "Medicamentos personales", ""]]],
+    ["ph-laptop", "Trabajo y aparatos", [["p-laptop", "Portátil y su cargador", ""], ["p-cargadores", "Cargadores del celular y cable largo", ""], ["p-power", "Power bank", "Siempre en el morral, nunca en bodega. En Rincón la luz se va."], ["p-audif", "Audífonos", ""]]],
+    ["ph-drop", "Aseo", [["p-dientes", "Cepillo y crema de dientes", ""], ["p-desodorante", "Desodorante", ""], ["p-champu", "Champú y crema en envases pequeños", "Máximo 100 ml cada uno en el equipaje de mano."]]]
+  ];
   function renderInfo(C) { const msg = agencyMsg(C); $$("[data-wa-agency]").forEach(a => { a.href = `https://wa.me/${a.dataset.waAgency}?text=${encodeURIComponent(msg)}`; }); }
   function shareText(C) {
     const p = P(), o = p.out[S.out], b = p.back[S.back], list = allActs();
@@ -2522,6 +2541,8 @@
     const t = e.target.closest("button"); if (!t) return;
     const ds = t.dataset;
     if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
+    if (ds.ckDel) { store.set("caribe-mychecks", store.get("caribe-mychecks", []).filter(x => x.k !== ds.ckDel)); renderChecks(LAST); return; }
+    if (t.hasAttribute("data-ck-reset")) { const done = store.get("caribe-checks4", {}); PACK.forEach(g => g[2].forEach(([k]) => { delete done[k]; })); store.get("caribe-mychecks", []).forEach(x => { delete done[x.k]; }); store.set("caribe-checks4", done); renderChecks(LAST); toast("Maleta desmarcada."); return; }
     if (ds.sg != null) { applySugg(+ds.sg); return; }
     if (t.hasAttribute("data-ai-ask")) { aiAsk(); return; }
     if (ds.aiExq) { aiAsk(ds.aiExq); return; }
@@ -2598,6 +2619,8 @@
     }
   });
   document.addEventListener("submit", e => {
+    const ck = e.target.closest("[data-ck-add]");
+    if (ck) { e.preventDefault(); const v = ck.querySelector("input").value.trim(); if (!v) return; const l = store.get("caribe-mychecks", []); l.push({ k: "m-" + Date.now().toString(36), t: v.slice(0, 60) }); store.set("caribe-mychecks", l); renderChecks(LAST); const i = $("[data-ck-add] input"); if (i) i.focus(); return; }
     const f = e.target.closest("[data-cform]"); if (!f) return; e.preventDefault();
     const fd = new FormData(f), name = undash(String(fd.get("t") || "")).trim();
     if (!name) { f.querySelector("[data-cform-err]").hidden = false; f.querySelector("input[name=t]").focus(); return; }
