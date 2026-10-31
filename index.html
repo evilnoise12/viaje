@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-31.7">
+<meta name="app-version" content="2026-10-31.8">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -2510,7 +2510,7 @@
     ["aseo", /cepillo|crema|pasta dental|desodorante|champ|jab[óo]n|acondicionador|peinilla|peine|afeitar|cuchilla|m[áa]quina de afeitar|perfume|colonia|toallitas|hilo dental|maquillaje|aseo|shampoo|rol[óo]n|cond[óo]n|preservativo|cortar pelo|patillera|tampones|toallas higi|copa menstrual|cosmetiquera|labial/i],
     ["gad", /cargador|port[áa]til|computador|laptop|macbook|celular|iphone|power ?bank|bater[íi]a|aud[íi]fono|cable|adaptador|c[áa]mara|akaso|gopro|kindle|tablet|ipad|mouse|parlante|airpods|apple watch|reloj inteligente|smartwatch/i],
     ["acc", /gafas|lentes|gorra|cachucha|sombrero|reloj|aretes|collar|pulsera|anillo|cintur[óo]n|bolso|ri[ñn]onera|kanguro|canguro|manilla|sombrilla|paraguas|cuello/i],
-    ["ropa", /ropa|vestido|camis|pantal|short|bermuda|buso|b[óo]xer|esqueleto|jogger|kanguro de|sandalia|tenis|zapato|chancla|pijama|medias|calcet|interior|brasier|chaqueta|buzo|blusa|falda|traje|sudadera|leggin|top/i]];
+    ["ropa", /ropa|vestido|camis|pantal|short|bermuda|mocho|buso|b[óo]xer|esqueleto|jogger|kanguro de|sandalia|tenis|zapato|chancla|pijama|medias|calcet|interior|brasier|chaqueta|buzo|blusa|falda|traje|sudadera|leggin|top/i]];
   const ckCat = t => (CK_RX.find(([, r]) => r.test(t)) || ["otros"])[0];
   function ckList(p) {
     if (p === "julio" && store.get("caribe-ck-julio", null) == null) { const old = store.get("caribe-mychecks", []); store.set("caribe-ck-julio", old.map(x => ({ ...x, c: ckCat(x.t) }))); }
@@ -2546,7 +2546,7 @@
   document.addEventListener("pointerup", ckDrop); document.addEventListener("pointercancel", ckDrop);
   // Ideas por persona; las de Julio salen de su lista de viajes anteriores (sin lo de viajes internacionales)
   const SUGS = {
-    julio: ["Cédula", "Efectivo", "Tarjetas", "Desodorante rolón", "Cepillo de dientes", "Crema dental", "Cepillo de pelo", "Shampoo", "Condones", "Máquina de cortar pelo y cable", "MacBook", "Cargador MacBook", "iPad", "Cargador iPad", "Cargador 20W", "Cargador 3 en 1", "Cargador Apple Watch", "AKASO", "Power bank", "Gafas de sol", "Gafas normales", "Gorra", "Kanguro", "Bolsa seca", "Bloqueador", "Pantaloneta de baño", "Buso de baño", "Pantalonetas", "Camisetas", "Esqueletos", "Bóxers", "Medias", "Jogger", "Tenis", "Sandalias", "Repelente", "Pastillas para el mareo"],
+    julio: ["Cédula", "Efectivo", "Tarjetas", "Desodorante rolón", "Cepillo de dientes", "Crema dental", "Cepillo de pelo", "Shampoo", "Condones", "Máquina de cortar pelo y cable", "MacBook", "Cargador MacBook", "iPad", "Cargador iPad", "Cargador 20W", "Cargador 3 en 1", "Cargador Apple Watch", "AKASO", "Power bank", "Gafas de sol", "Gafas normales", "Gorra", "Kanguro", "Bolsa seca", "Bloqueador", "Pantaloneta de baño", "Buso de baño", "Pantalonetas", "Mocho", "Camisetas", "Esqueletos", "Bóxers", "Medias", "Jogger", "Tenis", "Sandalias", "Repelente", "Pastillas para el mareo"],
     ale: ["Cédula", "Tarjetas", "Cepillo de dientes", "Crema dental", "Desodorante", "Shampoo", "Cargador del celular", "Power bank", "Audífonos", "Gafas de sol", "Gorra", "Bloqueador", "Bolsa seca", "Toalla de playa", "Vestido de baño", "Sandalias", "Pijama", "Repelente", "Pastillas para el mareo", "Medicamentos"]
   };
   function renderInfo(C) { const msg = agencyMsg(C); $$("[data-wa-agency]").forEach(a => { a.href = `https://wa.me/${a.dataset.waAgency}?text=${encodeURIComponent(msg)}`; }); }
