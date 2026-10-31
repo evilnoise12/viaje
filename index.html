@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-31.1">
+<meta name="app-version" content="2026-10-31.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1044,6 +1044,7 @@
 
     <section class="view" data-view="hoteles" hidden>
       <div class="view-head"><div><h1>Hoteles</h1></div></div>
+      <div class="g-tabs" role="tablist" data-htabs></div>
       <div data-hlist></div>
     </section>
 
@@ -2084,7 +2085,7 @@
       </div>`;
   }
   /* ---------- Hoteles con fotos ---------- */
-  let HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false), HZONE = store.get("caribe-hzone", "todas");
+  let HTAB = null, HSORT = store.get("caribe-hsort", "precio"), HWORK = !!store.get("caribe-hwork", false), HZONE = store.get("caribe-hzone", "todas");
   const ZONES = [["todas", "Todas"], ["amurallada", "Amurallada"], ["getsemani", "Getsemaní"], ["bocagrande", "Bocagrande"]];
   const zoneOf = h => { const w = h.where || ""; return /Pie del Cerro|Manga|Torices|Crespo/.test(w) ? "otra" : /^Getsemaní/.test(w) ? "getsemani" : /Bocagrande|Castillogrande/.test(w) ? "bocagrande" : /San Diego|Centro|Amurallada|Matuna/.test(w) ? "amurallada" : "otra"; };
   const picURL = (h, i = 0, size = "max500") => h.img && h.img[i] ? /^https?:/.test(h.img[i]) ? h.img[i] : `https://cf.bstatic.com/xdata/images/hotel/${size}/${h.img[i].replace("?k=", ".jpg?k=")}&o=` : null;
@@ -2256,12 +2257,13 @@
     return air0 && air1 ? `https://www.google.com/maps/dir/?api=1&origin=${air0.ll.join(",")}&destination=${air1.ll.join(",")}&waypoints=${encodeURIComponent(wp.join("|"))}&travelmode=driving` : "#";
   }
   function renderHotels() {
-    const box = $("[data-hlist]"); if (!box) return;
+    const tabs = $("[data-htabs]"), box = $("[data-hlist]"); if (!tabs || !box) return;
     const ds = DESTS.filter(d => S.n[d.id]), show = ds.length ? ds : DESTS;
-    const bk = show.filter(lockedN).map(d => [d, top3(d).slice(1, 3)]).filter(([, l]) => l.length);
-    box.innerHTML = show.map((d, i) => `<section class="hl-sec c-${d.id}" data-hsec="${d.id}"><h2 class="hl-dest"><i class="ph-fill ${d.icon}" aria-hidden="true"></i>${d.name}<span class="hl-step">${i + 1} de ${show.length}</span></h2>${hotelSection(d)}</section>`).join("")
-      + (bk.length ? `<section class="hl-sec" data-hsec="respaldo"><h2 class="hl-dest"><i class="ph-fill ph-lifebuoy" aria-hidden="true"></i>De respaldo</h2><p class="hl-head">Por si algo falla con una reserva: los dos mejores de cada pueblo con cupo, aire, baño privado y bajo el tope. Precios de la última revisión, confírmalos en Booking.</p>`
-        + bk.map(([d, l]) => `<div class="c-${d.id}"><h3 class="hl-sub hl-bk"><i class="ph-fill ${d.icon}" aria-hidden="true"></i>${d.name}</h3>${l.map(h => hotelCard(h, d, false)).join("")}</div>`).join("") + `</section>` : "");
+    if (!show.some(d => d.id === HTAB)) HTAB = show[0].id;
+    tabs.innerHTML = show.map(d => `<button type="button" role="tab" class="g-tab c-${d.id}" aria-selected="${d.id === HTAB}" data-htab="${d.id}"><i class="ph ${d.icon}" aria-hidden="true"></i>${d.name}</button>`).join("");
+    const d = DESTS.find(x => x.id === HTAB), bk = lockedN(d) ? top3(d).slice(1, 3) : [];
+    box.innerHTML = `<section class="c-${d.id}">${hotelSection(d)}`
+      + (bk.length ? `<h3 class="hl-sub hl-bk"><i class="ph-fill ph-lifebuoy" aria-hidden="true"></i>De respaldo</h3><p class="hl-head">Por si algo falla con la reserva: los dos mejores con cupo, aire, baño privado y bajo el tope. Precios de la última revisión, confírmalos en Booking.</p>${bk.map(h => hotelCard(h, d, false)).join("")}` : "") + `</section>`;
   }
   function hotelSection(d) {
     const n = S.n[d.id], [ci, co] = stayOf(d.id);
@@ -2540,7 +2542,8 @@
     }
     if (ds.set) { S[ds.set] = ds.v; if (ds.set === "pu") { const p = P(); if (!p.out[S.out]) S.out = Object.keys(p.out)[0]; if (!p.back[S.back]) S.back = Object.keys(p.back)[0]; } if (ds.set !== "food") balance(); render(); return; }
     if (ds.hotel) { S.h[ds.hotel] = ds.v; closeSheet(sheet); render(); toast("Hotel cambiado."); return; }
-    if (ds.hview) { const id = ds.hview; renderHotels(); showView("hoteles"); const sec = $(`[data-hsec="${id}"] .hl-dest`); if (sec) sec.scrollIntoView({ block: "start" }); return; }
+    if (ds.hview) { HTAB = ds.hview; renderHotels(); showView("hoteles"); return; }
+    if (ds.htab) { HTAB = ds.htab; renderHotels(); return; }
     if (ds.hsort) { HSORT = ds.hsort; store.set("caribe-hsort", HSORT); renderHotels(); return; }
     if (ds.hzone) { HZONE = ds.hzone; store.set("caribe-hzone", HZONE); renderHotels(); return; }
     if (ds.pase) { const k = ds.pase; e.preventDefault(); openSheet(sheet, () => paseHTML(k)); sheet._static = true;
