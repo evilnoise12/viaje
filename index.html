@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-10-31.8">
+<meta name="app-version" content="2026-11-01.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -755,6 +755,7 @@
   .ck-src { opacity: .35; }
   .ck-ghost { position: fixed; z-index: 90; pointer-events: none; margin: 0; transform: scale(1.03) rotate(-1deg); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .35); border-radius: 12px; background: var(--surface); }
   .ck-trip { margin-top: 28px; }
+  .ck-sync { font-size: 12px; color: var(--ok); margin: -6px 0 10px; } .ck-sync:empty { display: none; } .ck-sync.off { color: var(--warn); }
   .ck-card { display: flex; align-items: center; gap: 14px; width: 100%; margin: 14px 0 20px; padding: 14px 16px; border: 0; border-radius: 18px; font: inherit; text-align: left; color: #fff; background: linear-gradient(135deg, #ff9b54, #e4573a); box-shadow: 0 10px 24px -12px rgba(206, 77, 44, .8); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; -webkit-user-select: none; transition: transform 120ms ease-out, box-shadow 120ms ease-out; }
   .ck-card:active { transform: scale(.98); box-shadow: 0 4px 12px -8px rgba(206, 77, 44, .8); }
   .ck-ring { --p: 0; flex: none; display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: conic-gradient(#fff calc(var(--p) * 1turn), rgba(255, 255, 255, .22) 0); }
@@ -976,6 +977,7 @@
     <section class="view" data-view="pendientes" hidden>
       <div class="view-head"><div><h1>Checklist</h1></div></div>
       <p class="progress" data-progress></p>
+      <p class="ck-sync" data-ck-sync role="status"></p>
       <div class="checks" data-checks></div>
     </section>
 
@@ -2483,9 +2485,9 @@
     items.push(["efectivo", "Llevar efectivo", `Cerca de ${fmt(cash)} entre los dos.${RUTA === "sierra" ? " En Minca no hay cajeros: sácalo en Santa Marta." : ""} El detalle por destino está en Costos.`],
       ...(RUTA === "sierra" ? [["empacar-s", "Empacar impermeable y repelente", "Más sandalias o tenis que se puedan mojar, vestido de baño y manga larga para el atardecer."]] : []));
     const lists = Object.fromEntries(CK_WHO.map(([p]) => [p, ckList(p)])), mine = lists[CKP], has = new Set(mine.map(x => x.t.toLowerCase())), sug = SUGS[CKP].filter(t => !has.has(t.toLowerCase()));
-    const cnt = l => l.filter(x => done[x.k]).length, got = cnt(mine), tn = items.filter(([k]) => done[k]).length;
-    const row = ([k, t, s]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${done[k] ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b>${s ? `<span>${s}</span>` : ""}</span></label>`;
-    const item = x => `<div class="ck-row" data-ck-item="${esc(x.k)}"><button type="button" class="ck-drag" data-ck-drag="${esc(x.k)}" aria-label="Arrastrar ${esc(x.t)} a otra categoría"><i class="ph-bold ph-dots-six-vertical" aria-hidden="true"></i></button>${row([x.k, esc(x.t)])}<button type="button" class="icon-btn ck-del" data-ck-del="${esc(x.k)}" aria-label="Quitar ${esc(x.t)}"><i class="ph ph-x" aria-hidden="true"></i></button></div>`;
+    const cnt = l => l.filter(x => x.d).length, got = cnt(mine), tn = items.filter(([k]) => done[k]).length;
+    const row = ([k, t, s], on = done[k]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${on ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b>${s ? `<span>${s}</span>` : ""}</span></label>`;
+    const item = x => `<div class="ck-row" data-ck-item="${esc(x.k)}"><button type="button" class="ck-drag" data-ck-drag="${esc(x.k)}" aria-label="Arrastrar ${esc(x.t)} a otra categoría"><i class="ph-bold ph-dots-six-vertical" aria-hidden="true"></i></button>${row([x.k, esc(x.t)], x.d)}<button type="button" class="icon-btn ck-del" data-ck-del="${esc(x.k)}" aria-label="Quitar ${esc(x.t)}"><i class="ph ph-x" aria-hidden="true"></i></button></div>`;
     const who = CK_WHO.find(([p]) => p === CKP)[1];
     $("[data-checks]").innerHTML = `<div class="ck-who" role="tablist" aria-label="Lista de">${CK_WHO.map(([p, n]) => `<button type="button" role="tab" aria-selected="${p === CKP}" data-ckp="${p}">${n}<small>${lists[p].length ? `${cnt(lists[p])} de ${lists[p].length}` : "Vacía"}</small></button>`).join("")}</div>
       <form class="ck-add" data-ck-add><input type="text" name="t" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="Agregar a la lista de ${who}" aria-label="Agregar a la lista de ${who}"><button type="submit" class="mini primary" aria-label="Agregar"><i class="ph-bold ph-plus" aria-hidden="true"></i></button></form>
@@ -2496,7 +2498,8 @@
       ${got ? `<button type="button" class="mini ck-reset" data-ck-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>Desmarcar la lista de ${who} para el regreso</button>` : ""}
       <section class="ck-grp ck-trip"><h2 class="ck-h"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i>Pendientes del viaje<span>${tn} de ${items.length}</span></h2>${items.map(row).join("")}</section>`;
     const all = CK_WHO.flatMap(([p]) => lists[p]), aN = cnt(all);
-    $("[data-progress]").textContent = all.length ? (aN === all.length ? "Todo en las maletas. ¡Buen viaje!" : "Una lista para cada uno. Se guarda en este celular.") : "Una lista para cada uno, para que no se les olvide nada. Se guarda en este celular.";
+    $("[data-progress]").textContent = all.length ? (aN === all.length ? "Todo en las maletas. ¡Buen viaje!" : "Una lista para cada uno; los dos ven las dos.") : "Una lista para cada uno, para que no se les olvide nada. Los dos ven las dos.";
+    const sy = $("[data-ck-sync]"); if (sy) { sy.textContent = CK_ON === false ? "Sin conexión: los cambios se suben cuando vuelva la señal." : CK_ON ? "Sincronizado en la nube." : ""; sy.classList.toggle("off", CK_ON === false); }
     const pct = all.length ? aN / all.length : 0, left = all.length - aN;
     $("[data-v-status]").innerHTML = `<button type="button" class="ck-card" data-view-btn="pendientes"><span class="ck-ring" style="--p:${pct.toFixed(3)}"><i class="ph-fill ${all.length && !left ? "ph-check-fat" : "ph-suitcase-rolling"}" aria-hidden="true"></i></span><span class="ck-txt"><b>${!all.length ? "Arma tu checklist" : left ? "Checklist de la maleta" : "Maletas listas"}</b><small>${!all.length ? "Agrega lo que no se te puede olvidar" : CK_WHO.map(([p, n]) => `${n} ${cnt(lists[p])}/${lists[p].length}`).join(" · ")}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
   }
@@ -2514,9 +2517,37 @@
   const ckCat = t => (CK_RX.find(([, r]) => r.test(t)) || ["otros"])[0];
   function ckList(p) {
     if (p === "julio" && store.get("caribe-ck-julio", null) == null) { const old = store.get("caribe-mychecks", []); store.set("caribe-ck-julio", old.map(x => ({ ...x, c: ckCat(x.t) }))); }
-    return store.get(`caribe-ck-${p}`, []).map(x => ({ ...x, c: x.c && CK_CATS.some(([c]) => c === x.c) ? x.c : ckCat(x.t) }));
+    const d4 = store.get("caribe-checks4", {});
+    return store.get(`caribe-ck-${p}`, []).map(x => ({ ...x, c: x.c && CK_CATS.some(([c]) => c === x.c) ? x.c : ckCat(x.t), d: x.d != null ? !!x.d : !!d4[x.k] }));
   }
-  const ckSave = l => store.set(`caribe-ck-${CKP}`, l);
+  /* Nube: las dos listas viven en el Worker (KV); el celular guarda copia para usarla sin señal */
+  const CK_URL = "https://vacas-ia.label-printer.workers.dev/checklist", ckDirty = store.get("caribe-ck-dirty", {}), ckT = {};
+  let CK_ON = null, ckBusy = false;
+  const ckState = on => { if (CK_ON === on) return; CK_ON = on; const sy = $("[data-ck-sync]"); if (sy) { sy.textContent = on ? "Sincronizado en la nube." : "Sin conexión: los cambios se suben cuando vuelva la señal."; sy.classList.toggle("off", !on); } };
+  const ckSave = (l, p = CKP) => { store.set(`caribe-ck-${p}`, l); ckDirty[p] = true; store.set("caribe-ck-dirty", ckDirty); clearTimeout(ckT[p]); ckT[p] = setTimeout(() => ckPush(p), 500); };
+  async function ckPush(p) {
+    try { const r = await fetch(CK_URL, { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ p, list: ckList(p) }) });
+      if (!r.ok) throw 0; delete ckDirty[p]; store.set("caribe-ck-dirty", ckDirty); ckState(true); return true; } catch (e) { ckState(false); return false; }
+  }
+  async function ckPull() {
+    if (ckBusy || CKD) return; ckBusy = true;
+    try {
+      for (const p of Object.keys(ckDirty)) await ckPush(p);
+      const j = await (await fetch(CK_URL, { cache: "no-store" })).json(); let ch = false;
+      for (const [p] of CK_WHO) {
+        if (ckDirty[p]) continue; const doc = j.lists && j.lists[p];
+        if (!doc) { if (ckList(p).length) { ckDirty[p] = true; await ckPush(p); } continue; }
+        if (JSON.stringify(store.get(`caribe-ck-${p}`, [])) !== JSON.stringify(doc.list)) { store.set(`caribe-ck-${p}`, doc.list); ch = true; }
+      }
+      ckState(true);
+      const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest("[data-ck-add]");
+      if (ch && LAST && !typing && !CKD) renderChecks(LAST);
+    } catch (e) { ckState(false); } finally { ckBusy = false; }
+  }
+  setInterval(() => { if (!document.hidden && (curView === "pendientes" || curView === "viaje")) ckPull(); }, 8000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) ckPull(); });
+  window.addEventListener("online", ckPull);
+  setTimeout(ckPull, 600);
   const ckAdd = t => { const l = ckList(CKP); l.push({ k: "m-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), t: t.slice(0, 60), c: ckCat(t) }); ckSave(l); renderChecks(LAST); };
   /* Arrastrar un artículo a otra categoría (dedo o mouse) */
   let CKD = null;
@@ -2609,7 +2640,7 @@
     if (ds.ckDel) { ckSave(ckList(CKP).filter(x => x.k !== ds.ckDel)); renderChecks(LAST); return; }
     if (ds.ckSug) { ckAdd(ds.ckSug); return; }
     if (t.hasAttribute("data-ck-all")) { const l = ckList(CKP), has = new Set(l.map(x => x.t.toLowerCase())); SUGS[CKP].filter(x => !has.has(x.toLowerCase())).forEach((x, n) => l.push({ k: "m-" + Date.now().toString(36) + n + Math.random().toString(36).slice(2, 5), t: x, c: ckCat(x) })); ckSave(l); renderChecks(LAST); toast("Ideas agregadas. Quita con la × lo que no lleves."); return; }
-    if (t.hasAttribute("data-ck-reset")) { const done = store.get("caribe-checks4", {}); ckList(CKP).forEach(x => { delete done[x.k]; }); store.set("caribe-checks4", done); renderChecks(LAST); toast("Maleta desmarcada."); return; }
+    if (t.hasAttribute("data-ck-reset")) { ckSave(ckList(CKP).map(x => ({ ...x, d: false }))); renderChecks(LAST); toast("Lista desmarcada."); return; }
     if (ds.sg != null) { applySugg(+ds.sg); return; }
     if (t.hasAttribute("data-ai-ask")) { aiAsk(); return; }
     if (ds.aiExq) { aiAsk(ds.aiExq); return; }
@@ -2700,6 +2731,7 @@
   document.addEventListener("change", e => {
     const t = e.target;
     if (t.dataset.act) { S.acts[t.dataset.act] = t.checked; render(); return; }
+    if (t.dataset.key && t.dataset.key.startsWith("m-")) { const l = ckList(CKP), x = l.find(y => y.k === t.dataset.key); if (x) { x.d = t.checked; ckSave(l); } renderChecks(LAST); return; }
     if (t.dataset.key) { const done = store.get("caribe-checks4", {}); done[t.dataset.key] = t.checked; store.set("caribe-checks4", done); renderChecks(LAST); return; }
     if (t.hasAttribute("data-hwork")) { HWORK = t.checked; store.set("caribe-hwork", HWORK); renderHotels(); return; }
     if (t.hasAttribute("data-bag-toggle")) { S.bag = t.checked; render(); return; }
