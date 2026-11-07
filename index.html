@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-01.1">
+<meta name="app-version" content="2026-11-07.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -755,6 +755,14 @@
   .ck-src { opacity: .35; }
   .ck-ghost { position: fixed; z-index: 90; pointer-events: none; margin: 0; transform: scale(1.03) rotate(-1deg); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .35); border-radius: 12px; background: var(--surface); }
   .ck-trip { margin-top: 28px; }
+  /* Días ya vividos: quedan plegados arriba */
+  .v-past { margin: 0 0 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  .v-past > summary { list-style: none; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 14px; font-weight: 600; color: var(--muted); cursor: pointer; user-select: none; -webkit-user-select: none; }
+  .v-past > summary::-webkit-details-marker { display: none; } .v-past > summary span { font-weight: 500; font-size: 13px; } .v-past-c { margin-left: auto; transition: transform 150ms ease-out; } .v-past[open] .v-past-c { transform: rotate(180deg); }
+  .v-past > :not(summary) { opacity: .75; } .v-past[open] { padding: 0 10px 4px; } .v-past[open] > summary { padding: 10px 4px; }
+  .v-today { box-shadow: inset 4px 0 0 var(--dc, var(--accent)); } .v-num em.hoy { color: #fff; background: var(--dc, var(--accent)); border-radius: 6px; padding: 0 5px; font-style: normal; }
+  .day.today { box-shadow: inset 4px 0 0 var(--dc, var(--accent)); }
+  .cal-grid .cell.past { opacity: .4; } .cal-grid .cell.today { outline: 2px solid var(--dc, var(--accent)); outline-offset: -2px; }
   .ck-sync { font-size: 12px; color: var(--ok); margin: -6px 0 10px; } .ck-sync:empty { display: none; } .ck-sync.off { color: var(--warn); }
   .ck-card { display: flex; align-items: center; gap: 14px; width: 100%; margin: 14px 0 20px; padding: 14px 16px; border: 0; border-radius: 18px; font: inherit; text-align: left; color: #fff; background: linear-gradient(135deg, #ff9b54, #e4573a); box-shadow: 0 10px 24px -12px rgba(206, 77, 44, .8); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; -webkit-user-select: none; transition: transform 120ms ease-out, box-shadow 120ms ease-out; }
   .ck-card:active { transform: scale(.98); box-shadow: 0 4px 12px -8px rgba(206, 77, 44, .8); }
@@ -2068,7 +2076,7 @@
       if (dt > endM) { cells.push(`<div class="cell blank" aria-hidden="true"></div>`); continue; }
       if (!d) { cells.push(`<div class="cell out ${fest ? "hol" : ""}" ${fest ? `title="Festivo: ${HOL[k]}"` : `aria-hidden="true"`}><span class="dn"><span class="num">${n}</span>${mo}</span>${fest ? `<span class="hol-t">Festivo</span><i class="ph-fill ph-flag-banner hol-i" aria-hidden="true"></i>` : ""}${wxCell(null, k)}</div>`); continue; }
       const m = dayMain(d, it), loc = d.stay, fly = d.i === 0 || d.i === it.N, eve = d.eve.length > 0;
-      cells.push(`<button type="button" class="cell c-${loc} ${fly ? "fly" : ""}" data-day="${k}" aria-label="${dlong(dt)}: ${esc(m.lb)}${eve ? ", con plan de noche" : ""}${fest ? ", festivo" : ""}"><span class="dn"><span class="num">${n}</span>${eve ? `<i class="ph-fill ph-moon-stars moon" aria-hidden="true"></i>` : ""}${mo}</span><i class="${m.fly ? "ph-fill" : "ph"} ${m.icon} ci" aria-hidden="true"></i><span class="lb">${esc(m.lb)}</span>${wxCell(d)}${fest ? `<span class="fe">Festivo</span><i class="ph-fill ph-flag-banner hol-i" aria-hidden="true"></i>` : ""}${S.notes[k] ? `<i class="ph ph-note-pencil nt" aria-hidden="true"></i>` : ""}</button>`);
+      cells.push(`<button type="button" class="cell c-${loc} ${fly ? "fly" : ""} ${k < iso(new Date()) ? "past" : k === iso(new Date()) ? "today" : ""}" data-day="${k}" aria-label="${dlong(dt)}: ${esc(m.lb)}${eve ? ", con plan de noche" : ""}${fest ? ", festivo" : ""}"><span class="dn"><span class="num">${n}</span>${eve ? `<i class="ph-fill ph-moon-stars moon" aria-hidden="true"></i>` : ""}${mo}</span><i class="${m.fly ? "ph-fill" : "ph"} ${m.icon} ci" aria-hidden="true"></i><span class="lb">${esc(m.lb)}</span>${wxCell(d)}${fest ? `<span class="fe">Festivo</span><i class="ph-fill ph-flag-banner hol-i" aria-hidden="true"></i>` : ""}${S.notes[k] ? `<i class="ph ph-note-pencil nt" aria-hidden="true"></i>` : ""}</button>`);
     }
     const months = [...new Set([first, lastD].map(d => MN[d.getMonth()]))].join(" y ");
     const legend = `<div class="cal-legend">${DESTS.filter(d => S.n[d.id]).map(d => `<span class="c-${d.id}"><i class="sw" aria-hidden="true"></i>${d.name}</span>`).join("")}<span><i class="sw fly" aria-hidden="true"></i>Día de vuelo</span><span class="c-rincon"><i class="ph-fill ph-moon-stars" style="color:var(--dc)" aria-hidden="true"></i>Plan de noche</span><span><i class="ph ph-note-pencil" aria-hidden="true"></i>Con nota</span></div><div class="cal-legend wx-legend"><span><i class="ph-fill ph-sun wxc-sol" aria-hidden="true"></i>Soleado</span><span><i class="ph-fill ph-cloud-sun wxc-par" aria-hidden="true"></i>Sol a ratos</span><span><i class="ph-fill ph-cloud wxc-nub" aria-hidden="true"></i>Nublado</span><span><i class="ph-fill ph-cloud-rain wxc-llu" aria-hidden="true"></i>Aguacero</span><span><i class="ph-fill ph-cloud-lightning wxc-tor" aria-hidden="true"></i>Tormenta</span><span>8h = horas de sol del día; en cursiva, clima típico mientras llega el pronóstico</span></div><p class="wx-status">${wxStatus()}</p>`;
@@ -2084,18 +2092,20 @@
     killMaps();
     if (sumNights() !== totalNights()) { $("[data-itin]").innerHTML = emptyItin(); return; }
     const it = C.it, blocks = []; let cur = null;
-    it.days.forEach(d => { if (!cur || cur.loc !== d.stay) { cur = { loc: d.stay, days: [] }; blocks.push(cur); } cur.days.push(d); });
-    $("[data-itin]").innerHTML = `<div class="map-card"><div class="map-h"><b><i class="ph-fill ph-map-trifold" aria-hidden="true"></i>Ruta del viaje</b><a href="${routeLink()}" target="_blank" rel="noopener">Abrir en Google Maps</a></div><div class="map" id="map-route" role="region" aria-label="Mapa de la ruta del viaje"></div><p class="map-legend"><span><i class="ph-fill ph-airplane"></i> Aeropuertos</span><span>1, 2, 3: paradas en orden</span><span>Línea punteada: lancha a las islas</span></p></div>` + blocks.map(b => {
+    const TD = iso(new Date());
+    it.days.forEach(d => { const past = d.iso < TD; if (!cur || cur.loc !== d.stay || cur.past !== past) { cur = { loc: d.stay, days: [], past }; blocks.push(cur); } cur.days.push(d); });
+    $("[data-itin]").innerHTML = `<div class="map-card"><div class="map-h"><b><i class="ph-fill ph-map-trifold" aria-hidden="true"></i>Ruta del viaje</b><a href="${routeLink()}" target="_blank" rel="noopener">Abrir en Google Maps</a></div><div class="map" id="map-route" role="region" aria-label="Mapa de la ruta del viaje"></div><p class="map-legend"><span><i class="ph-fill ph-airplane"></i> Aeropuertos</span><span>1, 2, 3: paradas en orden</span><span>Línea punteada: lancha a las islas</span></p></div>` + (() => { const sec = b => {
       const dest = DESTS.find(x => x.id === b.loc), h = hotelOf(dest);
-      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] ? hotelsRow(dest) + (lockedN(dest) ? "" : `<div class="map dmap" data-dmap="${b.loc}" role="region" aria-label="Mapa de ${esc(dest.name)}"></div><p class="map-legend"><span><b>$121k</b> precio por noche</span><span>Verde: tu hotel</span><span>★ recomendados en videos</span><span>Íconos: planes y lugares</span></p>`) : ""}${b.days.map(d => `
-        <article class="day" id="day-${d.iso}"><div class="date"><b class="num">${d.date.getDate()}</b><span>${WD[d.date.getDay()]}</span>${d.fest ? `<span class="fe">festivo</span>` : ""}</div><div class="day-body">
+      return `<section class="stage c-${b.loc}"><header class="stage-head"><span class="dest-ic"><i class="ph ${dest.icon}" aria-hidden="true"></i></span><div><h3>${dest.name}</h3><p>${noches(S.n[b.loc])} · ${h.name}</p></div></header>${S.n[b.loc] && !b.past ? hotelsRow(dest) + (lockedN(dest) ? "" : `<div class="map dmap" data-dmap="${b.loc}" role="region" aria-label="Mapa de ${esc(dest.name)}"></div><p class="map-legend"><span><b>$121k</b> precio por noche</span><span>Verde: tu hotel</span><span>★ recomendados en videos</span><span>Íconos: planes y lugares</span></p>`) : ""}${b.days.map(d => `
+        <article class="day${d.iso === TD ? " today" : ""}" id="day-${d.iso}"><div class="date"><b class="num">${d.date.getDate()}</b><span>${WD[d.date.getDay()]}</span>${d.fest ? `<span class="fe">festivo</span>` : ""}</div><div class="day-body">
           ${d.move ? `<div>${moveChip(d.move)}</div>` : ""}
           ${d.items.map(x => itemHTML(x) + (x.k === "act" ? moveSelect(x.act, d, it) : "")).join("")}
           ${d.eve.map(e => itemHTML({ icon: "ph-moon-stars", t: "De noche: " + e.t, d: "" }) + moveSelect(e.act, d, it)).join("")}
           ${d.fest ? `<div><span class="chip bad"><i class="ph ph-users-three" aria-hidden="true"></i>Festivo, todo lleno</span></div>` : ""}
           <textarea class="note" data-note="${d.iso}" rows="1" placeholder="Notas del día" aria-label="Notas del ${dlong(d.date)}">${esc(S.notes[d.iso] || "")}</textarea>
         </div></article>`).join("")}</section>`;
-    }).join("");
+    }; const pb = blocks.filter(b => b.past), pn = pb.reduce((n, b) => n + b.days.length, 0);
+      return (pn ? `<details class="v-past"><summary><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>Días anteriores<span>${pn} ${pn === 1 ? "día" : "días"}</span><i class="ph ph-caret-down v-past-c" aria-hidden="true"></i></summary>${pb.map(sec).join("")}</details>` : "") + blocks.filter(b => !b.past).map(sec).join(""); })();
     if (typeof curView !== "undefined" && curView === "dias") setTimeout(initMaps, 0);
   }
   function daySheetHTML(k) {
@@ -2401,7 +2411,7 @@
     const names = nd.map(d => ({ golfo: "Tolú", rincon: "Rincón", ctg: "Cartagena" }[d.id] || d.name));
     $("[data-v-title]").textContent = names.length > 1 ? names.slice(0, -1).join(", ") + " y " + names.slice(-1) : names[0] || "Viaje";
     $("[data-v-meta]").textContent = `${cap(dlabel(out.date))} al ${dlabel(back.date)} · ${noches(totalNights())}`;
-    const wal = $("[data-v-pases]"), showPases = out.bought && out.date === PASE_DATE;
+    const wal = $("[data-v-pases]"), showPases = out.bought && out.date === PASE_DATE && iso(new Date()) <= PASE_DATE;
     wal.hidden = !showPases;
     wal.innerHTML = showPases ? PASES.map((x, i) => `<button type="button" class="wcard${i % 2 ? " alt" : ""}" data-pase="${x.k}" aria-label="Abrir pasabordo de ${x.who}, asiento ${x.seat}">
       <span class="wc-top"><span>PASABORDO · JA 5380</span><span>Asiento <b>${x.seat}</b></span></span><span class="wc-name">${x.who}</span>
@@ -2409,9 +2419,10 @@
     // Días agrupados por dónde duermen; el día del regreso va con el último destino
     const groups = []; it.days.forEach(d => { const loc = d.loc || (groups.length ? groups[groups.length - 1].loc : d.stay); const g = groups[groups.length - 1]; if (g && g.loc === loc) g.days.push(d); else groups.push({ loc, days: [d] }); });
     const pp = v => v ? `${fmt(v / 2)} p/p` : "Gratis";
-    box.innerHTML = groups.map(g => {
+    const TD = iso(new Date()), split = past => groups.map(g => ({ ...g, past, days: g.days.filter(x => (x.iso < TD) === past) })).filter(g => g.days.length);
+    const stage = g => {
       const d = DESTS.find(x => x.id === g.loc); if (!d) return "";
-      const h = hotelOf(d), pics = (VPICS[g.loc] || []).filter(k => APAGE[k] && APAGE[k].img.length);
+      const h = hotelOf(d), pics = g.past ? [] : (VPICS[g.loc] || []).filter(k => APAGE[k] && APAGE[k].img.length);
       const strip = pics.length ? `<div class="v-acts">${pics.map(k => { const pg = APAGE[k], pl = pg.act && it.placed[pg.act], a = pg.act && list.find(x => x.id === pg.act);
         const s2 = k === "covenas" ? "20 min en colectivo, 6.000" : pl ? `${cap(dlabel(pl.iso))}${a ? " · " + pp(actCost(a, it)) : ""}` : "Opcional";
         return `<button type="button" class="v-ac" data-apage="${k}"><img referrerpolicy="no-referrer" src="${pg.img[0]}" alt="" loading="lazy" decoding="async"><span class="v-cap"><b>${pg.t}</b><small>${s2}</small></span></button>`; }).join("")}</div>` : "";
@@ -2425,10 +2436,13 @@
         const sub = [head].concat(day.items.filter(x => x !== main && x.k !== "rest" && x.k !== "move" && x.k !== "flight").map(x => x.t), day.eve.map(e => e.t)).filter(Boolean).join(" · ") || (main.k === "rest" ? main.d : "");
         const w = wxDay(day.loc || g.loc, day.iso);
         const det = day.items.map(x => `<div><i class="ph ${x.icon}" aria-hidden="true"></i><span><b>${esc(x.t)}</b> ${esc(x.d || "")}${x.act && ACT2PAGE[x.act] ? ` <button type="button" class="v-more-btn" data-apage="${ACT2PAGE[x.act]}">Ver fotos y detalle</button>` : ""}</span></div>`).join("") + day.eve.map(e => `<div><i class="ph ${e.icon || "ph-moon-stars"}" aria-hidden="true"></i><span><b>De noche:</b> ${esc(e.t)}</span></div>`).join("");
-        return `<details class="v-day"><summary><span class="v-num"><b>${day.date.getDate()}</b><small>${WDS[day.date.getDay()]}</small>${day.fest ? `<em>festivo</em>` : ""}</span><span class="v-txt"><b>${esc(title)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span>${w ? `<span class="v-wx"><i class="ph-fill ${w.look.icon}" aria-hidden="true"></i>${w.tmax}°</span>` : `<span></span>`}</summary><div class="v-det">${det}</div></details>`;
+        const hoy = day.iso === TD;
+        return `<details class="v-day${hoy ? " v-today" : ""}"${hoy ? " open" : ""}><summary><span class="v-num"><b>${day.date.getDate()}</b><small>${WDS[day.date.getDay()]}</small>${hoy ? `<em class="hoy">hoy</em>` : day.fest ? `<em>festivo</em>` : ""}</span><span class="v-txt"><b>${esc(title)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span>${w ? `<span class="v-wx"><i class="ph-fill ${w.look.icon}" aria-hidden="true"></i>${w.tmax}°</span>` : `<span></span>`}</summary><div class="v-det">${det}</div></details>`;
       }).join("");
       return `<section class="v-stage c-${g.loc}"><div class="v-sh"><b>${esc(d.name.replace(" o Coveñas", ""))}</b><span>${noches(S.n[g.loc])} · ${esc(h.name)} · ${h.booked ? `<span class="ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>reservado</span>` : `<span class="todo">por reservar</span>`}</span></div>${strip}<div class="v-days">${rows}</div></section>`;
-    }).join("");
+    };
+    const past = split(true), cur = split(false), pn = past.reduce((n, g) => n + g.days.length, 0);
+    box.innerHTML = (pn ? `<details class="v-past"><summary><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>Días anteriores<span>${pn} ${pn === 1 ? "día" : "días"} · ${[...new Set(past.map(g => DNAME_SHORT[g.loc]))].join(", ")}</span><i class="ph ph-caret-down v-past-c" aria-hidden="true"></i></summary>${past.map(stage).join("")}</details>` : "") + cur.map(stage).join("");
   }
   // Google Flights Cartagena → Bogotá, solo directos y salida de 12 m a 12 am (filtros codificados en tfs)
   const GF_TFS = "CBwQAhooEgoyMDI2LTExLTEwKABADEgXUABYD2oHCAESA0NUR3IHCAESA0JPR0ABSAFwAYIBCwj___________8BmAEC";
@@ -2469,7 +2483,7 @@
   }
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
-    const items = o.bought
+    let items = o.bought
       ? [b.bought ? ["checkin-regreso", "Check-in del regreso en Wingo", "Vuelo P5 7229, martes 10 a la 1:26 pm. Hacerlo en línea en wingo.com: en el aeropuerto cuesta $23.800 por persona. Solo morral de 40×35×25 cm; la maleta de cabina se puede agregar en Mi Reserva."]
           : [`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
          ["checkin-ida", "Check-in de la ida en JetSMART", `Hecho: Julio 10D y Alejandra 9D. Embarque 10:20 am, zona 3; llegar a El Dorado a las 8:20 am. ${PASES.map(x => `<button type="button" class="v-more-btn" data-pase="${x.k}">Pasabordo ${x.who}</button>`).join(" ")}`]]
@@ -2489,6 +2503,8 @@
     const row = ([k, t, s], on = done[k]) => `<label class="check"><input type="checkbox" data-key="${esc(k)}" ${on ? "checked" : ""}><span class="box"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="txt"><b>${t}</b>${s ? `<span>${s}</span>` : ""}</span></label>`;
     const item = x => `<div class="ck-row" data-ck-item="${esc(x.k)}"><button type="button" class="ck-drag" data-ck-drag="${esc(x.k)}" aria-label="Arrastrar ${esc(x.t)} a otra categoría"><i class="ph-bold ph-dots-six-vertical" aria-hidden="true"></i></button>${row([x.k, esc(x.t)], x.d)}<button type="button" class="icon-btn ck-del" data-ck-del="${esc(x.k)}" aria-label="Quitar ${esc(x.t)}"><i class="ph ph-x" aria-hidden="true"></i></button></div>`;
     const who = CK_WHO.find(([p]) => p === CKP)[1];
+    const TD = iso(new Date()), gone = { "checkin-ida": o.date, ...Object.fromEntries(DESTS.map(d => [`hb-${d.id}-${hotelOf(d).id}`, stayOf(d.id)[0]])) };
+    items = items.filter(([k]) => !gone[k] || gone[k] > TD);
     $("[data-checks]").innerHTML = `<div class="ck-who" role="tablist" aria-label="Lista de">${CK_WHO.map(([p, n]) => `<button type="button" role="tab" aria-selected="${p === CKP}" data-ckp="${p}">${n}<small>${lists[p].length ? `${cnt(lists[p])} de ${lists[p].length}` : "Vacía"}</small></button>`).join("")}</div>
       <form class="ck-add" data-ck-add><input type="text" name="t" maxlength="60" autocomplete="off" enterkeyhint="done" placeholder="Agregar a la lista de ${who}" aria-label="Agregar a la lista de ${who}"><button type="submit" class="mini primary" aria-label="Agregar"><i class="ph-bold ph-plus" aria-hidden="true"></i></button></form>
       ${mine.length ? "" : `<p class="ck-empty">Escribe lo que no se te puede olvidar o toca una idea. Cada cosa cae sola en su categoría; si no te gusta dónde quedó, arrástrala con <i class="ph-bold ph-dots-six-vertical" aria-hidden="true"></i>.</p>`}
