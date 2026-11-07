@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-07.4">
+<meta name="app-version" content="2026-11-07.5">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -2331,15 +2331,15 @@
   }
   function hotelSection(d) {
     const n = S.n[d.id], [ci, co] = stayOf(d.id);
-    const ZN = d.id === "ctg" && !lockedN(d), ws = h => workScore(h) == null ? -1 : workScore(h), inZone = h => !ZN || HZONE === "todas" || zoneOf(h) === HZONE, keep = h => (!HWORK || ws(h) >= 8) && inZone(h);
+    const ZN = d.id === "ctg" && !lockedN(d), ws = h => workScore(h) == null ? -1 : workScore(h), inZone = h => !ZN || HZONE === "todas" || zoneOf(h) === HZONE, fits = h => S.h[d.id] === h.id || (h.rate && h.rate[S.pu] && rateOf(h) <= capOf(d.id)), keep = h => (!HWORK || ws(h) >= 8) && inZone(h) && fits(h);
     const cmp = HSORT === "trabajo" ? (a, b) => ws(b) - ws(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : HSORT === "nota" ? (a, b) => hotelRank(b) - hotelRank(a) || (rateOf(a) || 0) - (rateOf(b) || 0)
       : (a, b) => (S.h[d.id] === b.id) - (S.h[d.id] === a.id) || (rateOf(a) || 0) - (rateOf(b) || 0);
     const LK = lockedN(d);
     const list = LK ? [hotelOf(d)] : d.hotels.filter(keep).sort((a, b) => (!!b.rate[S.pu]) - (!!a.rate[S.pu]) || cmp(a, b));
-    const yt = LK ? (HOTEL_YT[d.id] || []).filter(h => h.alt) : (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
+    const yt = LK ? (HOTEL_YT[d.id] || []).filter(h => h.alt) : d.id === "ctg" ? [] : (HOTEL_YT[d.id] || []).filter(keep).sort((a, b) => HSORT === "trabajo" ? ws(b) - ws(a) : 0);
     const sb = (v, l, i) => `<button type="button" class="hl-sort" aria-pressed="${HSORT === v}" data-hsort="${v}"><i class="ph ${i}" aria-hidden="true"></i>${l}</button>`;
-    const zb = ([v, l]) => { const all = d.hotels.concat(HOTEL_YT[d.id] || []), c = v === "todas" ? all.length : all.filter(h => zoneOf(h) === v).length; return `<button type="button" class="hl-sort" aria-pressed="${HZONE === v}" data-hzone="${v}">${l}<span class="hl-n">${c}</span></button>`; };
+    const zb = ([v, l]) => { const all = d.hotels.filter(fits), c = v === "todas" ? all.length : all.filter(h => zoneOf(h) === v).length; return `<button type="button" class="hl-sort" aria-pressed="${HZONE === v}" data-hzone="${v}">${l}<span class="hl-n">${c}</span></button>`; };
     return `<p class="hl-head">${n ? `${noches(n)}, del ${dlabel(ci)} al ${dlabel(co)} · ${P().label}` : `Sin noches en ${d.name} en este plan`}${LK ? "" : ` · todos con aire, baño privado y céntricos, máximo ${d.id === "ctg" ? `${fmt(700000)} por las 3 noches` : `${fmt(capOf(d.id))} la noche`} · precios con impuestos`}</p>`
       + (LK ? "" : `<div class="hl-tools" role="group" aria-label="Ordenar hoteles">${sb("precio", "Precio", "ph-currency-dollar")}${sb("nota", "Mejor nota", "ph-star")}${sb("trabajo", "Teletrabajo", "ph-laptop")}</div>`
       + (ZN ? `<div class="hl-tools" role="group" aria-label="Filtrar por zona"><span class="hl-lbl"><i class="ph ph-map-pin" aria-hidden="true"></i>Zona</span>${ZONES.map(zb).join("")}</div>` : "")
