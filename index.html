@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-07.2">
+<meta name="app-version" content="2026-11-07.3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -755,6 +755,21 @@
   .ck-src { opacity: .35; }
   .ck-ghost { position: fixed; z-index: 90; pointer-events: none; margin: 0; transform: scale(1.03) rotate(-1deg); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .35); border-radius: 12px; background: var(--surface); }
   .ck-trip { margin-top: 28px; }
+  /* Gastos */
+  .gs-card { display: flex; align-items: center; gap: 14px; width: 100%; margin: -8px 0 20px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 18px; font: inherit; text-align: left; color: var(--text); background: var(--surface); cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; transition: transform 120ms ease-out; }
+  .gs-card:active { transform: scale(.98); } .gs-card .ck-txt small { color: var(--muted); opacity: 1; }
+  .gs-ic { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 22px; }
+  .gs-total { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 8px; margin: 0 2px 6px; } .gs-total span { color: var(--muted); } .gs-total b { font-size: 28px; letter-spacing: -.02em; } .gs-total small { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+  .gs-add { display: grid; gap: 8px; margin: 8px 0 16px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  .gs-add input, .gs-add select { font: inherit; font-size: 16px; min-height: 46px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); min-width: 0; }
+  .gs-row2 { display: grid; grid-template-columns: 1fr 1fr 48px; gap: 8px; } .gs-row2 .mini { justify-content: center; min-height: 46px; }
+  .gs-sums { display: grid; gap: 2px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 4px 12px; }
+  .gs-sum { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; padding: 9px 0; } .gs-sum + .gs-sum { border-top: 1px solid var(--line); } .gs-sum > i { color: var(--accent); font-size: 18px; }
+  .gs-sum span { display: grid; gap: 2px; } .gs-sum small { color: var(--muted); font-size: 12px; } .gs-bar { display: block; height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; } .gs-bar i { display: block; height: 100%; background: var(--accent); border-radius: 4px; } .gs-bar i.over { background: var(--warn); }
+  .gs-day { display: grid; gap: 6px; margin-bottom: 18px; } .gs-day .ck-h span { font-size: 13px; color: var(--text); }
+  .gs-it { display: grid; grid-template-columns: 22px 1fr auto 40px; gap: 10px; align-items: center; padding: 8px 4px 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .gs-ci { color: var(--muted); font-size: 18px; } .gs-t { display: grid; min-width: 0; } .gs-t b { font-weight: 500; overflow-wrap: anywhere; }
+  .gs-csel { justify-self: start; max-width: 100%; border: 0; background: none; padding: 2px 0; font: inherit; font-size: 12px; color: var(--muted); -webkit-appearance: none; appearance: none; }
   /* Días ya vividos: quedan plegados arriba */
   .v-past { margin: 0 0 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
   .v-past > summary { list-style: none; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 14px; font-weight: 600; color: var(--muted); cursor: pointer; user-select: none; -webkit-user-select: none; }
@@ -857,7 +872,7 @@
     <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos</button>
     <button class="nav-btn" data-view-btn="asistente"><i class="ph ph-sparkle" aria-hidden="true"></i>Asistente IA</button>
     <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar</button>
-    <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-list-checks" aria-hidden="true"></i>Checklist</button>
+    <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-list-checks" aria-hidden="true"></i>Checklist</button><button class="nav-btn" data-view-btn="gastos"><i class="ph ph-receipt" aria-hidden="true"></i>Gastos</button>
     <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
     <p class="foot">Precios del 5 de octubre de 2026. Confirmar antes de reservar.</p>
   </aside>
@@ -873,11 +888,12 @@
     <section class="view" data-view="viaje" hidden>
       <header class="v-head"><h1 data-v-title>Viaje</h1><p data-v-meta></p></header>
       <div class="v-status" data-v-status></div>
+      <div data-v-gastos></div>
       <div class="wallet" data-v-pases hidden></div>
       <div class="wx-strip" data-wx-strip></div>
       <div data-v-stages></div>
       <div class="v-edit"><button type="button" class="mini primary" data-view-btn="armar"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i>Cambiar plan</button><button type="button" class="mini" data-view-btn="dias"><i class="ph ph-map-trifold" aria-hidden="true"></i>Mapa y detalle</button></div>
-      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="pendientes">Checklist</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
+      <nav class="v-more" aria-label="Más"><button type="button" data-view-btn="pendientes">Checklist</button><button type="button" data-view-btn="gastos">Gastos</button><button type="button" data-view-btn="comparar">Comparar</button><button type="button" data-view-btn="info">Agencias y consejos</button></nav>
       <p class="v-credit">Fotos de actividades: Wikimedia Commons</p>
     </section>
 
@@ -980,6 +996,11 @@
     <section class="view" data-view="comparar" hidden>
       <div class="view-head"><div><h1>Comparar</h1></div></div>
       <div data-scen></div>
+    </section>
+
+    <section class="view" data-view="gastos" hidden>
+      <div class="view-head"><div><h1>Gastos</h1></div></div>
+      <div data-gastos></div>
     </section>
 
     <section class="view" data-view="pendientes" hidden>
@@ -1099,7 +1120,7 @@
       <div class="more-list">
         <button class="nav-btn" data-view-btn="costos"><i class="ph ph-wallet" aria-hidden="true"></i>Costos y presupuesto</button>
         <button class="nav-btn" data-view-btn="comparar"><i class="ph ph-columns" aria-hidden="true"></i>Comparar escenarios</button>
-        <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-list-checks" aria-hidden="true"></i>Checklist</button>
+        <button class="nav-btn" data-view-btn="pendientes"><i class="ph ph-list-checks" aria-hidden="true"></i>Checklist</button><button class="nav-btn" data-view-btn="gastos"><i class="ph ph-receipt" aria-hidden="true"></i>Gastos</button>
         <button class="nav-btn" data-view-btn="info"><i class="ph ph-info" aria-hidden="true"></i>Agencias y consejos</button>
       </div>
     </section>
@@ -2564,6 +2585,65 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden) ckPull(); });
   window.addEventListener("online", ckPull);
   setTimeout(ckPull, 600);
+  /* ---------- Gastos del viaje (compartidos en la nube) ---------- */
+  const GS_URL = "https://vacas-ia.label-printer.workers.dev/gastos";
+  const GS_CATS = [["comida", "Comida y bebida", "ph-fork-knife"], ["transp", "Transporte", "ph-bus"], ["planes", "Planes", "ph-sailboat"], ["mercado", "Mercado y compras", "ph-shopping-bag"], ["otros", "Otros", "ph-dots-three-circle"]];
+  const GS_RX = [["mercado", /\bara\b|[ée]xito|d1\b|tiend|olímpica|olimpica|supermercado|mercado|droguer|farmacia|repelente|bloqueador|sombrero|gorra|electrolit|sal de frutas|recuerdo|souvenir/i],
+    ["comida", /comida|almuerzo|desayuno|cena|corrientazo|pizza|helado|arepa|empanada|pescado|coco|jugo|cerveza|[áa]guila|club colombia|snack|caf[ée]|restaurante|agua|gaseosa|fruta|hamburguesa|perro|mazorca|ceviche|cocteler/i],
+    ["transp", /bus|carro|taxi|mototaxi|moto\b|lancha|colectivo|uber|indriver|transporte|pasaje|gasolina|peaje/i],
+    ["planes", /tour|snorkel|masaje|pasad[íi]a|entrada|museo|kayak|canoa|bioluminis|manglar|isla|paseo|careta|alquiler/i]];
+  const gsCat = t => (GS_RX.find(([, r]) => r.test(t)) || ["otros"])[0];
+  let GS = store.get("caribe-gastos", []), gsQ = store.get("caribe-gastos-q", []), GS_ON = null, gsBusy = false;
+  const gsMoney = v => "$" + Math.round(v).toLocaleString("es-CO");
+  async function gsSync(ops) {
+    if (ops && ops.length) { gsQ = gsQ.concat(ops); store.set("caribe-gastos-q", gsQ); }
+    if (gsBusy) return; gsBusy = true;
+    try {
+      const q = gsQ.slice(), r = await fetch(GS_URL, q.length ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ops: q }) } : { cache: "no-store" });
+      if (!r.ok) throw 0; const j = await r.json();
+      gsQ = gsQ.slice(q.length); store.set("caribe-gastos-q", gsQ);
+      const ch = JSON.stringify(j.list) !== JSON.stringify(GS); GS = j.list; store.set("caribe-gastos", GS); GS_ON = true;
+      const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest("[data-gs-add]");
+      if (ch && !typing) renderGastos(); else gsStatus();
+      if (gsQ.length) setTimeout(() => gsSync(), 300);
+    } catch (e) { GS_ON = false; gsStatus(); } finally { gsBusy = false; }
+  }
+  const gsStatus = () => { const el = $("[data-gs-sync]"); if (el) { el.textContent = GS_ON === false ? "Sin conexión: se sube cuando vuelva la señal." : GS_ON ? "Sincronizado: Julio y Alejandra ven lo mismo." : ""; el.classList.toggle("off", GS_ON === false); } };
+  // Aplica la operación en el celular de una vez y la manda a la nube
+  function gsDo(op) {
+    if (op.op === "add") GS = GS.concat([op.item]); else if (op.op === "upd") GS = GS.map(x => x.k === op.item.k ? op.item : x); else if (op.op === "del") GS = GS.filter(x => x.k !== op.k);
+    store.set("caribe-gastos", GS); renderGastos(); gsSync([op]);
+  }
+  function renderGastos() {
+    const C = LAST, total = GS.reduce((n, x) => n + x.v, 0), TD = iso(new Date());
+    const card = $("[data-v-gastos]");
+    if (card) card.innerHTML = `<button type="button" class="gs-card" data-view-btn="gastos"><span class="gs-ic"><i class="ph-fill ph-receipt" aria-hidden="true"></i></span><span class="ck-txt"><b>${GS.length ? gsMoney(total) + " gastados" : "Gastos del viaje"}</b><small>${GS.length ? `${GS.length} gastos · hoy ${gsMoney(GS.filter(x => x.f === TD).reduce((n, x) => n + x.v, 0))}` : "Anota lo que van gastando"}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
+    const box = $("[data-gastos]"); if (!box || !C) return;
+    const days = C.it.days, by = c => GS.filter(x => x.c === c).reduce((n, x) => n + x.v, 0);
+    const est = { comida: C.cats.comida, transp: (C.cats.traslados || 0) + (C.local || 0), planes: C.cats.planes };
+    const dayOpts = sel => days.map(d => `<option value="${d.iso}" ${d.iso === sel ? "selected" : ""}>${cap(WDS[d.date.getDay()])} ${d.date.getDate()} ${MO[d.date.getMonth()]}</option>`).join("");
+    const defDay = days.some(d => d.iso === TD) ? TD : days[days.length - 1].iso;
+    const catSel = (k, c) => `<select class="gs-csel" data-gs-cat="${esc(k)}" aria-label="Categoría">${GS_CATS.map(([id, n]) => `<option value="${id}" ${id === c ? "selected" : ""}>${n}</option>`).join("")}</select>`;
+    const fechas = [...new Set(GS.map(x => x.f))].sort().reverse();
+    const sums = GS_CATS.map(([id, n, ic]) => { const v = by(id); if (!v && !est[id]) return ""; const e = est[id], pct = e ? Math.min(100, v / e * 100) : 0;
+      return `<div class="gs-sum"><i class="ph-fill ${ic}" aria-hidden="true"></i><span><b>${n}</b>${e ? `<small>de ~${gsMoney(e)} presupuestado</small>` : ""}${e ? `<span class="gs-bar"><i style="width:${pct.toFixed(0)}%" class="${v > e ? "over" : ""}"></i></span>` : ""}</span><b class="num">${gsMoney(v)}</b></div>`; }).join("");
+    box.innerHTML = `<p class="gs-total"><span>Total gastado</span><b class="num">${gsMoney(total)}</b><small>${GS.length} gastos · ${gsMoney(total / 2)} por persona</small></p>
+      <p class="ck-sync" data-gs-sync role="status"></p>
+      <form class="gs-add" data-gs-add>
+        <input type="text" name="t" maxlength="80" autocomplete="off" placeholder="¿En qué? Ej.: almuerzo, taxi, tour" aria-label="Descripción del gasto" required>
+        <div class="gs-row2"><input type="text" name="v" inputmode="numeric" autocomplete="off" placeholder="$0" aria-label="Valor" required><select name="f" aria-label="Día">${dayOpts(defDay)}</select><button type="submit" class="mini primary" aria-label="Agregar gasto"><i class="ph-bold ph-plus" aria-hidden="true"></i></button></div>
+      </form>
+      <div class="gs-sums">${sums}</div>
+      ${fechas.map(f => { const l = GS.filter(x => x.f === f), d = D(f || TD);
+        return `<section class="gs-day"><h3 class="ck-h"><i class="ph-fill ph-calendar-blank" aria-hidden="true"></i>${f ? `${cap(WDS[d.getDay()])} ${d.getDate()} ${MO[d.getMonth()]}${f === TD ? " · hoy" : ""}` : "Sin fecha"}<span class="num">${gsMoney(l.reduce((n, x) => n + x.v, 0))}</span></h3>
+          ${l.map(x => { const c = GS_CATS.find(([id]) => id === x.c) || GS_CATS[4];
+            return `<div class="gs-it"><i class="ph-fill ${c[2]} gs-ci" aria-hidden="true"></i><span class="gs-t"><b>${esc(x.t)}</b>${catSel(x.k, x.c)}</span><b class="num">${gsMoney(x.v)}</b><button type="button" class="icon-btn ck-del" data-gs-del="${esc(x.k)}" aria-label="Borrar ${esc(x.t)}"><i class="ph ph-x" aria-hidden="true"></i></button></div>`; }).join("")}</section>`; }).join("") || `<p class="ck-empty">Aún no hay gastos. Anota el primero arriba.</p>`}`;
+    gsStatus();
+  }
+  setInterval(() => { if (!document.hidden && (curView === "gastos" || curView === "viaje")) gsSync(); }, 10000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) gsSync(); });
+  window.addEventListener("online", () => gsSync());
+  setTimeout(() => { renderGastos(); gsSync(); }, 700);
   const ckAdd = t => { const l = ckList(CKP); l.push({ k: "m-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), t: t.slice(0, 60), c: ckCat(t) }); ckSave(l); renderChecks(LAST); };
   /* Arrastrar un artículo a otra categoría (dedo o mouse) */
   let CKD = null;
@@ -2652,6 +2732,7 @@
     const t = e.target.closest("button"); if (!t) return;
     const ds = t.dataset;
     if (t.hasAttribute("data-wx-refresh")) { loadWeather(true); return; }
+    if (ds.gsDel) { const x = GS.find(y => y.k === ds.gsDel); if (x && confirm(`¿Borrar "${x.t}" (${gsMoney(x.v)})?`)) gsDo({ op: "del", k: x.k }); return; }
     if (ds.ckp) { CKP = ds.ckp; store.set("caribe-ckp", CKP); renderChecks(LAST); return; }
     if (ds.ckDel) { ckSave(ckList(CKP).filter(x => x.k !== ds.ckDel)); renderChecks(LAST); return; }
     if (ds.ckSug) { ckAdd(ds.ckSug); return; }
@@ -2733,6 +2814,9 @@
     }
   });
   document.addEventListener("submit", e => {
+    const gf = e.target.closest("[data-gs-add]");
+    if (gf) { e.preventDefault(); const t = gf.t.value.trim(), v = Number(String(gf.v.value).replace(/\D/g, "")); if (!t || !v) { toast("Escribe en qué y cuánto."); return; }
+      gsDo({ op: "add", item: { k: "g-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), t: t.slice(0, 80), v, c: gsCat(t), f: gf.f.value } }); const i = $("[data-gs-add] [name=t]"); if (i) i.focus(); toast("Gasto anotado."); return; }
     const ck = e.target.closest("[data-ck-add]");
     if (ck) { e.preventDefault(); const v = ck.querySelector("input").value.trim(); if (!v) return; ckAdd(v); const i = $("[data-ck-add] input"); if (i) i.focus(); return; }
     const f = e.target.closest("[data-cform]"); if (!f) return; e.preventDefault();
@@ -2747,6 +2831,7 @@
   document.addEventListener("change", e => {
     const t = e.target;
     if (t.dataset.act) { S.acts[t.dataset.act] = t.checked; render(); return; }
+    if (t.dataset.gsCat) { const x = GS.find(y => y.k === t.dataset.gsCat); if (x) gsDo({ op: "upd", item: { ...x, c: t.value } }); return; }
     if (t.dataset.key && t.dataset.key.startsWith("m-")) { const l = ckList(CKP), x = l.find(y => y.k === t.dataset.key); if (x) { x.d = t.checked; ckSave(l); } renderChecks(LAST); return; }
     if (t.dataset.key) { const done = store.get("caribe-checks4", {}); done[t.dataset.key] = t.checked; store.set("caribe-checks4", done); renderChecks(LAST); return; }
     if (t.hasAttribute("data-hwork")) { HWORK = t.checked; store.set("caribe-hwork", HWORK); renderHotels(); return; }
@@ -3071,7 +3156,7 @@
     $$("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
     if (v === "dias") setTimeout(initMaps, 30); else killMaps();
     $$("[data-view-btn]").forEach(b => { if (b.classList.contains("tot")) return;
-      const inMas = ["armar", "dias", "pendientes", "comparar", "info"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
+      const inMas = ["armar", "dias", "pendientes", "gastos", "comparar", "info"].includes(v) && b.dataset.viewBtn === "viaje" && b.closest(".bottom");
       if (b.dataset.viewBtn === v || inMas) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     curView = v; store.set("caribe-view", v);
     window.scrollTo(0, scrollMem[v] || 0);
