@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-09.2">
+<meta name="app-version" content="2026-11-09.3">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -2554,13 +2554,13 @@
       <span class="fl-mid"><span class="fl-t num">${dep} – ${arr}</span><span class="fl-s">${sub}</span></span>
       <span class="fl-pr num">${fmt(price)}<small>por persona</small></span><i class="ph-bold ph-arrow-up-right fl-go" aria-hidden="true"></i></a></li>`;
     const stops = ALT_BACK.stop.map(([dep, arr, v, dest, segs]) => row(segs[0][0], dep, arr, v,
-      `${AIRL[segs[0][0]]} · <span class="bog">bájate en Bogotá</span>`, gfBook(D10, dest, [["CTG", "BOG", ...segs[0]], ["BOG", dest, ...segs[1]]]), false));
+      `${AIRL[segs[0][0]]} · destino final <span class="bog">${({ BGA: "Bucaramanga" })[dest] || dest}</span>`, gfBook(D10, dest, [["CTG", "BOG", ...segs[0]], ["BOG", dest, ...segs[1]]]), false));
     const directs = ALT_BACK.direct.map(([dep, arr, v, fn]) => { const al = fn.slice(0, 2), no = fn.slice(2);
       return row(al, dep, arr, v, `${AIRL[al]} · Directo · ${durTxt(dep, arr)}`, gfBook(D10, "BOG", [["CTG", "BOG", al, no]]), v === min); });
     return `<section class="fl-alt"><h2 class="ck-h"><i class="ph-fill ph-airplane-landing" aria-hidden="true"></i>Nuevo regreso · mar 10 nov<span>CTG → BOG</span></h2>
       <p>Wingo canceló el P5 7229. Toca un vuelo para ver dónde comprarlo.</p>
       <h3><i class="ph-bold ph-arrows-split" aria-hidden="true"></i>Escala en Bogotá, menos de $280.000</h3><ol>${stops.join("")}</ol>
-      <p class="fl-s" style="margin:6px 14px 0;white-space:normal">Se compran a Bucaramanga y se bajan en Bogotá: solo bolso o morral, nada en bodega.</p>
+      <p class="fl-s" style="margin:6px 14px 0;white-space:normal">Solo bolso o morral: lo que vaya en bodega sigue hasta el destino final.</p>
       <h3><i class="ph-bold ph-airplane-tilt" aria-hidden="true"></i>Directos</h3><ol>${directs.join("")}</ol>
       <p class="fl-foot">Precios del lunes 9 a la 1 pm; cambian rápido. <a href="${gfURL(D10)}" target="_blank" rel="noopener">Ver todos en Google Vuelos</a></p></section>`;
   }
