@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-09.1">
+<meta name="app-version" content="2026-11-09.2">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -736,16 +736,25 @@
   .check .txt a { display: inline-block; padding: 4px 0; }
   .progress { color: var(--muted); margin-bottom: 10px; }
   /* Checklist: grupos, ítems propios y tarjeta de acceso en Viaje */
-  .fl-alt { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 14px 14px 10px; margin-bottom: 18px; }
-  .fl-alt > p { color: var(--muted); font-size: 13px; margin: 0 2px 10px; }
-  .fl-alt h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin: 12px 2px 4px; }
+  .fl-alt { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); padding: 14px 0 6px; margin-bottom: 18px; overflow: hidden; }
+  .fl-alt .ck-h { margin: 0 14px 4px; }
+  .fl-alt > p { color: var(--muted); font-size: 13px; margin: 0 14px 6px; }
+  .fl-alt h3 { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 14px 14px 2px; }
   .fl-alt ol { list-style: none; margin: 0; padding: 0; }
-  .fl-alt li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 9px 2px; border-top: 1px solid var(--line); font-size: 15px; }
-  .fl-alt li:first-child { border-top: 0; }
-  .fl-alt li b { font-weight: 600; } .fl-alt li .pr { font-weight: 600; text-align: right; }
-  .fl-alt li small { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; }
-  .fl-alt li.best .pr { color: var(--accent); }
-  .fl-alt .fl-foot { font-size: 12.5px; color: var(--muted); margin: 8px 2px 2px; } .fl-alt .fl-foot a { display: inline-block; padding: 4px 0; }
+  .fl-row { display: grid; grid-template-columns: 32px 1fr auto 14px; align-items: center; gap: 0 12px; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--text); text-decoration: none; min-height: 64px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; transition: background-color .12s ease-out; }
+  .fl-alt li:first-child .fl-row { border-top: 0; }
+  .fl-row:active { background: var(--surface-2); }
+  @media (hover: hover) and (pointer: fine) { .fl-row:hover { background: var(--surface-2); } }
+  .fl-logo { width: 32px; height: 32px; border-radius: 8px; background: #fff; object-fit: contain; box-shadow: 0 0 0 1px var(--line); }
+  .fl-mid { min-width: 0; display: grid; gap: 2px; }
+  .fl-t { font-size: 16px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+  .fl-s { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fl-s .bog { color: var(--accent); font-weight: 600; }
+  .fl-pr { text-align: right; font-size: 16px; font-weight: 700; white-space: nowrap; }
+  .fl-pr small { display: block; font-size: 11px; font-weight: 500; color: var(--muted); }
+  .fl-row.best .fl-pr { color: var(--accent); }
+  .fl-go { color: var(--muted); font-size: 14px; }
+  .fl-alt .fl-foot { font-size: 12.5px; color: var(--muted); margin: 10px 14px 6px; } .fl-alt .fl-foot a { display: inline-block; padding: 4px 0; }
   .ck-grp + .ck-grp { margin-top: 22px; } .ck-grp { display: grid; gap: 8px; }
   .ck-h { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; margin: 0 2px 2px; } .ck-h i { color: var(--accent); font-size: 20px; } .ck-h span { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); }
   .ck-row { display: flex; align-items: stretch; gap: 6px; } .ck-row .check { flex: 1; } .ck-del { align-self: center; flex: none; }
@@ -2516,21 +2525,44 @@
       box.hidden = false;
     } catch (e) { if (err) err.textContent = quiet ? "" : "Contraseña incorrecta."; }
   }
-  // Wingo canceló el regreso (P5 7229, mar 10 nov). Opciones por persona, Google Vuelos, 9 nov 2026 12:30 pm
+  // Wingo canceló el regreso (P5 7229, mar 10 nov). Precios por persona, Google Vuelos, lun 9 nov 1 pm.
+  // Cada fila abre la página de ese vuelo en Google Vuelos (tfs armado con el número de vuelo).
+  const AIRL = { LA: "LATAM", AV: "Avianca", JA: "JetSMART", P5: "Wingo" };
   const ALT_BACK = {
-    direct: [["5:45 → 7:20", "LATAM", 293640], ["12:25 → 14:00", "LATAM", 293640], ["5:30 → 7:00", "Avianca", 295923], ["5:15 → 6:50", "LATAM", 324460], ["12:19 → 13:55", "JetSMART", 339624], ["13:26 → 14:55", "Wingo", 342650], ["19:41 → 21:10", "Wingo", 342650], ["9:20 → 10:55", "LATAM", 346360], ["10:40 → 12:10", "Avianca", 392838], ["11:15 → 12:45", "Avianca", 392838], ["9:20 → 10:50", "Avianca", 410041], ["15:40 → 17:15", "LATAM", 411570], ["20:20 → 21:55", "LATAM", 411570], ["6:10 → 7:40", "Avianca", 466551], ["13:35 → 15:10", "LATAM", 477850], ["17:20 → 18:55", "LATAM", 490470], ["21:50 → 23:25", "LATAM", 490470], ["8:25 → 9:55", "Avianca", 508559], ["21:34 → 23:10", "JetSMART", 525558]],
-    stop: [["13:05 → 16:25", "LATAM", 249610, "Termina en Bogotá; la escala no es en Bogotá. Llega 2 h 25 más tarde que el directo de las 12:25."],
-           ["9:20 → 10:55", "LATAM", 260920, "Comprar a Bucaramanga y bajarse en Bogotá (LA 4133, llega 10:55). Solo bolso pequeño, nada en bodega."],
-           ["5:45 → 7:20", "LATAM", 260920, "Comprar a Bucaramanga y bajarse en Bogotá. Solo bolso pequeño, nada en bodega."]] };
+    stop: [ // Comprados a Bucaramanga: bajarse en Bogotá. Solo los de menos de $280.000
+      ["5:45", "7:20", 260920, "BGA", [["LA", "4111"], ["LA", "4196"]]],
+      ["9:20", "10:55", 260920, "BGA", [["LA", "4133"], ["LA", "4200"]]],
+      ["12:05", "13:30", 269371, "BGA", [["AV", "8559"], ["AV", "9462"]]],
+      ["5:30", "7:00", 278356, "BGA", [["AV", "9541"], ["AV", "4814"]]]],
+    direct: [["5:45", "7:20", 293640, "LA4111"], ["12:25", "14:00", 293640, "LA4115"], ["5:30", "7:00", 309110, "AV9541"], ["5:15", "6:50", 324580, "LA4119"],
+      ["13:26", "14:55", 342650, "P57229"], ["19:41", "21:10", 342650, "P57231"], ["9:20", "10:55", 346360, "LA4133"], ["12:19", "13:55", 381340, "JA5159"],
+      ["10:40", "12:10", 405500, "AV9743"], ["11:15", "12:45", 405500, "AV9251"], ["15:40", "17:15", 411570, "LA4131"], ["20:20", "21:55", 411570, "LA4129"],
+      ["13:35", "15:10", 477970, "LA4117"], ["6:10", "7:40", 480470, "AV9785"], ["9:20", "10:50", 480470, "AV8423"], ["17:20", "18:55", 490470, "LA4125"],
+      ["21:50", "23:25", 490470, "LA4123"], ["21:34", "23:10", 585790, "JA5169"]] };
+  const gfBook = (date, dest, segs) => {
+    const enc = t => [...new TextEncoder().encode(t)], str = (f, t) => [(f << 3) | 2, enc(t).length, ...enc(t)], msg = (f, a) => [(f << 3) | 2, a.length, ...a];
+    const leg = [...str(2, date), ...segs.flatMap(([fr, to, al, no]) => msg(4, [...str(1, fr), ...str(2, date), ...str(3, to), ...str(5, al), ...str(6, no)])), ...msg(13, [8, 1, ...str(2, "CTG")]), ...msg(14, [8, 1, ...str(2, dest)])];
+    const b = [8, 28, 16, 2, ...msg(3, leg), 0x40, 1, 0x48, 1, 0x70, 1, 0x82, 1, 0x0b, 8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0x98, 1, 2];
+    return "https://www.google.com/travel/flights/booking?tfs=" + btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") + "&hl=es-419&gl=co&curr=COP";
+  };
+  const durTxt = (a, b) => { const d = hm(b) - hm(a); return `${Math.floor(d / 60)} h ${d % 60} min`; };
   function altBackHTML() {
     if (iso(new Date()) > "2026-11-10") return "";
-    const min = Math.min(...ALT_BACK.direct.map(f => f[2]));
-    const li = ([t, a, v, n]) => `<li${v === min ? ' class="best"' : ""}><span><b class="num">${t}</b> · ${a}</span><span class="pr num">${fmt(v)}</span>${n ? `<small>${n}</small>` : ""}</li>`;
-    return `<section class="fl-alt"><h2 class="ck-h"><i class="ph-fill ph-airplane-landing" aria-hidden="true"></i>Nuevo regreso, martes 10<span>por persona</span></h2>
-      <p>Wingo canceló el P5 7229 y dice que hizo el reembolso. Opciones de Cartagena a Bogotá:</p>
-      <h3>Con escala, menos de $280.000</h3><ol>${ALT_BACK.stop.map(li).join("")}</ol>
-      <h3>Directos</h3><ol>${ALT_BACK.direct.map(li).join("")}</ol>
-      <p class="fl-foot">Precios de Google Vuelos del lunes 9 a las 12:30 pm; cambian rápido. <a href="${gfURL("2026-11-10")}" target="_blank" rel="noopener">Ver precios actuales</a></p></section>`;
+    const D10 = "2026-11-10", min = Math.min(...ALT_BACK.direct.map(f => f[2]));
+    const row = (al, dep, arr, price, sub, url, best) => `<li><a class="fl-row${best ? " best" : ""}" href="${url}" target="_blank" rel="noopener">
+      <img class="fl-logo" src="https://www.gstatic.com/flights/airline_logos/70px/${al}.png" alt="" width="32" height="32" decoding="async">
+      <span class="fl-mid"><span class="fl-t num">${dep} – ${arr}</span><span class="fl-s">${sub}</span></span>
+      <span class="fl-pr num">${fmt(price)}<small>por persona</small></span><i class="ph-bold ph-arrow-up-right fl-go" aria-hidden="true"></i></a></li>`;
+    const stops = ALT_BACK.stop.map(([dep, arr, v, dest, segs]) => row(segs[0][0], dep, arr, v,
+      `${AIRL[segs[0][0]]} · <span class="bog">bájate en Bogotá</span>`, gfBook(D10, dest, [["CTG", "BOG", ...segs[0]], ["BOG", dest, ...segs[1]]]), false));
+    const directs = ALT_BACK.direct.map(([dep, arr, v, fn]) => { const al = fn.slice(0, 2), no = fn.slice(2);
+      return row(al, dep, arr, v, `${AIRL[al]} · Directo · ${durTxt(dep, arr)}`, gfBook(D10, "BOG", [["CTG", "BOG", al, no]]), v === min); });
+    return `<section class="fl-alt"><h2 class="ck-h"><i class="ph-fill ph-airplane-landing" aria-hidden="true"></i>Nuevo regreso · mar 10 nov<span>CTG → BOG</span></h2>
+      <p>Wingo canceló el P5 7229. Toca un vuelo para ver dónde comprarlo.</p>
+      <h3><i class="ph-bold ph-arrows-split" aria-hidden="true"></i>Escala en Bogotá, menos de $280.000</h3><ol>${stops.join("")}</ol>
+      <p class="fl-s" style="margin:6px 14px 0;white-space:normal">Se compran a Bucaramanga y se bajan en Bogotá: solo bolso o morral, nada en bodega.</p>
+      <h3><i class="ph-bold ph-airplane-tilt" aria-hidden="true"></i>Directos</h3><ol>${directs.join("")}</ol>
+      <p class="fl-foot">Precios del lunes 9 a la 1 pm; cambian rápido. <a href="${gfURL(D10)}" target="_blank" rel="noopener">Ver todos en Google Vuelos</a></p></section>`;
   }
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
@@ -2997,7 +3029,7 @@
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
       hotel_tolu_reservado: "Hotel Pizzería Ópera, 1 al 4 nov (3 noches), $324.900 en Booking con Genius.",
-      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. Regreso comprado el 30 oct: Wingo P5 7229, mar 10 nov, CTG 13:26 a BOG 14:55, 2 pasajeros, tarifa Go Basic (solo morral 40x35x25), pagado $398.270. ACTUALIZACIÓN 9 nov: Wingo CANCELÓ ese regreso (dice que avisó el 31 oct y que hizo el reembolso; no llegó aviso). Hay que comprar otro vuelo CTG-BOG para el mar 10: directo más barato LATAM 12:25 o 5:45 a $293.640 p/p; LATAM 9:20 comprado a Bucaramanga con escala en Bogotá a $260.920 p/p (bajarse en Bogotá, solo bolso pequeño).",
+      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. Regreso comprado el 30 oct: Wingo P5 7229, mar 10 nov, CTG 13:26 a BOG 14:55, 2 pasajeros, tarifa Go Basic (solo morral 40x35x25), pagado $398.270. ACTUALIZACIÓN 9 nov: Wingo CANCELÓ ese regreso (dice que avisó el 31 oct y que hizo el reembolso; no llegó aviso). Hay que comprar otro vuelo CTG-BOG para el mar 10: directo más barato LATAM 12:25 o 5:45 a $293.640 p/p; LATAM 9:20 o 5:45 comprado a Bucaramanga con escala en Bogotá a $260.920 p/p (bajarse en Bogotá, solo bolso pequeño). No sugerir vuelos con escala en otra ciudad: Julio necesita el menor tiempo de viaje porque trabaja.",
       estado_del_viaje: "Vuelo de ida y los 3 hoteles comprados. El vuelo de regreso de Wingo fue CANCELADO: falta comprar uno nuevo para el mar 10 (ver vuelo_ida_comprado). No sugerir cambiar fechas, vuelos, hoteles ni noches. Solo se puede ajustar: planes, día de los planes, comida y consejos prácticos (qué llevar, efectivo, clima, cómo moverse).",
       planes_descartados: "Julio quitó el Malecón de Tolú en bicitaxi: solo quiere planes esenciales que valgan la pena (Ciénaga, bioluminiscencia, pasadía a las islas). No sugerir planes de relleno.",
       quien_paga: "Julio paga hoteles, comida y transporte local (bicitaxi, mototaxi, bus urbano) de los dos; vuelos, planes y transporte entre pueblos (Montería-Tolú, Tolú-Rincón, Rincón-Cartagena) se dividen por mitades con Alejandra.",
