@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-07.9">
+<meta name="app-version" content="2026-11-09.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -736,6 +736,16 @@
   .check .txt a { display: inline-block; padding: 4px 0; }
   .progress { color: var(--muted); margin-bottom: 10px; }
   /* Checklist: grupos, ítems propios y tarjeta de acceso en Viaje */
+  .fl-alt { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 14px 14px 10px; margin-bottom: 18px; }
+  .fl-alt > p { color: var(--muted); font-size: 13px; margin: 0 2px 10px; }
+  .fl-alt h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin: 12px 2px 4px; }
+  .fl-alt ol { list-style: none; margin: 0; padding: 0; }
+  .fl-alt li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 9px 2px; border-top: 1px solid var(--line); font-size: 15px; }
+  .fl-alt li:first-child { border-top: 0; }
+  .fl-alt li b { font-weight: 600; } .fl-alt li .pr { font-weight: 600; text-align: right; }
+  .fl-alt li small { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; }
+  .fl-alt li.best .pr { color: var(--accent); }
+  .fl-alt .fl-foot { font-size: 12.5px; color: var(--muted); margin: 8px 2px 2px; } .fl-alt .fl-foot a { display: inline-block; padding: 4px 0; }
   .ck-grp + .ck-grp { margin-top: 22px; } .ck-grp { display: grid; gap: 8px; }
   .ck-h { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; margin: 0 2px 2px; } .ck-h i { color: var(--accent); font-size: 20px; } .ck-h span { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); }
   .ck-row { display: flex; align-items: stretch; gap: 6px; } .ck-row .check { flex: 1; } .ck-del { align-self: center; flex: none; }
@@ -2506,10 +2516,26 @@
       box.hidden = false;
     } catch (e) { if (err) err.textContent = quiet ? "" : "Contraseña incorrecta."; }
   }
+  // Wingo canceló el regreso (P5 7229, mar 10 nov). Opciones por persona, Google Vuelos, 9 nov 2026 12:30 pm
+  const ALT_BACK = {
+    direct: [["5:45 → 7:20", "LATAM", 293640], ["12:25 → 14:00", "LATAM", 293640], ["5:30 → 7:00", "Avianca", 295923], ["5:15 → 6:50", "LATAM", 324460], ["12:19 → 13:55", "JetSMART", 339624], ["13:26 → 14:55", "Wingo", 342650], ["19:41 → 21:10", "Wingo", 342650], ["9:20 → 10:55", "LATAM", 346360], ["10:40 → 12:10", "Avianca", 392838], ["11:15 → 12:45", "Avianca", 392838], ["9:20 → 10:50", "Avianca", 410041], ["15:40 → 17:15", "LATAM", 411570], ["20:20 → 21:55", "LATAM", 411570], ["6:10 → 7:40", "Avianca", 466551], ["13:35 → 15:10", "LATAM", 477850], ["17:20 → 18:55", "LATAM", 490470], ["21:50 → 23:25", "LATAM", 490470], ["8:25 → 9:55", "Avianca", 508559], ["21:34 → 23:10", "JetSMART", 525558]],
+    stop: [["13:05 → 16:25", "LATAM", 249610, "Termina en Bogotá; la escala no es en Bogotá. Llega 2 h 25 más tarde que el directo de las 12:25."],
+           ["9:20 → 10:55", "LATAM", 260920, "Comprar a Bucaramanga y bajarse en Bogotá (LA 4133, llega 10:55). Solo bolso pequeño, nada en bodega."],
+           ["5:45 → 7:20", "LATAM", 260920, "Comprar a Bucaramanga y bajarse en Bogotá. Solo bolso pequeño, nada en bodega."]] };
+  function altBackHTML() {
+    if (iso(new Date()) > "2026-11-10") return "";
+    const min = Math.min(...ALT_BACK.direct.map(f => f[2]));
+    const li = ([t, a, v, n]) => `<li${v === min ? ' class="best"' : ""}><span><b class="num">${t}</b> · ${a}</span><span class="pr num">${fmt(v)}</span>${n ? `<small>${n}</small>` : ""}</li>`;
+    return `<section class="fl-alt"><h2 class="ck-h"><i class="ph-fill ph-airplane-landing" aria-hidden="true"></i>Nuevo regreso, martes 10<span>por persona</span></h2>
+      <p>Wingo canceló el P5 7229 y dice que hizo el reembolso. Opciones de Cartagena a Bogotá:</p>
+      <h3>Con escala, menos de $280.000</h3><ol>${ALT_BACK.stop.map(li).join("")}</ol>
+      <h3>Directos</h3><ol>${ALT_BACK.direct.map(li).join("")}</ol>
+      <p class="fl-foot">Precios de Google Vuelos del lunes 9 a las 12:30 pm; cambian rápido. <a href="${gfURL("2026-11-10")}" target="_blank" rel="noopener">Ver precios actuales</a></p></section>`;
+  }
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     let items = o.bought
-      ? [b.bought ? ["checkin-regreso", "Check-in del regreso en Wingo", "Vuelo P5 7229, martes 10 a la 1:26 pm. Hacerlo en línea en wingo.com: en el aeropuerto cuesta $23.800 por persona. Solo morral de 40×35×25 cm; la maleta de cabina se puede agregar en Mi Reserva."]
+      ? [b.bought ? ["regreso-nuevo", "Comprar el nuevo vuelo de regreso", "Wingo canceló el P5 7229. Las opciones están al inicio de Viaje. Confirmar que llegue el reembolso de $398.270 a la Visa."]
           : [`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
          ["checkin-ida", "Check-in de la ida en JetSMART", `Hecho: Julio 10D y Alejandra 9D. Embarque 10:20 am, zona 3; llegar a El Dorado a las 8:20 am. ${PASES.map(x => `<button type="button" class="v-more-btn" data-pase="${x.k}">Pasabordo ${x.who}</button>`).join(" ")}`]]
       : [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
@@ -2542,7 +2568,7 @@
     $("[data-progress]").textContent = all.length ? (aN === all.length ? "Todo en las maletas. ¡Buen viaje!" : "Una lista para cada uno; los dos ven las dos.") : "Una lista para cada uno, para que no se les olvide nada. Los dos ven las dos.";
     const sy = $("[data-ck-sync]"); if (sy) { sy.textContent = CK_ON === false ? "Sin conexión: los cambios se suben cuando vuelva la señal." : CK_ON ? "Sincronizado en la nube." : ""; sy.classList.toggle("off", CK_ON === false); }
     const pct = all.length ? aN / all.length : 0, left = all.length - aN;
-    $("[data-v-status]").innerHTML = `<button type="button" class="ck-card" data-view-btn="pendientes"><span class="ck-ring" style="--p:${pct.toFixed(3)}"><i class="ph-fill ${all.length && !left ? "ph-check-fat" : "ph-suitcase-rolling"}" aria-hidden="true"></i></span><span class="ck-txt"><b>${!all.length ? "Arma tu checklist" : left ? "Checklist de la maleta" : "Maletas listas"}</b><small>${!all.length ? "Agrega lo que no se te puede olvidar" : CK_WHO.map(([p, n]) => `${n} ${cnt(lists[p])}/${lists[p].length}`).join(" · ")}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
+    $("[data-v-status]").innerHTML = `${altBackHTML()}<button type="button" class="ck-card" data-view-btn="pendientes"><span class="ck-ring" style="--p:${pct.toFixed(3)}"><i class="ph-fill ${all.length && !left ? "ph-check-fat" : "ph-suitcase-rolling"}" aria-hidden="true"></i></span><span class="ck-txt"><b>${!all.length ? "Arma tu checklist" : left ? "Checklist de la maleta" : "Maletas listas"}</b><small>${!all.length ? "Agrega lo que no se te puede olvidar" : CK_WHO.map(([p, n]) => `${n} ${cnt(lists[p])}/${lists[p].length}`).join(" · ")}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
   }
   const CK_WHO = [["julio", "Julio"], ["ale", "Alejandra"]];
   let CKP = store.get("caribe-ckp", "julio"); if (!CK_WHO.some(([p]) => p === CKP)) CKP = "julio";
@@ -2971,8 +2997,8 @@
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
       hotel_tolu_reservado: "Hotel Pizzería Ópera, 1 al 4 nov (3 noches), $324.900 en Booking con Genius.",
-      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. Regreso comprado el 30 oct: Wingo P5 7229, mar 10 nov, CTG 13:26 a BOG 14:55, 2 pasajeros, tarifa Go Basic (solo morral 40x35x25), pagado $398.270. Check-in en línea (en aeropuerto $23.800 p/p). Si quieren maleta de cabina en el regreso, se agrega en Mi Reserva de Wingo (al comprar costaba $81.990).",
-      estado_del_viaje: "TODO ESTÁ COMPRADO Y RESERVADO: vuelos de ida y regreso y los 3 hoteles. No sugerir cambiar fechas, vuelos, hoteles ni noches. Solo se puede ajustar: planes, día de los planes, comida y consejos prácticos (qué llevar, efectivo, clima, cómo moverse).",
+      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. Regreso comprado el 30 oct: Wingo P5 7229, mar 10 nov, CTG 13:26 a BOG 14:55, 2 pasajeros, tarifa Go Basic (solo morral 40x35x25), pagado $398.270. ACTUALIZACIÓN 9 nov: Wingo CANCELÓ ese regreso (dice que avisó el 31 oct y que hizo el reembolso; no llegó aviso). Hay que comprar otro vuelo CTG-BOG para el mar 10: directo más barato LATAM 12:25 o 5:45 a $293.640 p/p; LATAM 9:20 comprado a Bucaramanga con escala en Bogotá a $260.920 p/p (bajarse en Bogotá, solo bolso pequeño).",
+      estado_del_viaje: "Vuelo de ida y los 3 hoteles comprados. El vuelo de regreso de Wingo fue CANCELADO: falta comprar uno nuevo para el mar 10 (ver vuelo_ida_comprado). No sugerir cambiar fechas, vuelos, hoteles ni noches. Solo se puede ajustar: planes, día de los planes, comida y consejos prácticos (qué llevar, efectivo, clima, cómo moverse).",
       planes_descartados: "Julio quitó el Malecón de Tolú en bicitaxi: solo quiere planes esenciales que valgan la pena (Ciénaga, bioluminiscencia, pasadía a las islas). No sugerir planes de relleno.",
       quien_paga: "Julio paga hoteles, comida y transporte local (bicitaxi, mototaxi, bus urbano) de los dos; vuelos, planes y transporte entre pueblos (Montería-Tolú, Tolú-Rincón, Rincón-Cartagena) se dividen por mitades con Alejandra.",
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
