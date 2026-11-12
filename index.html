@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="format-detection" content="telephone=no">
 <title>Vacas</title>
-<meta name="app-version" content="2026-11-09.4">
+<meta name="app-version" content="2026-11-12.1">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -736,25 +736,6 @@
   .check .txt a { display: inline-block; padding: 4px 0; }
   .progress { color: var(--muted); margin-bottom: 10px; }
   /* Checklist: grupos, ítems propios y tarjeta de acceso en Viaje */
-  .fl-alt { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); padding: 14px 0 6px; margin-bottom: 18px; overflow: hidden; }
-  .fl-alt .ck-h { margin: 0 14px 4px; }
-  .fl-alt > p { color: var(--muted); font-size: 13px; margin: 0 14px 6px; }
-  .fl-alt h3 { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 14px 14px 2px; }
-  .fl-alt ol { list-style: none; margin: 0; padding: 0; }
-  .fl-row { display: grid; grid-template-columns: 32px 1fr auto 14px; align-items: center; gap: 0 12px; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--text); text-decoration: none; min-height: 64px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; transition: background-color .12s ease-out; }
-  .fl-alt li:first-child .fl-row { border-top: 0; }
-  .fl-row:active { background: var(--surface-2); }
-  @media (hover: hover) and (pointer: fine) { .fl-row:hover { background: var(--surface-2); } }
-  .fl-logo { width: 32px; height: 32px; border-radius: 8px; background: #fff; object-fit: contain; box-shadow: 0 0 0 1px var(--line); }
-  .fl-mid { min-width: 0; display: grid; gap: 2px; }
-  .fl-t { font-size: 16px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
-  .fl-s { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .fl-s .bog { color: var(--accent); font-weight: 600; }
-  .fl-pr { text-align: right; font-size: 16px; font-weight: 700; white-space: nowrap; }
-  .fl-pr small { display: block; font-size: 11px; font-weight: 500; color: var(--muted); }
-  .fl-row.best .fl-pr { color: var(--accent); }
-  .fl-go { color: var(--muted); font-size: 14px; }
-  .fl-alt .fl-foot { font-size: 12.5px; color: var(--muted); margin: 10px 14px 6px; } .fl-alt .fl-foot a { display: inline-block; padding: 4px 0; }
   .ck-grp + .ck-grp { margin-top: 22px; } .ck-grp { display: grid; gap: 8px; }
   .ck-h { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; margin: 0 2px 2px; } .ck-h i { color: var(--accent); font-size: 20px; } .ck-h span { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); }
   .ck-row { display: flex; align-items: stretch; gap: 6px; } .ck-row .check { flex: 1; } .ck-del { align-self: center; flex: none; }
@@ -782,6 +763,9 @@
   .gs-add { display: grid; gap: 8px; margin: 8px 0 16px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
   .gs-add input, .gs-add select { font: inherit; font-size: 16px; min-height: 46px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); min-width: 0; }
   .gs-row2 { display: grid; grid-template-columns: 1fr 1fr 48px; gap: 8px; } .gs-row2 .mini { justify-content: center; min-height: 46px; }
+  .real { margin-bottom: 16px; } .real .gs-total { margin: 4px 2px 8px; } .real .gs-total b.over { color: var(--warn); } .real .gs-total small b { font-size: inherit; letter-spacing: 0; color: var(--accent); font-weight: 600; } .real .gs-total small b.over { color: var(--warn); }
+  .real .gs-bar { height: 6px; margin: 0 2px 14px; } .real .gs-sums { margin-bottom: 14px; } .real .gs-sum small .up { color: var(--warn); } .real .gs-sum small .dn { color: var(--accent); }
+  .real .split { margin-bottom: 10px; } .real .note { font-size: 12.5px; color: var(--muted); margin: 0 2px; }
   .gs-sums { display: grid; gap: 2px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 4px 12px; }
   .gs-sum { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; padding: 9px 0; } .gs-sum + .gs-sum { border-top: 1px solid var(--line); } .gs-sum > i { color: var(--accent); font-size: 18px; }
   .gs-sum span { display: grid; gap: 2px; } .gs-sum small { color: var(--muted); font-size: 12px; } .gs-bar { display: block; height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; } .gs-bar i { display: block; height: 100%; background: var(--accent); border-radius: 4px; } .gs-bar i.over { background: var(--warn); }
@@ -977,9 +961,11 @@
 
     <section class="view" data-view="costos" hidden>
       <div class="view-head"><div><h1>Costos</h1><p>Para los dos.</p></div></div>
+      <div data-real></div>
       <div class="warns" data-warn-costos></div>
       <div class="grid2">
         <div class="card">
+          <p class="small muted" data-plan-lbl hidden>Lo que se había planeado</p>
           <p class="bigtot num" data-total>$0</p>
           <p class="sub">Por día <b class="num" data-pd>$0</b></p>
           <div class="split" data-split></div>
@@ -1177,7 +1163,7 @@
     p2: { label: "Puente del 2", sub: "dom 1 al mar 10 nov", festivo: "2026-11-02",
       weather: "Inicio de noviembre: todavía llueve, sobre todo en la tarde.",
       out: { dom: { date: "2026-11-01", air: "JetSMART", time: "11:05 → 12:35", price: 194168, ver: "22 oct", bought: true, note: "JA 5380 · solo mochila · asientos 10D y 9D · embarque 10:20 am, zona 3" } },
-      back: { mar: { date: "2026-11-10", air: "Wingo", time: "13:26 → 14:55", price: 199135, ver: "30 oct", bought: true, note: "P5 7229 · solo morral de 40×35×25 cm · check-in en línea (en el aeropuerto $23.800 p/p)" },
+      back: { mar: { date: "2026-11-10", air: "LATAM", time: "9:20 → 10:55", price: 260920, ver: "10 nov", bought: true, note: "LA 4133 · comprado a Bucaramanga y se bajaron en la escala de Bogotá · Wingo canceló el P5 7229" },
               mie: { date: "2026-11-11", air: "Wingo", time: "13:01 → 14:30", price: 178805, ver: "29 oct", note: "Una noche más en Cartagena. LATAM 1:35 pm a $188.560" },
               jue: { date: "2026-11-12", air: "Wingo", time: "20:11 → 21:40", price: 178805, ver: "22 oct", note: "Sin maleta de mano incluida. De noche" } } }
   };
@@ -1449,6 +1435,7 @@
       local: n => (n.minca ? 60000 : 0) + (n.ctg ? 60000 : 0), cashLocal: id => 60000,
       rest: "Hamaca, río y nada más.", wxRef: [["minca", "Minca"], ["ctg", "Cartagena"]] }
   };
+  DESTS_GOLFO.forEach(d => { d.hotels = d.hotels.filter(h => h.booked); }); // el viaje ya pasó: solo los hoteles donde se quedaron
   let RUTA = "golfo", R = ROUTES.golfo, DESTS, MOVES, MOVE_T, MOVE_MODE, ACTS;
   function applyRoute(id) {
     RUTA = ROUTES[id] ? id : "golfo"; R = ROUTES[RUTA];
@@ -1797,11 +1784,11 @@
     const tt = $("[data-trip-title]");
     if (diff) { tt.innerHTML = `<span class="t-long">Faltan noches: van ${SN} de ${TN}. Repártelas en Armar</span><span class="t-short">Van ${SN} de ${TN} noches</span>`; tt.className = "bad"; }
     else { tt.innerHTML = `<span class="t-long">${noches(TN)} · ${nd.map(d => `${DNAME_SHORT[d.id]} ${S.n[d.id]}`).join(", ")}</span><span class="t-short">${noches(TN)} · ${nd.length} ${nd.length === 1 ? "destino" : "destinos"}</span>`; tt.className = ""; }
-    const t = Math.round(C.total);
+    const done = tripDone(), t = Math.round(done ? realOf(C).total : C.total);
     $("[data-f-total]").textContent = fmt(t);
     const gap = S.goal - t, tg = $("[data-top-goal]");
     if (diff) { tg.textContent = "incompleto"; tg.className = "g over"; }
-    else { tg.textContent = gap >= 0 ? `total pareja · sobran ${short(gap)}` : `se pasa por ${short(-gap)}`; tg.className = gap >= 0 ? "g" : "g over"; }
+    else { tg.textContent = gap >= 0 ? `${done ? "gastado" : "total pareja"} · sobran ${short(gap)}` : `${done ? "gastado · " : ""}se pasa por ${short(-gap)}`; tg.className = gap >= 0 ? "g" : "g over"; }
     const m = $("[data-meter]"); m.style.width = Math.min(100, t / S.goal * 100) + "%"; m.className = gap < 0 ? "over" : "";
     if (prevTotal !== null && t !== prevTotal) {
       const pill = $("[data-diff]"); pill.textContent = fmtSigned(t - prevTotal); pill.className = "diff " + (t > prevTotal ? "up" : "down");
@@ -1878,8 +1865,31 @@
       <div class="act-side"><span class="cost num ${noFit ? "strike" : ""}">${cost ? fmt(cost / 2) : "Gratis"}</span><small>${noFit ? "no se cobra" : "por persona"} · ${a.pay === "tarjeta" ? "tarjeta" : "efectivo"}</small>${key && cost ? tag(key) : a.custom ? `<span class="tag ed">propio</span>` : ""}${tools}</div>
     </div>`;
   }
+  // Balance real: vuelos y hoteles pagados + gastos anotados (sin el hotel, que ya va en Hoteles)
+  const A_PAID = 681803; // lo que puso Alejandra: su mitad del plan antes de que Wingo cancelara el regreso
+  const TRIP_END = "2026-11-10";
+  function realOf(C) {
+    const g = GS.filter(x => !/^hotel\b/i.test(x.t)), by = (...c) => g.filter(x => c.includes(x.c)).reduce((n, x) => n + x.v, 0);
+    const rows = [["Vuelos", "ph-airplane-tilt", C.cats.vuelos, C.cats.vuelos], ["Hoteles", "ph-bed", C.cats.hospedaje, C.cats.hospedaje],
+      ["Comida", "ph-fork-knife", by("comida"), C.cats.comida], ["Transporte", "ph-bus", by("transp"), C.cats.traslados + C.local],
+      ["Planes", "ph-sailboat", by("planes"), C.cats.planes], ["Mercado y otros", "ph-shopping-bag", by("mercado", "otros"), 0]];
+    return { rows, total: rows.reduce((n, r) => n + r[2], 0), plan: rows.reduce((n, r) => n + r[3], 0) };
+  }
+  const tripDone = () => iso(new Date()) > TRIP_END && GS.length > 0;
+  function renderReal(C) {
+    const box = $("[data-real]"); if (!box || !C) return;
+    const pl = $("[data-plan-lbl]"); if (pl) pl.hidden = !tripDone();
+    if (!tripDone()) { box.innerHTML = ""; return; }
+    const R = realOf(C), gap = S.goal - R.total, pct = Math.min(100, R.total / S.goal * 100), dv = (v, p) => { const d = v - p; return !p || Math.abs(d) < 1000 ? "" : ` · <span class="${d > 0 ? "up" : "dn"}">${d > 0 ? "+" : "−"}${fmt(Math.abs(d))}</span>`; };
+    box.innerHTML = `<div class="card real"><h2 class="desg-h"><i class="ph ph-flag-checkered" aria-hidden="true"></i>Cómo les fue</h2>
+      <p class="gs-total"><span>Gastado de verdad</span><b class="num ${gap < 0 ? "over" : ""}">${fmt(R.total)}</b><small>de ${fmt(S.goal)} de presupuesto · <b class="${gap < 0 ? "over" : ""}">${gap >= 0 ? "sobraron " + fmt(gap) : "se pasaron por " + fmt(-gap)}</b></small></p>
+      <span class="gs-bar"><i style="width:${pct.toFixed(0)}%" class="${gap < 0 ? "over" : ""}"></i></span>
+      <div class="gs-sums">${R.rows.map(([n, ic, v, p]) => `<div class="gs-sum"><i class="ph-fill ${ic}" aria-hidden="true"></i><span><b>${n}</b><small>${n === "Vuelos" ? "Ida $388.336 y regreso LATAM $521.840" : n === "Hoteles" ? "Ópera, Cangrejo Azul y Dorado Plaza" : p ? `Plan ${fmt(p)}${dv(v, p)}` : "No estaba en el plan"}</small></span><b class="num">${fmt(v)}</b></div>`).join("")}</div>
+      <div class="split"><div><span>Julio</span><b class="num">${fmt(R.total - A_PAID)}</b><small>Todo lo demás, incluido lo que subió el regreso</small></div><div><span>Alejandra</span><b class="num">${fmt(A_PAID)}</b><small>Lo que se le pidió</small></div></div>
+      <p class="note">Sin contar el reembolso de Wingo ($398.270): si no llega, súmalo al gasto.</p></div>`;
+  }
   function renderCostos(C) {
-    const TN = totalNights();
+    const TN = totalNights(); renderReal(C);
     $("[data-warn-costos]").innerHTML = warnHTML(warnings(C).filter(w => w.bad));
     $("[data-total]").textContent = fmt(C.total);
     /* Julio paga hoteles y comida; el resto (vuelos, traslados, planes, imprevistos) se divide por mitades */
@@ -2525,49 +2535,10 @@
       box.hidden = false;
     } catch (e) { if (err) err.textContent = quiet ? "" : "Contraseña incorrecta."; }
   }
-  // Wingo canceló el regreso (P5 7229, mar 10 nov). Precios por persona, Google Vuelos, lun 9 nov 1 pm.
-  // Cada fila abre la página de ese vuelo en Google Vuelos (tfs armado con el número de vuelo).
-  const AIRL = { LA: "LATAM", AV: "Avianca", JA: "JetSMART", P5: "Wingo" };
-  const ALT_BACK = {
-    stop: [ // Comprados a Bucaramanga: bajarse en Bogotá. Solo los de menos de $280.000
-      ["5:45", "7:20", 260920, "BGA", [["LA", "4111"], ["LA", "4196"]]],
-      ["9:20", "10:55", 260920, "BGA", [["LA", "4133"], ["LA", "4200"]]],
-      ["12:05", "13:30", 269371, "BGA", [["AV", "8559"], ["AV", "9462"]]],
-      ["5:30", "7:00", 278356, "BGA", [["AV", "9541"], ["AV", "4814"]]]],
-    direct: [["5:45", "7:20", 293640, "LA4111"], ["12:25", "14:00", 293640, "LA4115"], ["5:30", "7:00", 309110, "AV9541"], ["5:15", "6:50", 324580, "LA4119"],
-      ["13:26", "14:55", 342650, "P57229"], ["19:41", "21:10", 342650, "P57231"], ["9:20", "10:55", 346360, "LA4133"], ["12:19", "13:55", 381340, "JA5159"],
-      ["10:40", "12:10", 405500, "AV9743"], ["11:15", "12:45", 405500, "AV9251"], ["15:40", "17:15", 411570, "LA4131"], ["20:20", "21:55", 411570, "LA4129"],
-      ["13:35", "15:10", 477970, "LA4117"], ["6:10", "7:40", 480470, "AV9785"], ["9:20", "10:50", 480470, "AV8423"], ["17:20", "18:55", 490470, "LA4125"],
-      ["21:50", "23:25", 490470, "LA4123"], ["21:34", "23:10", 585790, "JA5169"]] };
-  const gfBook = (date, dest, segs) => {
-    const enc = t => [...new TextEncoder().encode(t)], str = (f, t) => [(f << 3) | 2, enc(t).length, ...enc(t)], msg = (f, a) => [(f << 3) | 2, a.length, ...a];
-    const leg = [...str(2, date), ...segs.flatMap(([fr, to, al, no]) => msg(4, [...str(1, fr), ...str(2, date), ...str(3, to), ...str(5, al), ...str(6, no)])), ...msg(13, [8, 1, ...str(2, "CTG")]), ...msg(14, [8, 1, ...str(2, dest)])];
-    const b = [8, 28, 16, 2, ...msg(3, leg), 0x40, 1, 0x48, 1, 0x70, 1, 0x82, 1, 0x0b, 8, 255, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0x98, 1, 2];
-    return "https://www.google.com/travel/flights/booking?tfs=" + btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") + "&hl=es-419&gl=co&curr=COP";
-  };
-  const durTxt = (a, b) => { const d = hm(b) - hm(a); return `${Math.floor(d / 60)} h ${d % 60} min`; };
-  function altBackHTML() {
-    if (iso(new Date()) > "2026-11-10") return "";
-    const D10 = "2026-11-10", late = f => hm(f[0]) >= 9 * 60, STOP = ALT_BACK.stop.filter(late), DIR = ALT_BACK.direct.filter(late), min = Math.min(...DIR.map(f => f[2]));
-    const row = (al, dep, arr, price, sub, url, best) => `<li><a class="fl-row${best ? " best" : ""}" href="${url}" target="_blank" rel="noopener">
-      <img class="fl-logo" src="https://www.gstatic.com/flights/airline_logos/70px/${al}.png" alt="" width="32" height="32" decoding="async">
-      <span class="fl-mid"><span class="fl-t num">${dep} – ${arr}</span><span class="fl-s">${sub}</span></span>
-      <span class="fl-pr num">${fmt(price)}<small>por persona</small></span><i class="ph-bold ph-arrow-up-right fl-go" aria-hidden="true"></i></a></li>`;
-    const stops = STOP.map(([dep, arr, v, dest, segs]) => row(segs[0][0], dep, arr, v,
-      `${AIRL[segs[0][0]]} · destino final <span class="bog">${({ BGA: "Bucaramanga" })[dest] || dest}</span>`, gfBook(D10, dest, [["CTG", "BOG", ...segs[0]], ["BOG", dest, ...segs[1]]]), false));
-    const directs = DIR.map(([dep, arr, v, fn]) => { const al = fn.slice(0, 2), no = fn.slice(2);
-      return row(al, dep, arr, v, `${AIRL[al]} · Directo · ${durTxt(dep, arr)}`, gfBook(D10, "BOG", [["CTG", "BOG", al, no]]), v === min); });
-    return `<section class="fl-alt"><h2 class="ck-h"><i class="ph-fill ph-airplane-landing" aria-hidden="true"></i>Nuevo regreso · mar 10 nov<span>CTG → BOG</span></h2>
-      <p>Wingo canceló el P5 7229. Desde las 9 am; toca un vuelo para ver dónde comprarlo.</p>
-      <h3><i class="ph-bold ph-arrows-split" aria-hidden="true"></i>Escala en Bogotá, menos de $280.000</h3><ol>${stops.join("")}</ol>
-      <p class="fl-s" style="margin:6px 14px 0;white-space:normal">Solo bolso o morral: lo que vaya en bodega sigue hasta el destino final.</p>
-      <h3><i class="ph-bold ph-airplane-tilt" aria-hidden="true"></i>Directos</h3><ol>${directs.join("")}</ol>
-      <p class="fl-foot">Precios del lunes 9 a la 1 pm; cambian rápido. <a href="${gfURL(D10)}" target="_blank" rel="noopener">Ver todos en Google Vuelos</a></p></section>`;
-  }
   function renderChecks(C) {
     const done = store.get("caribe-checks4", {}), p = P(), o = p.out[S.out], b = p.back[S.back], it = C.it;
     let items = o.bought
-      ? [b.bought ? ["regreso-nuevo", "Comprar el nuevo vuelo de regreso", "Wingo canceló el P5 7229. Las opciones están al inicio de Viaje. Confirmar que llegue el reembolso de $398.270 a la Visa."]
+      ? [b.bought ? ["reembolso-wingo", "Confirmar el reembolso de Wingo", "Wingo canceló el P5 7229 y dice que devolvió $398.270 a la Visa. Revisar que haya llegado."]
           : [`regreso-${S.pu}-${S.back}`, "Comprar el vuelo de regreso", `${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}. La ida ya está comprada. <a href="${gfURL(b.date)}" target="_blank" rel="noopener">Ver vuelos directos después de las 12 m</a>; tocando la fecha se ven los precios de los otros días.`],
          ["checkin-ida", "Check-in de la ida en JetSMART", `Hecho: Julio 10D y Alejandra 9D. Embarque 10:20 am, zona 3; llegar a El Dorado a las 8:20 am. ${PASES.map(x => `<button type="button" class="v-more-btn" data-pase="${x.k}">Pasabordo ${x.who}</button>`).join(" ")}`]]
       : [[`vuelos-${S.pu}-${S.out}-${S.back}`, "Comprar los vuelos", `${o.air} ${dlabel(o.date)} a las ${o.time.split("→")[0].trim()} y ${b.air} ${dlabel(b.date)} a las ${b.time.split("→")[0].trim()}.${S.bag && C.bagLegs ? " Con maleta de mano." : ""}`]];
@@ -2600,7 +2571,7 @@
     $("[data-progress]").textContent = all.length ? (aN === all.length ? "Todo en las maletas. ¡Buen viaje!" : "Una lista para cada uno; los dos ven las dos.") : "Una lista para cada uno, para que no se les olvide nada. Los dos ven las dos.";
     const sy = $("[data-ck-sync]"); if (sy) { sy.textContent = CK_ON === false ? "Sin conexión: los cambios se suben cuando vuelva la señal." : CK_ON ? "Sincronizado en la nube." : ""; sy.classList.toggle("off", CK_ON === false); }
     const pct = all.length ? aN / all.length : 0, left = all.length - aN;
-    $("[data-v-status]").innerHTML = `${altBackHTML()}<button type="button" class="ck-card" data-view-btn="pendientes"><span class="ck-ring" style="--p:${pct.toFixed(3)}"><i class="ph-fill ${all.length && !left ? "ph-check-fat" : "ph-suitcase-rolling"}" aria-hidden="true"></i></span><span class="ck-txt"><b>${!all.length ? "Arma tu checklist" : left ? "Checklist de la maleta" : "Maletas listas"}</b><small>${!all.length ? "Agrega lo que no se te puede olvidar" : CK_WHO.map(([p, n]) => `${n} ${cnt(lists[p])}/${lists[p].length}`).join(" · ")}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
+    $("[data-v-status]").innerHTML = `<button type="button" class="ck-card" data-view-btn="pendientes"><span class="ck-ring" style="--p:${pct.toFixed(3)}"><i class="ph-fill ${all.length && !left ? "ph-check-fat" : "ph-suitcase-rolling"}" aria-hidden="true"></i></span><span class="ck-txt"><b>${!all.length ? "Arma tu checklist" : left ? "Checklist de la maleta" : "Maletas listas"}</b><small>${!all.length ? "Agrega lo que no se te puede olvidar" : CK_WHO.map(([p, n]) => `${n} ${cnt(lists[p])}/${lists[p].length}`).join(" · ")}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
   }
   const CK_WHO = [["julio", "Julio"], ["ale", "Alejandra"]];
   let CKP = store.get("caribe-ckp", "julio"); if (!CK_WHO.some(([p]) => p === CKP)) CKP = "julio";
@@ -2680,6 +2651,7 @@
     const C = LAST, total = GS.reduce((n, x) => n + x.v, 0), TD = iso(new Date());
     const card = $("[data-v-gastos]");
     if (card) card.innerHTML = `<button type="button" class="gs-card" data-view-btn="gastos"><span class="gs-ic"><i class="ph-fill ph-receipt" aria-hidden="true"></i></span><span class="ck-txt"><b>${GS.length ? gsMoney(total) + " gastados" : "Gastos del viaje"}</b><small>${GS.length ? `${GS.length} gastos · hoy ${gsMoney(GS.filter(x => x.f === TD).reduce((n, x) => n + x.v, 0))}` : "Anota lo que van gastando"}</small></span><i class="ph-bold ph-caret-right ck-go" aria-hidden="true"></i></button>`;
+    renderReal(C); if (C && tripDone()) renderTop(C);
     const box = $("[data-gastos]"); if (!box || !C) return;
     const days = C.it.days, by = c => GS.filter(x => x.c === c).reduce((n, x) => n + x.v, 0);
     const est = { comida: C.cats.comida, transp: (C.cats.traslados || 0) + (C.local || 0), planes: C.cats.planes };
@@ -3029,8 +3001,8 @@
     return {
       ruta: `${R.name}: ${R.sub}`, destinos: DESTS.map(d => ({ id: d.id, nombre: d.name, noches_minimas: d.min })),
       hotel_tolu_reservado: "Hotel Pizzería Ópera, 1 al 4 nov (3 noches), $324.900 en Booking con Genius.",
-      vuelo_ida_comprado: "JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, tarifa Basic (solo mochila), pagado $388.336. Check-in desde el 29 oct. Regreso comprado el 30 oct: Wingo P5 7229, mar 10 nov, CTG 13:26 a BOG 14:55, 2 pasajeros, tarifa Go Basic (solo morral 40x35x25), pagado $398.270. ACTUALIZACIÓN 9 nov: Wingo CANCELÓ ese regreso (dice que avisó el 31 oct y que hizo el reembolso; no llegó aviso). Hay que comprar otro vuelo CTG-BOG para el mar 10: directo más barato LATAM 12:25 o 5:45 a $293.640 p/p; LATAM 9:20 o 5:45 comprado a Bucaramanga con escala en Bogotá a $260.920 p/p (bajarse en Bogotá, solo bolso pequeño). No sugerir vuelos con escala en otra ciudad: Julio necesita el menor tiempo de viaje porque trabaja.",
-      estado_del_viaje: "Vuelo de ida y los 3 hoteles comprados. El vuelo de regreso de Wingo fue CANCELADO: falta comprar uno nuevo para el mar 10 (ver vuelo_ida_comprado). No sugerir cambiar fechas, vuelos, hoteles ni noches. Solo se puede ajustar: planes, día de los planes, comida y consejos prácticos (qué llevar, efectivo, clima, cómo moverse).",
+      vuelo_ida_comprado: "Ida: JetSMART JA 5380, dom 1 nov 2026, BOG 11:05 a MTR 12:35, 2 pasajeros, pagado $388.336. Regreso: Wingo canceló el P5 7229 (reembolso de $398.270 pendiente de confirmar); compraron LATAM LA 4133, mar 10 nov, CTG 9:20 a BOG 10:55 (comprado a Bucaramanga, se bajaron en Bogotá), $521.840 los dos.",
+      estado_del_viaje: "El viaje ya terminó (1 al 10 nov 2026). Hoteles: Ópera $324.900, Cangrejo Azul $265.620, Dorado Plaza $681.342. El balance real está en Costos, sección Cómo les fue.",
       planes_descartados: "Julio quitó el Malecón de Tolú en bicitaxi: solo quiere planes esenciales que valgan la pena (Ciénaga, bioluminiscencia, pasadía a las islas). No sugerir planes de relleno.",
       quien_paga: "Julio paga hoteles, comida y transporte local (bicitaxi, mototaxi, bus urbano) de los dos; vuelos, planes y transporte entre pueblos (Montería-Tolú, Tolú-Rincón, Rincón-Cartagena) se dividen por mitades con Alejandra.",
       viaje: { puente: S.pu, salida: S.out, regreso: S.back, noches_totales: totalNights(), noches: S.n, hoteles: S.h, comida: S.food, maleta: S.bag,
